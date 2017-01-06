@@ -30,7 +30,8 @@ var play = function(msg){
     };
     var call = msg.content.substring(settings.prefix.length);
     call = call.split(" ");
-    if (call[1].toLowerCase() in files) {
+    if (call[1]) {
+        if (call[1].toLowerCase() in files) {
         let author = msg.author.id;
         console.log(author);
         /*
@@ -44,9 +45,12 @@ var play = function(msg){
             }
         }
         */
-        
     } else {
         msg.channel.sendMessage("File/Meme not found."); 
+    }
+
+    } else {
+        msg.channel.sendMessage("**REEEEEEEE**, it's `" + settings.prefix + "play [filename]`");
     }
 };
 //Return information about the user
