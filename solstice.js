@@ -16,10 +16,15 @@ const debug = function (msg) {
     userVoice.join().then(connection => {
         const dispatcher = connection.playFile('./sounds/cena.mp3');
 
-        console.log(dispatcher);
-        /*dispatcher.stream._events.end.then(foo => {
-            userVoice.leave();
-    });*/
+        dispatcher.on('speaking', (event, listener) => {
+            if (event) {
+                console.log("Currently playing audio...");
+
+            } else {
+                console.log("Stopped playing audio!");
+                userVoice.leave();
+            }
+        });
     });
 };
 //Ping, Pong!
