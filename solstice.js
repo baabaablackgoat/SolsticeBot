@@ -7,7 +7,7 @@ const settings = require("./settings.js");
 //Debug
 var debug = function(msg){
     msg.channel.sendMessage("```Debug executed, check console```");
-    console.log(bot.channels);
+    console.log(bot.VoiceChannel);
 };
 //Ping, Pong!
 var ping = function(msg){
@@ -18,7 +18,6 @@ var terminate = function(msg){
     if (msg.author.id === settings.owner_id) {
         msg.channel.sendMessage("...I understand.");
         bot.destroy();
-        setTimeout(bot.login(settings.token), 1000);
     } else {
         msg.channel.sendMessage("Ha, no, fuck you!");
     }
@@ -51,12 +50,16 @@ var userinfo = function(msg){
     msg.channel.sendMessage(reply);
     */
 };
-
+//For the loods
+var fuck = function(msg){
+    msg.channel.sendMessage("Wow, no, you l00d.");
+}
 const commands = {
     debug: debug,
     ping: ping,
     play: play,
     userinfo: userinfo,
+    fuck: fuck,
     die: terminate,
     terminate: terminate
 };
