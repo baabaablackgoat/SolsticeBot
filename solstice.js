@@ -13,8 +13,14 @@ const debug = function (msg) {
     msg.channel.sendMessage("user is currently in voice channel " + userVoice);
     console.log(userVoice);
 
-    userVoice.join().then(() => {
-        console.log("joined");
+    userVoice.join().then(connection => {
+        const dispatcher = connection.playFile('./sounds/cena.mp3');
+
+        console.log(dispatcher);
+        
+        bot.setTimeout(() => {
+            userVoice.leave();
+        }, 3000);
     });
 };
 //Ping, Pong!
