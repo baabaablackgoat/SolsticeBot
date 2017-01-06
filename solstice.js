@@ -6,11 +6,16 @@ const settings = require("./settings.js");
 
 //Debug
 const debug = function (msg) {
-    const userVoice = msg.member.voiceChannelID;
+    const userVoiceID = msg.member.voiceChannelID;
+    const userVoice = msg.guild.channels.get(userVoiceID);
 
     msg.channel.sendMessage("```Debug executed, check console```");
     msg.channel.sendMessage("user is currently in voice channel " + userVoice);
     console.log(userVoice);
+
+    userVoice.join().then(() => {
+        console.log("joined");
+    });
 };
 //Ping, Pong!
 const ping = function (msg) {
