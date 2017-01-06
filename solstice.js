@@ -1,18 +1,14 @@
 "use strict";
 
 const Discord = require("discord.js");
+const ytdl = require("ytdl-core");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
 let dispatcher, userVoice; //That's the voice channel the bot is talking in
 
 //Debug
 const debug = function (msg) {
-    const userVoiceID = msg.member.voiceChannelID;
-    const userVoice = msg.guild.channels.get(userVoiceID);
-
     msg.channel.sendMessage("```Debug executed, check console```");
-    msg.channel.sendMessage("user is currently in voice channel " + userVoice);
-    //console.log(userVoice);
 };
 //Ping, Pong!
 const ping = function (msg) {
@@ -31,31 +27,32 @@ const terminate = function (msg) {
 const play = function (msg) {
     var call = msg.content.substring(settings.prefix.length);
     call = call.split(" ");
-    if (call[1]) {
-        if (call[1] === "random" || call[1] === "rdm"){
-            const temp = Object.keys(files);
-            call[1] = temp[Math.floor(Math.random()* (temp.length))];
-            msg.channel.sendMessage(":heart::spades::heart::spades: Playing: "+call[1]);
-        }
-        var file = files[call[1]];
-        if (call[1].toLowerCase() in files) {
-            if (dispatcher) {dispatcher.end("Halted due to two audio files playing at the same time");}
-            const userVoiceID = msg.member.voiceChannelID;
-            userVoice = msg.guild.channels.get(userVoiceID);
-            userVoice.join().then(connection => {
-                dispatcher = connection.playFile('./sounds/'+file);
-                console.log('./sounds/'+file);
-                dispatcher.on('speaking', (event, listener) => {
-                    if (!event) {
-                        userVoice.leave();
-                        dispatcher = null;
-                    }
-                });
+    if (call[1]) { // Was an argument passed?
+        if (call[1].startsWith("http")) { // Was a link passed?
+            msg.channel.sendMessage("Checking link...");
+            let ytInfo = ytdl.getInfo(call[1], {filter: "audioonly"},function(err,info){
+                if (!err) {
+                    var stream = ytdl(call[1], { filter: "audioonly" });
+                    sound_play(msg,"stream",stream);
+                } else {
+                    msg.channel.sendMessage("Invalid link.");
+                    console.log(err);
+                }
             });
         } else {
-            msg.channel.sendMessage("File/Meme not found.");
-        }
-    } else {
+            if (call[1] === "random" || call[1] === "rdm"){ //Is the passed argument "rdm" or "random" ?
+                const temp = Object.keys(files);
+                call[1] = temp[Math.floor(Math.random()* (temp.length))];
+                msg.channel.sendMessage(":heart::spades::heart::spades: Playing: "+call[1]);
+            }
+            var file = files[call[1]];
+            if (call[1].toLowerCase() in files) { // Does the passed key exist in the files object?
+               sound_play(msg,"file",file);
+            } else { // File does not exist/was not defined
+                msg.channel.sendMessage("File/Meme not found.");
+            }
+        }   
+    } else { // No argument passed
         msg.channel.sendMessage("**REEEEEEEE**, it's `" + settings.prefix + "play [filename]`");
     }
 };
@@ -87,6 +84,27 @@ const volume = function (msg) {
         }
     }
 }
+//Used to play the stream/file
+const sound_play = function (msg,type,src) {
+    if (dispatcher) {dispatcher.end("Halted due to two audio files playing at the same time");}
+    const userVoiceID = msg.member.voiceChannelID;
+    userVoice = msg.guild.channels.get(userVoiceID);
+    userVoice.join().then(connection => {
+        if (type === "file") {
+            dispatcher = connection.playFile('./sounds/'+src);
+        } else if (type === "stream") {
+            dispatcher = connection.playStream(src);
+        } else {
+            console.log("What the fuck, man?");
+        }
+        dispatcher.on('speaking', (event, listener) => {
+            if (!event) {
+                userVoice.leave();
+                dispatcher = null;
+            }
+        });
+    });
+}
 //Return information about the user
 const userinfo = function (msg) {
     /*
@@ -112,6 +130,7 @@ const commands = {
     vol: volume,
     userinfo: userinfo,
     fuck: fuck,
+    break: terminate,
     die: terminate,
     terminate: terminate
 };
@@ -121,13 +140,10 @@ const files = {
     holzbrett: "holzbrett.mp3",
     lazytown: "lazyboom.mp3",
     drawingdicks: "dicks.mp3",
-    dicks: "dicks.mp3",
     sail: "sail.mp3",
     saail: "saail.mp3",
     slowclap: "slowclap.mp3",
-    clap: "slowclap.mp3",
     wochenende: "wochenende.mp3",
-    nein: "neinneinnein.mp3",
     neinneinnein: "neinneinnein.mp3",
     bausparvertrag: "bausparvertrag.mp3",
     sailremix: "sailremix.mp3",
