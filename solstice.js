@@ -29,15 +29,12 @@ const terminate = function (msg) {
 };
 //Play a predefined file (see files object)
 const play = function (msg) {
-    const files = {
-        cena: "cena.mp3",
-        holzbrett: "holzbrett.mp3"
-    };
     var call = msg.content.substring(settings.prefix.length);
     call = call.split(" ");
     if (call[1]) {
         var file = files[call[1]];
         if (call[1].toLowerCase() in files) {
+            if (dispatcher) {dispatcher.end("Halted due to two audio files playing at the same time");}
             const userVoiceID = msg.member.voiceChannelID;
             userVoice = msg.guild.channels.get(userVoiceID);
             userVoice.join().then(connection => {
@@ -93,6 +90,22 @@ const commands = {
     fuck: fuck,
     die: terminate,
     terminate: terminate
+};
+
+const files = {
+    cena: "cena.mp3",
+    holzbrett: "holzbrett.mp3",
+    lazytown: "lazyboom.mp3",
+    drawingdicks: "dicks.mp3",
+    dicks: "dicks.mp3",
+    sail: "sail.mp3",
+    saail: "sail.mp3",
+    slowclap: "slowclap.mp3",
+    clap: "slowclap.mp3",
+    wochenende: "wochenende.mp3",
+    nein: "neinneinnein.mp3",
+    neinneinnein: "neinneinnein.mp3",
+    bausparvertrag: "bausparvertrag.mp3"
 };
 
 bot.on("message", msg => {
