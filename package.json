@@ -5,7 +5,8 @@
   "main": "solstice.js",
   "dependencies": {
     "discord.js": "^11.0.0",
-    "opusscript": "0.0.1"
+    "opusscript": "0.0.1",
+    "ytdl-core": "0.7.21"
   },
   "devDependencies": {},
   "scripts": {
