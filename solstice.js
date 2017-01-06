@@ -1,3 +1,5 @@
+"use strict";
+
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
@@ -6,11 +8,11 @@ const settings = require("./settings.js");
 var debug = function(msg){
     msg.channel.sendMessage("```Debug executed, check console```");
     console.log(bot.channels);
-}
+};
 //Ping, Pong!
 var ping = function(msg){
     msg.channel.sendMessage("Pong!");
-}
+};
 //Stop the current node.js process with an exit message - if called by the bot owner, only. 
 var terminate = function(msg){
     if (msg.author.id === settings.owner_id) {
@@ -20,14 +22,14 @@ var terminate = function(msg){
     } else {
         msg.channel.sendMessage("Ha, no, fuck you!");
     }
-}
+};
 //Play a predefined file (see files object)
 var play = function(msg){
     const files = {
         cena: "cena.mp3",
         holzbrett: "holzbrett.mp3"
     };
-    var call = msg.content.substring(prefix.length);
+    var call = msg.content.substring(settings.prefix.length);
     call = call.split(" ");
     if (call[1].toLowerCase() in files) {
         console.log(msg.author);
@@ -39,7 +41,7 @@ var play = function(msg){
     } else {
         msg.channel.sendMessage("File/Meme not found."); 
     }
-}
+};
 //Return information about the user
 var userinfo = function(msg){
     /*
@@ -48,7 +50,7 @@ var userinfo = function(msg){
     reply.addField(msg.author.username+"#"+msg.author.discriminator);
     msg.channel.sendMessage(reply);
     */
-}
+};
 
 const commands = {
     debug: debug,
@@ -79,6 +81,6 @@ bot.on("message", msg => {
 
 bot.on("ready", () => {
     console.log("Solstice is ready.");
-})
+});
 
 bot.login(settings.token);
