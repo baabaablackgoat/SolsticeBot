@@ -1,9 +1,14 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client();
-const prefix = "pls ";
-const bot_owner = "178470784984023040";
+const prefix = settings.prefix;
+const bot_owner = settings.bot_owner;
 const token = require("./login.js");
 
+//Debug
+var debug = function(msg){
+    msg.channel.sendMessage("```Debug executed, check console```");
+    //console.log(bot.channels.178531551015993344);
+}
 //Ping, Pong!
 var ping = function(msg){
     msg.channel.sendMessage("Pong!");
@@ -12,7 +17,8 @@ var ping = function(msg){
 var terminate = function(msg){
     if (msg.author.id === bot_owner) {
         msg.channel.sendMessage("...I understand.");
-        setTimeout(process.exit,1000);
+        bot.destroy();
+        setTimeout(bot.login(token), 1000);
     } else {
         msg.channel.sendMessage("Ha, no, fuck you!");
     }
@@ -38,13 +44,16 @@ var play = function(msg){
 }
 //Return information about the user
 var userinfo = function(msg){
+    /*
     var reply = new Discord.RichEmbed();
     reply.color = 0;
     reply.addField(msg.author.username+"#"+msg.author.discriminator);
     msg.channel.sendMessage(reply);
+    */
 }
 
 const commands = {
+    debug: debug,
     ping: ping,
     play: play,
     userinfo: userinfo,
@@ -74,4 +83,4 @@ bot.on("ready", () => {
     console.log("Solstice is ready.");
 })
 
-bot.login(token);
+bot.login(settings.token);
