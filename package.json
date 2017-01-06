@@ -1,0 +1,29 @@
+{
+  "name": "solsticebot",
+  "version": "0.0.1",
+  "description": "can shitpost alot",
+  "main": "solstice.js",
+  "dependencies": {
+    "discord.js": "^11.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MGF1998/SolsticeBot.git"
+  },
+  "keywords": [
+    "discord",
+    "bepis",
+    "node.js",
+    "discord.js"
+  ],
+  "author": "TrueMGF",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MGF1998/SolsticeBot/issues"
+  },
+  "homepage": "https://truemgf.de"
+}
