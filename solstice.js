@@ -3,6 +3,7 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
+let dispatcher, userVoice; //That's the voice channel the bot is talking in
 
 //Debug
 const debug = function (msg) {
@@ -38,13 +39,14 @@ const play = function (msg) {
         var file = files[call[1]];
         if (call[1].toLowerCase() in files) {
             const userVoiceID = msg.member.voiceChannelID;
-            const userVoice = msg.guild.channels.get(userVoiceID);
+            userVoice = msg.guild.channels.get(userVoiceID);
             userVoice.join().then(connection => {
-                const dispatcher = connection.playFile('./sounds/'+file);
+                dispatcher = connection.playFile('./sounds/'+file);
                 console.log('./sounds/'+file);
                 dispatcher.on('speaking', (event, listener) => {
                     if (!event) {
                         userVoice.leave();
+                        dispatcher = null;
                     }
                 });
             });
@@ -56,6 +58,17 @@ const play = function (msg) {
         msg.channel.sendMessage("**REEEEEEEE**, it's `" + settings.prefix + "play [filename]`");
     }
 };
+//Disconnect the bot from the voice channel.
+const disconnect = function (msg) {
+    if (dispatcher) {
+        dispatcher.end("Halted by user");
+        userVoice.leave();
+        msg.channel.send("Left voice channel.");
+        dispatcher = null;
+    } else {
+        msg.channel.send("Not in a voice channel!");
+    }
+}
 //Return information about the user
 const userinfo = function (msg) {
     /*
@@ -69,10 +82,13 @@ const userinfo = function (msg) {
 const fuck = function (msg) {
     msg.channel.sendMessage("Wow, no, you l00d.");
 };
+
 const commands = {
     debug: debug,
     ping: ping,
     play: play,
+    disconnect: disconnect,
+    dc: disconnect,
     userinfo: userinfo,
     fuck: fuck,
     die: terminate,
