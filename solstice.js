@@ -1,8 +1,6 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client();
-const prefix = settings.prefix;
-const bot_owner = settings.bot_owner;
-const token = require("./login.js");
+const settings = require("./settings.js");
 
 //Debug
 var debug = function(msg){
@@ -15,7 +13,7 @@ var ping = function(msg){
 }
 //Stop the current node.js process with an exit message - if called by the bot owner, only. 
 var terminate = function(msg){
-    if (msg.author.id === bot_owner) {
+    if (msg.author.id === settings.owner_id) {
         msg.channel.sendMessage("...I understand.");
         bot.destroy();
         setTimeout(bot.login(token), 1000);
@@ -62,8 +60,8 @@ const commands = {
 };
 
 bot.on("message", msg => {
-    if (msg.content.startsWith(prefix) && !msg.author.bot){
-        var call = msg.content.substring(prefix.length);
+    if (msg.content.startsWith(settings.prefix) && !msg.author.bot){
+        var call = msg.content.substring(settings.prefix.length);
         call = call.split(" ");
         if (call[0] in commands) {
             console.log(msg.author.username + " called command: " + call);
