@@ -66,6 +66,23 @@ const disconnect = function (msg) {
         msg.channel.send("Not in a voice channel!");
     }
 }
+//Change volume of the bot
+const volume = function (msg) {
+    var call = msg.content.substring(settings.prefix.length);
+    call = call.split(" "); 
+    if (!call[1] && dispatcher) {
+        msg.channel.sendMessage("The current volume is "+dispatcher.volume);
+    } else if (!dispatcher) {
+        msg.channel.sendMessage("Sound Dispatcher is offline.");
+    } else {
+        if (call[1]>=0 && call[1]<=2) {
+            dispatcher.setVolume(call[1]);
+            msg.channel.sendMessage("Volume has been set to "+call[1]);
+        } else {
+            msg.channel.sendMessage("Error! Volume can only be set between 0 and 2. Your value "+call[1]+" is out of bounds!");
+        }
+    }
+}
 //Return information about the user
 const userinfo = function (msg) {
     /*
@@ -86,6 +103,8 @@ const commands = {
     play: play,
     disconnect: disconnect,
     dc: disconnect,
+    volume: volume,
+    vol: volume,
     userinfo: userinfo,
     fuck: fuck,
     die: terminate,
@@ -99,13 +118,14 @@ const files = {
     drawingdicks: "dicks.mp3",
     dicks: "dicks.mp3",
     sail: "sail.mp3",
-    saail: "sail.mp3",
+    saail: "saail.mp3",
     slowclap: "slowclap.mp3",
     clap: "slowclap.mp3",
     wochenende: "wochenende.mp3",
     nein: "neinneinnein.mp3",
     neinneinnein: "neinneinnein.mp3",
-    bausparvertrag: "bausparvertrag.mp3"
+    bausparvertrag: "bausparvertrag.mp3",
+    sailremix: "sailremix.mp3"
 };
 
 bot.on("message", msg => {
