@@ -12,20 +12,6 @@ const debug = function (msg) {
     msg.channel.sendMessage("```Debug executed, check console```");
     msg.channel.sendMessage("user is currently in voice channel " + userVoice);
     //console.log(userVoice);
-
-    userVoice.join().then(connection => {
-        const dispatcher = connection.playFile('./sounds/cena.mp3');
-
-        dispatcher.on('speaking', (event, listener) => {
-            if (event) {
-                console.log("Currently playing audio...");
-
-            } else {
-                console.log("Stopped playing audio!");
-                userVoice.leave();
-            }
-        });
-    });
 };
 //Ping, Pong!
 const ping = function (msg) {
@@ -35,7 +21,7 @@ const ping = function (msg) {
 const terminate = function (msg) {
     if (msg.author.id === settings.owner_id) {
         msg.channel.sendMessage("...I understand.");
-        bot.destroy();
+        setTimeout(process.exit,1000);
     } else {
         msg.channel.sendMessage("Ha, no, fuck you!");
     }
@@ -49,20 +35,19 @@ const play = function (msg) {
     var call = msg.content.substring(settings.prefix.length);
     call = call.split(" ");
     if (call[1]) {
+        var file = files[call[1]];
         if (call[1].toLowerCase() in files) {
-            let author = msg.author.id;
-            console.log(author);
-            /*
-            for () {
-                //Loop through all known voice channels and see if the author id is represented
-                if (something === author) {
-                    // do some check if the command was called in the same guild (server)
-                    //join that m'f voicechannel, play the file, leave the m'f voicechannel
-                } else {
-                    msg.channel.sendMessage("You are not in a voicechannel, " + msg.author.username);
-                }
-            }
-            */
+            const userVoiceID = msg.member.voiceChannelID;
+            const userVoice = msg.guild.channels.get(userVoiceID);
+            userVoice.join().then(connection => {
+                const dispatcher = connection.playFile('./sounds/'+file);
+                console.log('./sounds/'+file);
+                dispatcher.on('speaking', (event, listener) => {
+                    if (!event) {
+                        userVoice.leave();
+                    }
+                });
+            });
         } else {
             msg.channel.sendMessage("File/Meme not found.");
         }
