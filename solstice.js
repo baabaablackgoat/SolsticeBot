@@ -32,6 +32,8 @@ var play = function(msg){
     call = call.split(" ");
     if (call[1].toLowerCase() in files) {
         let author = msg.author.id;
+        console.log(author);
+        /*
         for () {
             //Loop through all known voice channels and see if the author id is represented
             if (something === author) {
@@ -41,6 +43,7 @@ var play = function(msg){
                 msg.channel.sendMessage("You are not in a voicechannel, " + msg.author.username);
             }
         }
+        */
         
     } else {
         msg.channel.sendMessage("File/Meme not found."); 
