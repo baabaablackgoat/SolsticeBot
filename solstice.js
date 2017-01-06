@@ -7,7 +7,7 @@ const settings = require("./settings.js");
 //Debug
 var debug = function(msg){
     msg.channel.sendMessage("```Debug executed, check console```");
-    console.log(bot.VoiceChannel);
+    console.log(bot.channels);
 };
 //Ping, Pong!
 var ping = function(msg){
@@ -31,12 +31,17 @@ var play = function(msg){
     var call = msg.content.substring(settings.prefix.length);
     call = call.split(" ");
     if (call[1].toLowerCase() in files) {
-        console.log(msg.author);
-        /*
-        console.log(voiceChannel.name);
-        msg.author.voiceChannel.join()
-        setTimeout(voiceChannel.leave(),1000);
-        */
+        let author = msg.author.id;
+        for () {
+            //Loop through all known voice channels and see if the author id is represented
+            if (something === author) {
+                // do some check if the command was called in the same guild (server)
+                //join that m'f voicechannel, play the file, leave the m'f voicechannel
+            } else {
+                msg.channel.sendMessage("You are not in a voicechannel, " + msg.author.username);
+            }
+        }
+        
     } else {
         msg.channel.sendMessage("File/Meme not found."); 
     }
