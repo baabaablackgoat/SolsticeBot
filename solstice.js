@@ -32,6 +32,11 @@ const play = function (msg) {
     var call = msg.content.substring(settings.prefix.length);
     call = call.split(" ");
     if (call[1]) {
+        if (call[1] === "random" || call[1] === "rdm"){
+            const temp = Object.keys(files);
+            call[1] = temp[Math.floor(Math.random()* (temp.length))];
+            msg.channel.sendMessage(":heart::spades::heart::spades: Playing: "+call[1]);
+        }
         var file = files[call[1]];
         if (call[1].toLowerCase() in files) {
             if (dispatcher) {dispatcher.end("Halted due to two audio files playing at the same time");}
@@ -50,7 +55,6 @@ const play = function (msg) {
         } else {
             msg.channel.sendMessage("File/Meme not found.");
         }
-
     } else {
         msg.channel.sendMessage("**REEEEEEEE**, it's `" + settings.prefix + "play [filename]`");
     }
@@ -101,6 +105,7 @@ const commands = {
     debug: debug,
     ping: ping,
     play: play,
+    music: play,
     disconnect: disconnect,
     dc: disconnect,
     volume: volume,
@@ -125,7 +130,8 @@ const files = {
     nein: "neinneinnein.mp3",
     neinneinnein: "neinneinnein.mp3",
     bausparvertrag: "bausparvertrag.mp3",
-    sailremix: "sailremix.mp3"
+    sailremix: "sailremix.mp3",
+    spada_youandi: "spada_youandi.mp3"
 };
 
 bot.on("message", msg => {
