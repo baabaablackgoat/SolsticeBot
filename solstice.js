@@ -1,8 +1,8 @@
 const Discord = require("discord.js");
+const settings = require("./settings.js");
 const bot = new Discord.Client();
 const prefix = settings.prefix;
 const bot_owner = settings.bot_owner;
-const token = require("./login.js");
 
 //Debug
 var debug = function(msg){
