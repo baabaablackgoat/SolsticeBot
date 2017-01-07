@@ -94,7 +94,7 @@ const infoQueue = function(msg){
 }
 //Debug
 const debug = function (msg) {
-    var temp = msg.channel.sendMessage("./cg_dream4_3.png");
+    //bot.ClientUser.setGame("with a lightswitch");
 };
 //Ping, Pong!
 const ping = function (msg) {
@@ -142,6 +142,7 @@ const play = function (msg) {
 const disconnect = function (msg) {
     if (dispatcher) {
         dispatcher.end("Halted by user");
+        flushQueue;
         userVoice.leave();
         msg.channel.send("Left voice channel.");
         dispatcher = null;
@@ -213,6 +214,14 @@ const memes = function (msg){
     ];
     msg.channel.sendMessage(memepages[Math.floor(Math.random()*memepages.length)] +" ( ͡° ͜ʖ ͡°)");
 }
+//volvo pls fix
+const fix = function(msg){
+    msg.channel.sendMessage("volvo, pls fix http://starecat.com/content/wp-content/uploads/engineer-engifar-engiwherever-you-are-titanic.jpg");
+}
+//we'll bang okay
+const bang = function(msg){
+    msg.channel.sendMessage("We'll bang, okay? :gun:");
+}
 const commands = {
     debug: debug,
     ping: ping,
@@ -230,6 +239,8 @@ const commands = {
     vol: volume,
     userinfo: userinfo,
     fuck: fuck,
+    fix: fix,
+    bang: bang,
     break: terminate,
     die: terminate,
     terminate: terminate,
