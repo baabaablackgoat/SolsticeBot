@@ -4,8 +4,94 @@ const Discord = require("discord.js");
 const ytdl = require("ytdl-core");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
-let dispatcher, userVoice; //That's the voice channel the bot is talking in
+var playing = false;
+var queue = [];
+let dispatcher, userVoice, VoiceConnection; //That's the voice channel the bot is talking in
 
+//Global functions
+//Joins the voicechannel of the message author
+//Voice connection is asynchronous, takes up to 1000ms
+function joinChannel(msg){
+	if(typeof VoiceConnection === 'undefined' || !VoiceConnection ){
+		console.log("connecting to channel")
+		const userVoiceID = msg.member.voiceChannelID;
+		userVoice = msg.guild.channels.get(userVoiceID);
+		userVoice.join().then(connection => {
+			VoiceConnection = connection;
+		});
+	}
+}
+//Checks the current queue. If no song is playing,  the queue jumpstarts
+function checkQueue(msg){
+	if(!playing && queue.length > 0){
+		joinChannel(msg);
+		var item = queue.shift();
+		setTimeout(function(){
+			playFromQueue(msg, item);
+		}, 500);
+	} else if (!playing && dispatcher){
+		disconnect(msg);
+	}
+}
+//Adds a song to the queue
+function addtoQueue(msg,item){
+	queue.push(item);
+	msg.channel.sendMessage(item["name"] + " was added to queue! Position: " + parseInt(queue.length));
+}
+//Plays the topmost song in the queue
+function playFromQueue(msg, item){
+	if(typeof VoiceConnection !== 'undefined' && VoiceConnection ){
+		msg.channel.sendMessage("Now Playing: " + item["name"]);
+		if(item["stream"]){
+			dispatcher = VoiceConnection.playStream(ytdl(item["value"], { 'filter': "audioonly",'quality':'lowest' }));
+		} else {
+			dispatcher = VoiceConnection.playFile(item["value"]);
+		}
+		
+		dispatcher.on('end',function(){
+			playing = false;
+			checkQueue(msg);
+		});
+		
+		dispatcher.on('error',function(err){
+			console.log("dispatch error: " + err);
+			playing = false;	
+			checkQueue(msg);
+		});	
+		playing = true;
+	} else {
+		setTimeout(function(){
+			playFromQueue(msg, item);
+			console.log("retry");
+		}, 100);
+	}	
+};
+// Ends the current dispatcher to jump to the next song
+const nextSong = function(msg){
+	dispatcher.end();
+}
+// Runs nextSong and clears queue.
+const flushQueue = function(msg){
+	queue = [];
+	nextSong(msg);
+}
+//Lists current queue.
+const infoQueue = function(msg){
+	if(queue.length > 0){
+		var msgString = "Currently in Queue: \n" ;
+		var i = 1;
+		var item;
+		
+		queue.forEach(function(item){
+			msgString += i + ": " + item["name"] + "\n";
+			i+=1;
+		});
+	} else {
+		var msgString = "There aren´t any items in the queue right now." ;
+	}
+	
+	msg.channel.sendMessage(msgString);
+}
 //Debug
 const debug = function (msg) {
     var temp = msg.channel.sendMessage("./cg_dream4_3.png");
@@ -23,37 +109,33 @@ const terminate = function (msg) {
         msg.channel.sendMessage(msg.author.username+ ", no! I will not smash the sun!");
     }
 };
-//Play a predefined file (see files object)
+//Music and predefined files
 const play = function (msg) {
     var call = msg.content.substring(settings.prefix.length);
     call = call.split(" ");
-    if (call[1]) { // Was an argument passed?
-        if (call[1].startsWith("http")) { // Was a link passed?
-            msg.channel.sendMessage("Checking link...");
-            let ytInfo = ytdl.getInfo(call[1], {filter: "audioonly"},function(err,info){
-                if (!err) {
-                    var stream = ytdl(call[1], { filter: "audioonly" });
-                    sound_play(msg,"stream",stream);
-                } else {
-                    msg.channel.sendMessage("Invalid link.");
-                    console.log(err);
-                }
-            });
+    if (call[1]) {
+        var file = files[call[1]];
+        if (call[1].toLowerCase() in files) {
+			var item = {"name":call[1],"stream":false,"value":"./sounds/"+files[call[1]]};
+			addtoQueue(msg,item);
+			checkQueue(msg);
+        } else if(call[1].startsWith("https://youtu.be") || call[1].startsWith("https://www.youtube.com")) {
+            msg.channel.sendMessage("Grabbing metadata...");
+			var ytInfo = ytdl.getInfo(call[1], { filter: "audioonly" },function(err, info){
+				if(!err){
+					var item = {"name":info["title"],"stream":true,"value":call[1]};
+					addtoQueue(msg,item);
+					checkQueue(msg);
+				} else {
+					msg.channel.sendMessage("Stream not found!");
+					console.log(err);
+				}
+			});
         } else {
-            if (call[1] === "random" || call[1] === "rdm"){ //Is the passed argument "rdm" or "random" ?
-                const temp = Object.keys(files);
-                call[1] = temp[Math.floor(Math.random()* (temp.length))];
-                msg.channel.sendMessage(":heart::spades::heart::spades: Playing: "+call[1]);
-            }
-            var file = files[call[1]];
-            if (call[1].toLowerCase() in files) { // Does the passed key exist in the files object?
-               sound_play(msg,"file",file);
-            } else { // File does not exist/was not defined
-                msg.channel.sendMessage("File/Meme not found.");
-            }
-        }   
-    } else { // No argument passed
-        msg.channel.sendMessage("**REEEEEEEE**, it's `" + settings.prefix + "play [filename]`");
+			msg.channel.sendMessage("File/Meme not found");
+        }
+    } else {
+        msg.channel.sendMessage("**REEEEEE**, it's `" + settings.prefix + "play [filename/link]`");
     }
 };
 //Disconnect the bot from the voice channel.
@@ -63,6 +145,7 @@ const disconnect = function (msg) {
         userVoice.leave();
         msg.channel.send("Left voice channel.");
         dispatcher = null;
+        VoiceConnection = null;
     } else {
         msg.channel.send("Not in a voice channel!");
     }
@@ -136,6 +219,11 @@ const commands = {
     memes: memes,
     play: play,
     music: play,
+    skip: nextSong,
+	next: nextSong,
+    clear: flushQueue,
+	flush: flushQueue,
+	queue: infoQueue,
     disconnect: disconnect,
     dc: disconnect,
     volume: volume,
@@ -144,7 +232,8 @@ const commands = {
     fuck: fuck,
     break: terminate,
     die: terminate,
-    terminate: terminate
+    terminate: terminate,
+    smash: terminate
 };
 
 const files = {
