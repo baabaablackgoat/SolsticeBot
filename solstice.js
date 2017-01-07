@@ -8,7 +8,7 @@ let dispatcher, userVoice; //That's the voice channel the bot is talking in
 
 //Debug
 const debug = function (msg) {
-    msg.channel.sendMessage("```Debug executed, check console```");
+    var temp = msg.channel.sendMessage("./cg_dream4_3.png");
 };
 //Ping, Pong!
 const ping = function (msg) {
@@ -17,10 +17,10 @@ const ping = function (msg) {
 //Stop the current node.js process with an exit message - if called by the bot owner, only. 
 const terminate = function (msg) {
     if (msg.author.id === settings.owner_id) {
-        msg.channel.sendMessage("...I understand.");
+        msg.channel.sendMessage("Niklas, no! I will not smash the sun! *shattering sound*");
         setTimeout(process.exit,1000);
     } else {
-        msg.channel.sendMessage("Ha, no, fuck you!");
+        msg.channel.sendMessage(msg.author.username+ ", no! I will not smash the sun!");
     }
 };
 //Play a predefined file (see files object)
@@ -107,21 +107,33 @@ const sound_play = function (msg,type,src) {
 }
 //Return information about the user
 const userinfo = function (msg) {
-    /*
-    var reply = new Discord.RichEmbed();
-    reply.color = 0;
+    let reply = new Discord.RichEmbed();
+    //reply.color = 0;
     reply.addField(msg.author.username+"#"+msg.author.discriminator);
-    msg.channel.sendMessage(reply);
-    */
+    console.log(reply);
+    msg.channel.sendMessage("reply"); 
 };
 //For the loods
 const fuck = function (msg) {
     msg.channel.sendMessage("Wow, no, you l00d.");
 };
-
+//lots of kappa
+const memes = function (msg){
+    const memepages = [
+        "https://www.reddit.com/r/kreiswichs/",
+        "https://www.reddit.com/r/nottheonion/",
+        "https://www.reddit.com/r/showerthoughts/",
+        "https://www.reddit.com/r/GlobalOffensive/",
+        "https://www.reddit.com/r/Overwatch/",
+        "https://www.reddit.com/r/iamverysmart/",
+        "https://www.youtube.com/watch?v=yXXyfeWJz1M"
+    ];
+    msg.channel.sendMessage(memepages[Math.floor(Math.random()*memepages.length)] +" ( ͡° ͜ʖ ͡°)");
+}
 const commands = {
     debug: debug,
     ping: ping,
+    memes: memes,
     play: play,
     music: play,
     disconnect: disconnect,
