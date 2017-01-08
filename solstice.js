@@ -4,8 +4,8 @@ const Discord = require("discord.js");
 const ytdl = require("ytdl-core");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
-var playing = false;
-var queue = [];
+var queue = [], playing = false, currentlyPlaying = ""; // global vars for the music bot
+var user = [], votes = {}; // global vars for the voting system
 let dispatcher, userVoice, VoiceConnection; //That's the voice channel the bot is talking in
 
 //Global functions
@@ -16,10 +16,49 @@ function joinChannel(msg){
 		console.log("connecting to channel")
 		const userVoiceID = msg.member.voiceChannelID;
 		userVoice = msg.guild.channels.get(userVoiceID);
+		refreshUser();
 		userVoice.join().then(connection => {
 			VoiceConnection = connection;
 		});
 	}
+}
+//a list of users in the voicechannel
+function refreshUser(){
+	user = [];
+	userVoice.members.array().forEach(function(GuildMember){
+		if(GuildMember["user"] && !GuildMember["user"].bot){
+			user.push(GuildMember["user"]);
+		}
+	});
+}
+//voting function: action acts as id, each vote has a array of client-ids of client that accepted the vote
+//if more than 50% of the current clients in the voice channel voted(yes), the function returns true
+function vote(msg,voteAction){
+	if(!votes[voteAction]){
+		votes[voteAction] = [msg.author.id];
+	} else {
+		votes[voteAction].push(msg.author.id);
+	}
+	
+	if(evaluteVote(msg, voteAction)){
+		votes[voteAction] = [];
+		return true;
+	} else {
+		return false;
+	}	
+}
+//checks if vote is now passed
+function evaluteVote(msg, voteAction){
+	refreshUser();
+	var all = user.length;
+	var voted = 0;
+	user.forEach(function(currentUser){
+		if(votes[voteAction].indexOf(currentUser.id) > -1){
+			voted += 1;
+		}
+	});
+	msg.channel.sendMessage(voteAction + ": " + voted + " / " + all);
+	return ((voted / all) >= 0.5);
 }
 //Checks the current queue. If no song is playing,  the queue jumpstarts
 function checkQueue(msg){
@@ -89,8 +128,10 @@ function setStatus(status){
 }
 // Ends the current dispatcher to jump to the next song
 const nextSong = function(msg){
-	dispatcher.end();
-    setGame(settings.default_game);
+	if(vote(msg,"Skip current Song")){
+		dispatcher.end();
+		setGame(settings.default_game);
+	}
 }
 // Runs nextSong and clears queue.
 const flushQueue = function(msg){
@@ -104,10 +145,14 @@ const infoQueue = function(msg){
 		var i = 1;
 		var item;
 		
+		msgString += "0: " + currentlyPlaying + "\n";
+		
 		queue.forEach(function(item){
 			msgString += i + ": " + item["name"] + "\n";
 			i+=1;
 		});
+	} else if(playing){
+		nowPlaying(msg);
 	} else {
 		var msgString = "There aren´t any items in the queue right now." ;
 	}
@@ -161,6 +206,14 @@ const play = function (msg) {
         msg.channel.sendMessage("**REEEEEE**, it's `" + settings.prefix + "play [filename/link]`");
     }
 };
+//says song that is currently playing
+const nowPlaying = function(msg) {
+	if(currentlyPlaying != ""){
+		msg.channel.send("Currently Playing: " + currentlyPlaying);
+	} else {
+		msg.channel.send("Not playing anything right now.");
+	}
+}
 //Disconnect the bot from the voice channel.
 const disconnect = function (msg) {
     if (dispatcher) {
