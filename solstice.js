@@ -4,6 +4,8 @@ const Discord = require("discord.js");
 const ytdl = require("ytdl-core");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
+const stream = require('stream');
+const fs = require('fs');
 var queue = [], playing = false, currentlyPlaying = ""; // global vars for the music bot
 var user = [], votes = {}; // global vars for the voting system
 let dispatcher, userVoice, VoiceConnection; //That's the voice channel the bot is talking in
@@ -72,6 +74,7 @@ function checkQueue(msg){
                 playFromQueue(msg, item);
             }, 500);
         } else if (!playing && dispatcher){
+			currentlyPlaying = "";
             disconnect(msg);
         }
     }
@@ -84,10 +87,14 @@ function addtoQueue(msg,item){
 //Plays the topmost song in the queue
 function playFromQueue(msg, item){
 	if(typeof VoiceConnection !== 'undefined' && VoiceConnection ){
+		votes["Skip current Song"] = []; // reset vote skip
 		msg.channel.sendMessage("Now Playing: " + item["name"]);
+		currentlyPlaying = item["name"];
         setGame(item["name"]);
-		if(item["stream"]){
-			dispatcher = VoiceConnection.playStream(ytdl(item["value"], { 'filter': "audioonly",'quality':'lowest' }));
+		
+		if(item["stream"]){			
+			var readable = ytdl(item["value"], {'filter': 'audioonly'});
+			dispatcher = VoiceConnection.playStream(readable);			
 		} else {
 			dispatcher = VoiceConnection.playFile(item["value"]);
 		}
@@ -97,11 +104,14 @@ function playFromQueue(msg, item){
 			checkQueue(msg);
 		});
 		
+		/**
 		dispatcher.on('error',function(err){
 			console.log("dispatch error: " + err);
 			playing = false;	
 			checkQueue(msg);
 		});	
+		**/
+		
 		playing = true;
 	} else {
 		setTimeout(function(){
@@ -136,7 +146,8 @@ const nextSong = function(msg){
 // Runs nextSong and clears queue.
 const flushQueue = function(msg){
 	queue = [];
-	nextSong(msg);
+	dispatcher.end();
+	setGame(settings.default_game);
 }
 //Lists current queue.
 const infoQueue = function(msg){
@@ -171,6 +182,7 @@ const ping = function (msg) {
 //Stop the current node.js process with an exit message - if called by the bot owner, only. 
 const terminate = function (msg) {
     if (msg.author.id === settings.owner_id) {
+		disconnect(msg);
         msg.channel.sendMessage("Niklas, no! I will not smash the sun! *shattering sound*");
         setTimeout(process.exit,1000);
     } else {
@@ -218,7 +230,7 @@ const nowPlaying = function(msg) {
 const disconnect = function (msg) {
     if (dispatcher) {
         dispatcher.end("Halted by user");
-        flushQueue;
+        flushQueue(msg);
         userVoice.leave();
         msg.channel.send("Left voice channel.");
         dispatcher = null;
@@ -316,6 +328,7 @@ const commands = {
     clear: flushQueue,
 	flush: flushQueue,
 	queue: infoQueue,
+	np: nowPlaying,
     disconnect: disconnect,
     dc: disconnect,
     volume: volume,
