@@ -144,7 +144,9 @@ const nextSong = function(msg){
 // Runs nextSong and clears queue.
 const flushQueue = function(msg){
 	queue = [];
-	dispatcher.end();
+    if (playing) {
+	    dispatcher.end();
+    }
 	setGame(settings.default_game);
 }
 //Lists current queue.
