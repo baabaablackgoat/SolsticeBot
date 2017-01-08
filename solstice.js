@@ -23,15 +23,19 @@ function joinChannel(msg){
 }
 //Checks the current queue. If no song is playing,  the queue jumpstarts
 function checkQueue(msg){
-	if(!playing && queue.length > 0){
-		joinChannel(msg);
-		var item = queue.shift();
-		setTimeout(function(){
-			playFromQueue(msg, item);
-		}, 500);
-	} else if (!playing && dispatcher){
-		disconnect(msg);
-	}
+    if (typeof msg.member.voiceChannelID === "undefined") {
+        msg.channel.sendMessage("You're not in a voicechannel! Couldn't join a voice channel.");
+    } else {
+        if(!playing && queue.length > 0){
+            joinChannel(msg);
+            var item = queue.shift();
+            setTimeout(function(){
+                playFromQueue(msg, item);
+            }, 500);
+        } else if (!playing && dispatcher){
+            disconnect(msg);
+        }
+    }
 }
 //Adds a song to the queue
 function addtoQueue(msg,item){
