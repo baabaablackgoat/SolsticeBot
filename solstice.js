@@ -4,8 +4,6 @@ const Discord = require("discord.js");
 const ytdl = require("ytdl-core");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
-const stream = require('stream');
-const fs = require('fs');
 var queue = [], playing = false, currentlyPlaying = ""; // global vars for the music bot
 var user = [], votes = {}; // global vars for the voting system
 let dispatcher, userVoice, VoiceConnection; //That's the voice channel the bot is talking in
