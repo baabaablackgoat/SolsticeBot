@@ -66,6 +66,22 @@ function playFromQueue(msg, item){
 		}, 100);
 	}	
 };
+//Modifies the bot's game
+function setGame(game){
+    if (typeof game === "string") {
+        bot.user.setGame(game);
+        console.log("Changed Game presence to "+ game);
+    }
+}
+//Modifies the bot's status (takes online,idle,dnd,invisible)
+function setStatus(status){
+    if (status === "online" || status === "idle" || status === "dnd" || status === "invisible"){
+        bot.user.setStatus(status);
+        console.log("Changed Status to "+ status);
+    } else {
+        console.log("Couldn't change status - invalid value was passed");
+    }
+}
 // Ends the current dispatcher to jump to the next song
 const nextSong = function(msg){
 	dispatcher.end();
@@ -94,7 +110,8 @@ const infoQueue = function(msg){
 }
 //Debug
 const debug = function (msg) {
-    //bot.ClientUser.setGame("with a lightswitch");
+    msg.channel.sendCode("js", "//Debug function executed");
+    console.log(msg.member.highestRole.color);
 };
 //Ping, Pong!
 const ping = function (msg) {
@@ -192,10 +209,15 @@ const sound_play = function (msg,type,src) {
 //Return information about the user
 const userinfo = function (msg) {
     let reply = new Discord.RichEmbed();
-    //reply.color = 0;
-    reply.addField(msg.author.username+"#"+msg.author.discriminator);
-    console.log(reply);
-    msg.channel.sendMessage("reply"); 
+    console.log(msg.member);
+    reply.addField("User ID",msg.author.id);
+    reply.addField("Account age",Math.floor(((new Date()-msg.author.createdAt)/86400000))+" days ago"+" | "+msg.author.createdAt);
+    reply.addField("Avatar",msg.author.avatarURL);
+    reply.setColor(msg.member.highestRole.color);
+    reply.setImage(msg.author.avatarURL);
+    reply.timestamp = new Date();
+    reply.setAuthor("Solstice User Info | "+msg.author.username+"#"+msg.author.discriminator,bot.user.avatarURL);
+    msg.channel.sendEmbed(reply); 
 };
 //For the loods
 const fuck = function (msg) {
