@@ -8,8 +8,11 @@ You will most likely need to install a few npm packages.
 Also:
 It is highly possible that your bot will crash if you try to play an audio file.
 This happens because FFMPEG isnt installed on your computer or isn't added to your path.
-For these cases, (and if you're on Windows), I highly suggest you install Chocolatey. (Reminder: Chocolatey is installed via PowerShell, and only works if Get-ExecutionPolicy is *not* set to restricted.)
-https://chocolatey.org/install
+
+For these cases, (and if you're on Windows), I highly suggest you install [Chocolatey.](https://chocolatey.org/install)
+
+(Reminder: Chocolatey is installed via PowerShell, and only works if Get-ExecutionPolicy is *not* set to restricted.)
+
 As soon as it's installed, `choco install ffmpeg` should do the trick.
 
 Your settings.js should look like this:
