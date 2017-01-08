@@ -42,6 +42,7 @@ function addtoQueue(msg,item){
 function playFromQueue(msg, item){
 	if(typeof VoiceConnection !== 'undefined' && VoiceConnection ){
 		msg.channel.sendMessage("Now Playing: " + item["name"]);
+        setGame(item["name"]);
 		if(item["stream"]){
 			dispatcher = VoiceConnection.playStream(ytdl(item["value"], { 'filter': "audioonly",'quality':'lowest' }));
 		} else {
@@ -85,6 +86,7 @@ function setStatus(status){
 // Ends the current dispatcher to jump to the next song
 const nextSong = function(msg){
 	dispatcher.end();
+    setGame(settings.default_game);
 }
 // Runs nextSong and clears queue.
 const flushQueue = function(msg){
@@ -111,7 +113,7 @@ const infoQueue = function(msg){
 //Debug
 const debug = function (msg) {
     msg.channel.sendCode("js", "//Debug function executed");
-    console.log(msg.member.highestRole.color);
+    console.log(queue);
 };
 //Ping, Pong!
 const ping = function (msg) {
@@ -164,6 +166,7 @@ const disconnect = function (msg) {
         msg.channel.send("Left voice channel.");
         dispatcher = null;
         VoiceConnection = null;
+        setGame(settings.default_game);
     } else {
         msg.channel.send("Not in a voice channel!");
     }
@@ -202,6 +205,7 @@ const sound_play = function (msg,type,src) {
             if (!event) {
                 userVoice.leave();
                 dispatcher = null;
+                setGame(settings.default_game);
             }
         });
     });
@@ -305,6 +309,7 @@ bot.on("message", msg => {
 
 bot.on("ready", () => {
     console.log("Solstice is ready.");
+    setGame(settings.default_game);
 });
 
 bot.login(settings.token);
