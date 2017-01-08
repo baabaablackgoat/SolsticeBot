@@ -4,6 +4,7 @@ const Discord = require("discord.js");
 const ytdl = require("ytdl-core");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
+const userlist = require("./userlist.js");
 var queue = [], playing = false, currentlyPlaying = ""; // global vars for the music bot
 var user = [], votes = {}; // global vars for the voting system
 let dispatcher, userVoice, VoiceConnection; //That's the voice channel the bot is talking in
@@ -360,6 +361,7 @@ const files = {
 
 bot.on("message", msg => {
     if (msg.content.startsWith(settings.prefix) && !msg.author.bot) {
+
         var call = msg.content.substring(settings.prefix.length);
         call = call.split(" ");
         if (call[0] in commands) {
