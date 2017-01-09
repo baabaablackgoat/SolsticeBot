@@ -282,13 +282,14 @@ const ping = function (msg) {
 };
 //Stop the current node.js process with an exit message - if called by the bot owner, only. 
 const terminate = function (msg) {
-    if (msg.author.id === settings.owner_id) {
-		disconnect(msg);
+    if (accessCheck(msg,99,false)) {
+        disconnect(msg);
         msg.channel.sendMessage("Niklas, no! I will not smash the sun! *shattering sound*");
         setTimeout(process.exit,1000);
     } else {
         msg.channel.sendMessage(msg.author.username+ ", no! I will not smash the sun!");
     }
+
 };
 //Music and predefined files
 const play = function (msg) {
