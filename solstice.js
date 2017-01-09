@@ -174,7 +174,8 @@ const infoQueue = function(msg){
 //Debug
 const debug = function (msg) {
     msg.channel.sendCode("js", "//Debug function executed");
-    console.log(queue);
+    console.log(userlist.banned);
+    console.log(userlist.banned.indexOf(msg.author.id));
 };
 //Ping, Pong!
 const ping = function (msg) {
@@ -361,7 +362,15 @@ const files = {
 
 bot.on("message", msg => {
     if (msg.content.startsWith(settings.prefix) && !msg.author.bot) {
-
+        if (settings.useDiscordRoles && msg.member.roles.has(settings.botbanned_role_id)) {
+            msg.channel.sendMessage("<@"+msg.author.id+">, you are banned from using me. Consult the Administrators if you believe this was done in an error.");
+            console.log(msg.author.username + " attempted to use a command but is banned");
+            return;
+        } else if (!settings.useDiscordRoles && userlist.banned.indexOf(msg.author.id) >= 0) { 
+            msg.channel.sendMessage("<@"+msg.author.id+">, you are banned from using me. Consult the Administrators if you believe this was done in an error.");
+            console.log(msg.author.username + " attempted to use a command but is banned");
+            return;
+        }
         var call = msg.content.substring(settings.prefix.length);
         call = call.split(" ");
         if (call[0] in commands) {
