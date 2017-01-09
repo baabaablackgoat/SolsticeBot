@@ -94,9 +94,11 @@ function playFromQueue(msg, item){
 		
 		if(item["stream"]){			
 			var readable = ytdl(item["value"], {'filter': 'audioonly'});
-			dispatcher = VoiceConnection.playStream(readable);			
+			dispatcher = VoiceConnection.playStream(readable);
+            dispatcher.passes = 3;			
 		} else {
 			dispatcher = VoiceConnection.playFile(item["value"]);
+            dispatcher.passes = 3;
 		}
 		
 		dispatcher.on('end',function(){
