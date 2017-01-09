@@ -177,7 +177,7 @@ function bannedFor(expires){
 function applyBotBan(mention,time){
     console.log(mention,time);
     if (mention) {
-        if (!mention.startsWith("<@!")){
+        if (!mention.startsWith("<@")){
             return("You asked me to botban someone, but you didn't provide a valid mention. Did the user leave the Guild?");
         } else {
             let bannedUser = mention.substring(3,mention.length - 1);
