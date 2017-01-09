@@ -1,10 +1,11 @@
 "use strict";
 
 const Discord = require("discord.js");
+const fs = require("fs");
 const ytdl = require("ytdl-core");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
-const userlist = require("./userlist.js");
+let userlist = JSON.parse(fs.readFileSync('./userlist.json', 'utf8'));
 var queue = [], playing = false, currentlyPlaying = ""; // global vars for the music bot
 var user = [], votes = {}; // global vars for the voting system
 let dispatcher, userVoice, VoiceConnection; //That's the voice channel the bot is talking in
@@ -135,6 +136,47 @@ function setStatus(status){
         console.log("Couldn't change status - invalid value was passed");
     }
 }
+//Used to show banned people for how long they are banned.
+function bannedFor(expires){
+    if (expires === "never") {
+        return "three thousand eternities *(permanent)*";
+    }
+    else {
+        let time = (expires - new Date()) / 1000;
+        if (time > 60) { //more than 60 seconds
+            time = Math.ceil(time/60);
+            if (time > 60) { //more than 60 minutes
+                time = Math.ceil(time/60);
+                if (time > 24) { //more than 24 hours
+                    time = Math.ceil(time/24);    
+                    return time + " days";
+                } return time + " hours";
+            } else {
+                return time + " minutes";
+            }
+        } else {
+            return time + " seconds";
+        }
+    }
+}
+//Used while botbanning to check if the user is already botbanned. If not, create new entry. If they are, update expiry date.
+function addBotBan(id,expirytime){
+    if (userlist.banned.hasOwnProperty(id)){
+        userlist.banned[id].expires = expirytime;
+        fs.writeFile('userlist.json', JSON.stringify(userlist));
+    } else {
+        userlist.banned[id].expires = expirytime;
+        userlist.banned[id].id = Number(id);
+        fs.writeFile('userlist.json', JSON.stringify(userlist));
+    }
+    if (settings.useDiscordRoles) {
+        if (!settings.botbanned_role_id) {
+            msg.channel.sendMessage("You didn't set up a botbanned role!");
+        } else {
+            //Do shit to assign a role
+        }
+    }
+}
 // Ends the current dispatcher to jump to the next song
 const nextSong = function(msg){
 	if(vote(msg,"Skip current Song")){
@@ -174,8 +216,7 @@ const infoQueue = function(msg){
 //Debug
 const debug = function (msg) {
     msg.channel.sendCode("js", "//Debug function executed");
-    console.log(userlist.banned);
-    console.log(userlist.banned.indexOf(msg.author.id));
+    console.log(userlist);
 };
 //Ping, Pong!
 const ping = function (msg) {
@@ -319,6 +360,56 @@ const fix = function(msg){
 const bang = function(msg){
     msg.channel.sendMessage("We'll bang, okay? :gun:");
 }
+//Botbans users, and adds entries to the JSON file.
+const botban = function(msg){
+    var call = msg.content.substring(settings.prefix.length);
+    call = call.split(" ");
+    if (call[1]) {
+        if (call[1].startsWith("<@!")){
+            let bannedUser = call[1].substring(3,call[1].length - 1);
+            if (call[2]) {
+                if (call[2] === "never"){ 
+                    addBotBan(bannedUser,"never");
+                    msg.channel.sendMessage("The user with the ID "+bannedUser+" has been permanently botbanned.");
+                } else if (call[2].endsWith("s")) {
+                    let expirytime = new Date();
+                    let bantime = Number(call[2].substring(0,call[2].length-1));
+                    expirytime.setSeconds(expirytime.getSeconds() + bantime);
+                    addBotBan(bannedUser,expirytime.getTime());
+                    msg.channel.sendMessage("The user with the ID "+bannedUser+" has been botbanned for "+call[2]);
+                } else if (call[2].endsWith("m")) {
+                    let expirytime = new Date();
+                    let bantime = Number(call[2].substring(0,call[2].length-1));
+                    expirytime.setMinutes(expirytime.getMinutes() + bantime);
+                    addBotBan(bannedUser,expirytime.getTime());
+                    msg.channel.sendMessage("The user with the ID "+bannedUser+" has been botbanned for "+call[2]);
+                } else if (call[2].endsWith("h")) {
+                    let expirytime = new Date();
+                    let bantime = Number(call[2].substring(0,call[2].length-1));
+                    expirytime.setHours(expirytime.getHours() + bantime);
+                    addBotBan(bannedUser,expirytime.getTime());
+                    msg.channel.sendMessage("The user with the ID "+bannedUser+" has been botbanned for "+call[2]);
+                } else if (call[2].endsWith("d")) {
+                    let expirytime = new Date();
+                    let bantime = Number(call[2].substring(0,call[2].length-1));
+                    expirytime.setDate(expirytime.getDate() + bantime);
+                    addBotBan(bannedUser,expirytime.getTime());
+                    msg.channel.sendMessage("The user with the ID "+bannedUser+" has been botbanned for "+call[2]);
+                } else {
+                    msg.channel.sendMessage("You asked me to botban the user with the ID "+bannedUser+" for a specific time, but you didn't provide a valid time.");
+                }
+            } else {
+                //Do stuff to botban the user for the default time
+                msg.channel.sendMessage("The user with the ID "+bannedUser+" has been botbanned for the default time, "+settings.default_bantime);
+            }
+        } else {
+            msg.channel.sendMessage("You asked me to botban someone, but you didn't provide a valid mention. Did the user leave the Guild?");
+        }
+    } else {
+        msg.channel.sendMessage("You asked me to botban someone, but you didn't mention the user.");
+    }
+    console.log(userlist.banned);
+}
 const commands = {
     debug: debug,
     ping: ping,
@@ -339,6 +430,7 @@ const commands = {
     fuck: fuck,
     fix: fix,
     bang: bang,
+    botban: botban,
     break: terminate,
     die: terminate,
     terminate: terminate,
@@ -363,13 +455,24 @@ const files = {
 bot.on("message", msg => {
     if (msg.content.startsWith(settings.prefix) && !msg.author.bot) {
         if (settings.useDiscordRoles && msg.member.roles.has(settings.botbanned_role_id)) {
-            msg.channel.sendMessage("<@"+msg.author.id+">, you are banned from using me. Consult the Administrators if you believe this was done in an error.");
-            console.log(msg.author.username + " attempted to use a command but is banned");
-            return;
-        } else if (!settings.useDiscordRoles && userlist.banned.indexOf(msg.author.id) >= 0) { 
-            msg.channel.sendMessage("<@"+msg.author.id+">, you are banned from using me. Consult the Administrators if you believe this was done in an error.");
-            console.log(msg.author.username + " attempted to use a command but is banned");
-            return;
+            if (userlist.banned[msg.author.id] === undefined) {
+                if (settings.access_role_id) {
+                    msg.channel.sendMessage("<@&"+settings.access_role_id+">, the user <@"+msg.author.id+"> still has the botbanned role, but does not have a ban entry in the bot logs. Please double-check your records, and use `"+settings.prefix+"botban (time)`.");
+                } else {
+                    msg.channel.sendMessage("Attention, Mods! The user <@"+msg.author.id+"> still has the botbanned role, but does not have a ban entry in the bot logs. Please double-check your records, and use `"+settings.prefix+"botban (time)`.");
+                }
+                return;
+            } else if (userlist.banned[msg.author.id].expires === "never" || userlist.banned[msg.author.id].expires > new Date()) {
+                msg.channel.sendMessage("<@"+msg.author.id+">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
+                console.log(msg.author.username + " attempted to use a command but is banned");
+                return;
+            }
+        } else if (!settings.useDiscordRoles && userlist.banned.hasOwnProperty(msg.author.id)) {
+            if (userlist.banned[msg.author.id].expires === "never" || userlist.banned[msg.author.id].expires > new Date()) {
+                msg.channel.sendMessage("<@"+msg.author.id+">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
+                console.log(msg.author.username + " attempted to use a command but is banned");
+                return;
+            } 
         }
         var call = msg.content.substring(settings.prefix.length);
         call = call.split(" ");
