@@ -740,6 +740,8 @@ const commands = {
 
 const files = {
     cena: "cena.mp3",
+    cykablyat: "cykablyat.mp3",
+    exterminate: "exterminate.mp3",
     holzbrett: "holzbrett.mp3",
     lazytown: "lazyboom.mp3",
     drawingdicks: "dicks.mp3",
