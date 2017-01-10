@@ -451,6 +451,9 @@ const botban = function (msg) {
         msg.channel.sendMessage(applyBotBan(call[0], call[1]));
     }
 };
+const help = function (msg) {
+    msg.channel.sendMessage("Soon:tm:");
+}
 const commands = {
     help: {
         function: help,
