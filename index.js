@@ -293,14 +293,9 @@ const ping = function (msg) {
 };
 //Stop the current node.js process with an exit message - if called by the bot owner, only. 
 const terminate = function (msg) {
-    if (accessCheck(msg, 99, false)) {
-        disconnect(msg);
-        msg.channel.sendMessage("Niklas, no! I will not smash the sun! *shattering sound*");
-        setTimeout(process.exit, 1000);
-    } else {
-        msg.channel.sendMessage(msg.author.username + ", no! I will not smash the sun!");
-    }
-
+    disconnect(msg);
+    msg.channel.sendMessage(msg.member.nickname+", no! I will not smash the sun! *shattering sound*");
+    setTimeout(process.exit, 1000);
 };
 //Music and predefined files
 const play = function (msg) {
@@ -444,16 +439,52 @@ const bang = function (msg) {
 };
 //Botbans users, and adds entries to the JSON file.
 const botban = function (msg) {
-    if (accessCheck(msg, 5, "15m")) {
-        var call = msg.content.substring(settings.prefix.length);
-        call = call.split(" ");
-        call.shift();
-        msg.channel.sendMessage(applyBotBan(call[0], call[1]));
-    }
+    var call = msg.content.substring(settings.prefix.length);
+    call = call.split(" ");
+    call.shift();
+    msg.channel.sendMessage(applyBotBan(call[0], call[1]));
 };
 const help = function (msg) {
-    msg.channel.sendMessage("Soon:tm:");
-}
+    let reply = [];
+    let useraccess;
+    if (!userlist.mods.hasOwnProperty(msg.author.id)){useraccess=0;}else{useraccess=userlist.mods[msg.author.id].access;}
+    var call = msg.content.substring(settings.prefix.length);
+    call = call.split(" ");
+    if (call[1]) {
+        if (commands.hasOwnProperty(call[1])){
+            if (useraccess >= commands[call[1]].access) {
+                let embed = new Discord.RichEmbed();
+                embed.setAuthor("Solstice Help Dialogue | "+call[1], bot.user.avatarURL);
+                embed.setColor([255,125,0]);
+                embed.setTitle("TL;DR:");
+                embed.setDescription(commands[call[1]].help_indepth);
+                if (commands[call[1]].help_args) {
+                    embed.addField("Arguments",commands[call[1]].help_args);
+                } else {
+                    embed.addField("Arguments","This command takes no arguments.");
+                }
+                if (commands[call[1]].help_aliases) {
+                    embed.addField("Aliases",commands[call[1]].help_aliases);
+                } else {
+                    embed.addField("Aliases","This command has no aliases.");
+                }
+                embed.addField("Access","Requires access level of "+commands[call[1]].access+" or higher.\n(You are Access Level "+useraccess+".)");
+                msg.channel.sendEmbed(embed);
+            } else {
+                msg.channel.sendMessage("You don't have access to the command `"+call[1]+"`.");
+            }
+        } else {
+            msg.channel.sendMessage("`"+call[1]+"` is not a valid command.");
+        }
+    } else {
+        for (var key in commands){
+            if (!commands[key].hidden && useraccess>=commands[key].access){
+                reply.push(key," ".repeat(15-key.length),commands[key].help_text,"\n");
+            }
+        }
+        msg.channel.sendMessage("```"+reply.join("")+"```");
+    }
+};
 const commands = {
     help: {
         function: help,
@@ -705,7 +736,7 @@ const commands = {
         help_args: false,
         help_aliases: "break,die,terminate",
     },
-}
+};
 
 const files = {
     cena: "cena.mp3",
@@ -723,8 +754,8 @@ const files = {
 };
 
 bot.on("message", msg => {
-    if (msg.content.startsWith(settings.prefix) && !msg.author.bot) {
-        if (settings.useDiscordRoles && msg.member.roles.has(settings.botbanned_role_id)) {
+    if (msg.content.startsWith(settings.prefix) && !msg.author.bot) { //Invoker? Not a bot user?
+        if (settings.useDiscordRoles && msg.member.roles.has(settings.botbanned_role_id)) { //Using Discord Roles (NYI), is the user banned?
             if (userlist.banned[msg.author.id] === undefined) {
                 if (settings.access_role_id) {
                     msg.channel.sendMessage("<@&" + settings.access_role_id + ">, the user <@" + msg.author.id + "> still has the botbanned role, but does not have a ban entry in the bot logs. Please double-check your records, and use `" + settings.prefix + "botban (time)`.");
@@ -746,17 +777,28 @@ bot.on("message", msg => {
         }
         var call = msg.content.substring(settings.prefix.length);
         call = call.split(" ");
-        if (commands.hasOwnProperty(call[0])) {
-            console.log(msg.author.username + " called command: " + call);
-            var fn = commands[call[0]].function;
-            if (typeof fn === 'function') {
-                fn(msg);
-            } else {
-                console.log("couldn't find function");
+        if (commands.hasOwnProperty(call[0])) { //Is this command valid?
+            let useraccess;
+            if (!userlist.mods.hasOwnProperty(msg.author.id)) {useraccess = 0} else {useraccess = userlist.mods[msg.author.id].access} //set useraccess
+            if (commands[call[0]].access <= useraccess) { //Is useraccess equal or greater than commands.command.access?
+                console.log(msg.author.username + " called command: " + call); //run command
+                var fn = commands[call[0]].function;
+                if (typeof fn === 'function') { //Is the function that executes the command available?
+                    fn(msg);
+                } else { //Function not found
+                    console.log("Fatal error - function not resolvable");
+                }
+            } else { //Useraccess was smaller than command access value
+                console.log(msg.author.username+" called command "+call+" but doesn't have access: "+useraccess+"<"+commands[call[0]].access);
+                msg.channel.sendMessage("You do not have access to this command. | "+useraccess+"<"+commands[call[0]].access);
+                if (!commands[call[0]].punishment === false) {
+                    applyBotBan("<@"+msg.author.id+">",commands[call[0]].punishment);
+                    console.log("Automatically botbanned user.");
+                }
             }
-        } else {
+        } else { //User entered unknown command
             console.log(msg.author.username + " called an unknown command: " + call);
-            msg.channel.sendMessage("Unknown command.");
+            msg.channel.sendMessage("Unknown command. `"+settings.prefix+"help`");
         }
     }
 });
