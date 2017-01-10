@@ -234,7 +234,7 @@ function addBotBan(id, expirytime) {
     }
     userlist.banned[id].expires = expirytime;
     userlist.banned[id].id = Number(id);
-    fs.writeFile('userlist.json', JSON.stringify(userlist,"  ","  "));
+    fs.writeFile('./data/userlist.json', JSON.stringify(userlist,"  ","  "));
     if (settings.useDiscordRoles) {
         if (!settings.botbanned_role_id) {
             msg.channel.sendMessage("You didn't set up a botbanned role!");
@@ -543,7 +543,7 @@ bot.on("ready", () => {
         }
         userlist.mods[settings.owner_id].access = 99;
         userlist.mods[settings.owner_id].id = Number(settings.owner_id);
-        fs.writeFile('userlist.json', JSON.stringify(userlist,"  ","  "));
+        fs.writeFile('./data/userlist.json', JSON.stringify(userlist,"  ","  "));
     }
     setGame(settings.default_game);
 });
