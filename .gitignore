@@ -1,5 +1,6 @@
 settings.js
-data/userlist.json
+userlist.json
 node_modules/
 npm-debug.*
 sounds/
+data/userlist.json
