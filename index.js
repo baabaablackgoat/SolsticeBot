@@ -5,144 +5,149 @@ const fs = require("fs");
 const ytdl = require("ytdl-core");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
-let userlist = JSON.parse(fs.readFileSync('./userlist.json', 'utf8'));
-var queue = [], playing = false, currentlyPlaying = ""; // global vars for the music bot
-var user = [], votes = {}; // global vars for the voting system
+let userlist = JSON.parse(fs.readFileSync('./data/userlist.json', 'utf8'));
+let queue = [];
+let playing = false;
+let currentlyPlaying = ""; // global vars for the music bot
+let user = [];
+let votes = {}; // global vars for the voting system
 let dispatcher, userVoice, VoiceConnection; //That's the voice channel the bot is talking in
 
 //Global functions
 //Joins the voicechannel of the message author
 //Voice connection is asynchronous, takes up to 1000ms
-function joinChannel(msg){
-	if(typeof VoiceConnection === 'undefined' || !VoiceConnection ){
-		console.log("connecting to channel")
-		const userVoiceID = msg.member.voiceChannelID;
-		userVoice = msg.guild.channels.get(userVoiceID);
-		refreshUser();
-		userVoice.join().then(connection => {
-			VoiceConnection = connection;
-		});
-	}
+function joinChannel(msg) {
+    if (typeof VoiceConnection === 'undefined' || !VoiceConnection) {
+        console.log("connecting to channel")
+        const userVoiceID = msg.member.voiceChannelID;
+        userVoice = msg.guild.channels.get(userVoiceID);
+        refreshUser();
+        userVoice.join().then(connection => {
+            VoiceConnection = connection;
+        });
+    }
 }
 //a list of users in the voicechannel
-function refreshUser(){
-	user = [];
-	userVoice.members.array().forEach(function(GuildMember){
-		if(GuildMember["user"] && !GuildMember["user"].bot){
-			user.push(GuildMember["user"]);
-		}
-	});
+function refreshUser() {
+    user = [];
+    userVoice.members.array().forEach(function (GuildMember) {
+        if (GuildMember.user && !GuildMember.user.bot) {
+            user.push(GuildMember.user);
+        }
+    });
 }
 //voting function: action acts as id, each vote has a array of client-ids of client that accepted the vote
 //if more than 50% of the current clients in the voice channel voted(yes), the function returns true
-function vote(msg,voteAction){
-	if(!votes[voteAction]){
-		votes[voteAction] = [msg.author.id];
-	} else {
-		votes[voteAction].push(msg.author.id);
-	}
-	
-	if(evaluteVote(msg, voteAction)){
-		votes[voteAction] = [];
-		return true;
-	} else {
-		return false;
-	}	
+function vote(msg, voteAction) {
+    if (!votes[voteAction]) {
+        votes[voteAction] = [msg.author.id];
+    } else {
+        votes[voteAction].push(msg.author.id);
+    }
+
+    if (evaluteVote(msg, voteAction)) {
+        votes[voteAction] = [];
+        return true;
+    } else {
+        return false;
+    }
 }
 //checks if vote is now passed
-function evaluteVote(msg, voteAction){
-	refreshUser();
-	var all = user.length;
-	var voted = 0;
-	user.forEach(function(currentUser){
-		if(votes[voteAction].indexOf(currentUser.id) > -1){
-			voted += 1;
-		}
-	});
-	msg.channel.sendMessage(voteAction + ": " + voted + " / " + all);
-	return ((voted / all) >= 0.5);
+function evaluteVote(msg, voteAction) {
+    refreshUser();
+    var all = user.length;
+    var voted = 0;
+    user.forEach(function (currentUser) {
+        if (votes[voteAction].indexOf(currentUser.id) > -1) {
+            voted += 1;
+        }
+    });
+    msg.channel.sendMessage(voteAction + ": " + voted + " / " + all);
+    return ((voted / all) >= 0.5);
 }
 //Checks the current queue. If no song is playing,  the queue jumpstarts
-function checkQueue(msg){
+function checkQueue(msg) {
     if (typeof msg.member.voiceChannelID === "undefined") {
         msg.channel.sendMessage("You're not in a voicechannel! Couldn't join a voice channel.");
     } else {
-        if(!playing && queue.length > 0){
+        if (!playing && queue.length > 0) {
             joinChannel(msg);
             var item = queue.shift();
-            setTimeout(function(){
+            setTimeout(function () {
                 playFromQueue(msg, item);
             }, 500);
-        } else if (!playing && dispatcher){
-			currentlyPlaying = "";
+        } else if (!playing && dispatcher) {
+            currentlyPlaying = "";
             disconnect(msg);
         }
     }
 }
 //Adds a song to the queue
-function addtoQueue(msg,item){
-	queue.push(item);
-	msg.channel.sendMessage(item["name"] + " was added to queue! Position: " + parseInt(queue.length));
+function addtoQueue(msg, item) {
+    queue.push(item);
+    msg.channel.sendMessage(item.name + " was added to queue! Position: " + parseInt(queue.length));
 }
 //Plays the topmost song in the queue
-function playFromQueue(msg, item){
-	if(typeof VoiceConnection !== 'undefined' && VoiceConnection ){
-		votes["Skip current Song"] = []; // reset vote skip
-		msg.channel.sendMessage("Now Playing: " + item["name"]);
-		currentlyPlaying = item["name"];
-        setGame(item["name"]);
-		
-		if(item["stream"]){			
-			var readable = ytdl(item["value"], {'filter': 'audioonly'});
-			dispatcher = VoiceConnection.playStream(readable);
-            dispatcher.passes = 3;			
-		} else {
-			dispatcher = VoiceConnection.playFile(item["value"]);
+function playFromQueue(msg, item) {
+    if (typeof VoiceConnection !== 'undefined' && VoiceConnection) {
+        votes["Skip current Song"] = []; // reset vote skip
+        msg.channel.sendMessage("Now Playing: " + item.name);
+        currentlyPlaying = item.name;
+        setGame(item.name);
+
+        if (item.stream) {
+            var readable = ytdl(item.value, {
+                'filter': 'audioonly'
+            });
+            dispatcher = VoiceConnection.playStream(readable);
             dispatcher.passes = 3;
-		}
-		
-		dispatcher.on('end',function(){
-			playing = false;
-			checkQueue(msg);
-		});
-		
-		/**
-		dispatcher.on('error',function(err){
-			console.log("dispatch error: " + err);
-			playing = false;	
-			checkQueue(msg);
-		});	
-		**/
-		
-		playing = true;
-	} else {
-		setTimeout(function(){
-			playFromQueue(msg, item);
-			console.log("retry");
-		}, 100);
-	}	
+        } else {
+            dispatcher = VoiceConnection.playFile(item.value);
+            dispatcher.passes = 3;
+        }
+
+        dispatcher.on('end', function () {
+            playing = false;
+            checkQueue(msg);
+        });
+
+        /**
+        dispatcher.on('error',function(err){
+        	console.log("dispatch error: " + err);
+        	playing = false;	
+        	checkQueue(msg);
+        });	
+        **/
+
+        playing = true;
+    } else {
+        setTimeout(function () {
+            playFromQueue(msg, item);
+            console.log("retry");
+        }, 100);
+    }
 };
 //Modifies the bot's game
-function setGame(game){
+function setGame(game) {
     if (typeof game === "string") {
         bot.user.setGame(game);
-        console.log("Changed Game presence to "+ game);
+        console.log("Changed Game presence to " + game);
     }
 }
 //Modifies the bot's status (takes online,idle,dnd,invisible)
-function setStatus(status){
-    if (status === "online" || status === "idle" || status === "dnd" || status === "invisible"){
+function setStatus(status) {
+    if (status === "online" || status === "idle" || status === "dnd" || status === "invisible") {
         bot.user.setStatus(status);
-        console.log("Changed Status to "+ status);
+        console.log("Changed Status to " + status);
     } else {
         console.log("Couldn't change status - invalid value was passed");
     }
 }
 //Checks if the user who called a command that requires special access has the permissions to do so. Returns true if okay. 
-function accessCheck(msg,requiredAccess,punishment){
-    if (!userlist.mods.hasOwnProperty(msg.author.id) || userlist.mods[msg.author.id].access < requiredAccess){
-        if (!punishment === false){ //...if not false (bool) to allow passing the punishment directly
-            applyBotBan("<@!"+msg.author.id+">",punishment);
+function accessCheck(msg, requiredAccess, punishment) {
+    if (!userlist.mods.hasOwnProperty(msg.author.id) || userlist.mods[msg.author.id].access < requiredAccess) {
+        if (!punishment === false) { //...if not false (bool) to allow passing the punishment directly
+            applyBotBan("<@!" + msg.author.id + ">", punishment);
         }
         msg.channel.sendMessage("Access denied.");
         return false;
@@ -151,20 +156,20 @@ function accessCheck(msg,requiredAccess,punishment){
     }
 }
 //Used to show banned people for how long they are banned.
-function bannedFor(expires){
+function bannedFor(expires) {
     if (expires === "never") {
         return "three thousand eternities *(permanent)*";
-    }
-    else {
+    } else {
         let time = (expires - new Date()) / 1000;
         if (time > 60) { //more than 60 seconds
-            time = Math.ceil(time/60);
+            time = Math.ceil(time / 60);
             if (time > 60) { //more than 60 minutes
-                time = Math.ceil(time/60);
+                time = Math.ceil(time / 60);
                 if (time > 24) { //more than 24 hours
-                    time = Math.ceil(time/24);    
+                    time = Math.ceil(time / 24);
                     return time + " days";
-                } return time + " hours";
+                }
+                return time + " hours";
             } else {
                 return time + " minutes";
             }
@@ -174,55 +179,59 @@ function bannedFor(expires){
     }
 }
 //Applies botbans to users. 
-function applyBotBan(mention,time){
-    console.log(mention,time);
+function applyBotBan(mention, time) {
+    console.log(mention, time);
     if (mention) {
-        if (!mention.startsWith("<@")){
-            return("You asked me to botban someone, but you didn't provide a valid mention. Did the user leave the Guild?");
+        if (!mention.startsWith("<@")) {
+            return ("You asked me to botban someone, but you didn't provide a valid mention. Did the user leave the Guild?");
         } else {
-            let bannedUser = mention.substring(3,mention.length - 1);
+            let bannedUser = mention.substring(3, mention.length - 1);
             if (userlist.mods.hasOwnProperty(bannedUser) && userlist.mods[bannedUser].access >= settings.ban_immunity) {
                 return ("The user you tried to ban is immune!");
             }
-            if (!time) {time = settings.default_bantime;}
-            if (time === "never"){ 
-                addBotBan(bannedUser,"never");
-                return("The user with the ID "+bannedUser+" has been permanently botbanned.");
+            if (!time) {
+                time = settings.default_bantime;
+            }
+            if (time === "never") {
+                addBotBan(bannedUser, "never");
+                return ("The user with the ID " + bannedUser + " has been permanently botbanned.");
             } else if (time.endsWith("s")) {
                 let expirytime = new Date();
-                let bantime = Number(time.substring(0,time.length-1));
+                let bantime = Number(time.substring(0, time.length - 1));
                 expirytime.setSeconds(expirytime.getSeconds() + bantime);
-                addBotBan(bannedUser,expirytime.getTime());
-                return("The user with the ID "+bannedUser+" has been botbanned for "+time);
+                addBotBan(bannedUser, expirytime.getTime());
+                return ("The user with the ID " + bannedUser + " has been botbanned for " + time);
             } else if (time.endsWith("m")) {
                 let expirytime = new Date();
-                let bantime = Number(time.substring(0,time.length-1));
+                let bantime = Number(time.substring(0, time.length - 1));
                 expirytime.setMinutes(expirytime.getMinutes() + bantime);
-                addBotBan(bannedUser,expirytime.getTime());
-                return("The user with the ID "+bannedUser+" has been botbanned for "+time);
+                addBotBan(bannedUser, expirytime.getTime());
+                return ("The user with the ID " + bannedUser + " has been botbanned for " + time);
             } else if (time.endsWith("h")) {
                 let expirytime = new Date();
-                let bantime = Number(time.substring(0,time.length-1));
+                let bantime = Number(time.substring(0, time.length - 1));
                 expirytime.setHours(expirytime.getHours() + bantime);
-                addBotBan(bannedUser,expirytime.getTime());
-                return("The user with the ID "+bannedUser+" has been botbanned for "+time);
+                addBotBan(bannedUser, expirytime.getTime());
+                return ("The user with the ID " + bannedUser + " has been botbanned for " + time);
             } else if (time.endsWith("d")) {
                 let expirytime = new Date();
-                let bantime = Number(time.substring(0,time.length-1));
+                let bantime = Number(time.substring(0, time.length - 1));
                 expirytime.setDate(expirytime.getDate() + bantime);
-                addBotBan(bannedUser,expirytime.getTime());
-                return("The user with the ID "+bannedUser+" has been botbanned for "+time);
+                addBotBan(bannedUser, expirytime.getTime());
+                return ("The user with the ID " + bannedUser + " has been botbanned for " + time);
             } else {
-                return("You asked me to botban the user with the ID "+bannedUser+" for a specific time, but you didn't provide a valid time.");
+                return ("You asked me to botban the user with the ID " + bannedUser + " for a specific time, but you didn't provide a valid time.");
             }
         }
     } else {
-        return("You asked me to botban someone, but you didn't provide a mention.");
+        return ("You asked me to botban someone, but you didn't provide a mention.");
     }
 }
 //Used in applyBotBan to check if the user is already botbanned. If not, create new entry. If they are, update expiry date.
-function addBotBan(id,expirytime){
-    if (!userlist.banned.hasOwnProperty(id)){userlist.banned[id] = {};} 
+function addBotBan(id, expirytime) {
+    if (!userlist.banned.hasOwnProperty(id)) {
+        userlist.banned[id] = {};
+    }
     userlist.banned[id].expires = expirytime;
     userlist.banned[id].id = Number(id);
     fs.writeFile('userlist.json', JSON.stringify(userlist));
@@ -238,40 +247,40 @@ function addBotBan(id,expirytime){
 //####     COMMANDS     ####
 //##########################
 // Ends the current dispatcher to jump to the next song
-const nextSong = function(msg){
-	if(vote(msg,"Skip current Song")){
-		dispatcher.end();
-		setGame(settings.default_game);
-	}
-}
-// Runs nextSong and clears queue.
-const flushQueue = function(msg){
-	queue = [];
-    if (playing) {
-	    dispatcher.end();
+const nextSong = function (msg) {
+    if (vote(msg, "Skip current Song")) {
+        dispatcher.end();
+        setGame(settings.default_game);
     }
-	setGame(settings.default_game);
-}
+};
+// Runs nextSong and clears queue.
+const flushQueue = function (msg) {
+    queue = [];
+    if (playing) {
+        dispatcher.end();
+    }
+    setGame(settings.default_game);
+};
 //Lists current queue.
-const infoQueue = function(msg){
-	if(queue.length > 0){
-		var msgString = "Currently in Queue: \n" ;
-		var i = 1;
-		var item;
-		
-		msgString += "0: " + currentlyPlaying + "\n";
-		
-		queue.forEach(function(item){
-			msgString += i + ": " + item["name"] + "\n";
-			i+=1;
-		});
-	} else if(playing){
-		nowPlaying(msg);
-	} else {
-		var msgString = "There aren´t any items in the queue right now." ;
-	}
-	
-	msg.channel.sendMessage(msgString);
+const infoQueue = function (msg) {
+    if (queue.length > 0) {
+        var msgString = "Currently in Queue: \n";
+        var i = 1;
+        var item;
+
+        msgString += "0: " + currentlyPlaying + "\n";
+
+        queue.forEach(function (item) {
+            msgString += i + ": " + item["name"] + "\n";
+            i += 1;
+        });
+    } else if (playing) {
+        nowPlaying(msg);
+    } else {
+        var msgString = "There aren´t any items in the queue right now.";
+    }
+
+    msg.channel.sendMessage(msgString);
 }
 //Debug
 const debug = function (msg) {
@@ -284,12 +293,12 @@ const ping = function (msg) {
 };
 //Stop the current node.js process with an exit message - if called by the bot owner, only. 
 const terminate = function (msg) {
-    if (accessCheck(msg,99,false)) {
+    if (accessCheck(msg, 99, false)) {
         disconnect(msg);
         msg.channel.sendMessage("Niklas, no! I will not smash the sun! *shattering sound*");
-        setTimeout(process.exit,1000);
+        setTimeout(process.exit, 1000);
     } else {
-        msg.channel.sendMessage(msg.author.username+ ", no! I will not smash the sun!");
+        msg.channel.sendMessage(msg.author.username + ", no! I will not smash the sun!");
     }
 
 };
@@ -300,35 +309,45 @@ const play = function (msg) {
     if (call[1]) {
         var file = files[call[1]];
         if (call[1].toLowerCase() in files) {
-			var item = {"name":call[1],"stream":false,"value":"./sounds/"+files[call[1]]};
-			addtoQueue(msg,item);
-			checkQueue(msg);
-        } else if(call[1].startsWith("https://youtu.be") || call[1].startsWith("https://www.youtube.com")) {
+            var item = {
+                "name": call[1],
+                "stream": false,
+                "value": "./sounds/" + files[call[1]]
+            };
+            addtoQueue(msg, item);
+            checkQueue(msg);
+        } else if (call[1].startsWith("https://youtu.be") || call[1].startsWith("https://www.youtube.com")) {
             msg.channel.sendMessage("Grabbing metadata...");
-			var ytInfo = ytdl.getInfo(call[1], { filter: "audioonly" },function(err, info){
-				if(!err){
-					var item = {"name":info["title"],"stream":true,"value":call[1]};
-					addtoQueue(msg,item);
-					checkQueue(msg);
-				} else {
-					msg.channel.sendMessage("Stream not found!");
-					console.log(err);
-				}
-			});
+            var ytInfo = ytdl.getInfo(call[1], {
+                filter: "audioonly"
+            }, function (err, info) {
+                if (!err) {
+                    var item = {
+                        "name": info["title"],
+                        "stream": true,
+                        "value": call[1]
+                    };
+                    addtoQueue(msg, item);
+                    checkQueue(msg);
+                } else {
+                    msg.channel.sendMessage("Stream not found!");
+                    console.log(err);
+                }
+            });
         } else {
-			msg.channel.sendMessage("File/Meme not found");
+            msg.channel.sendMessage("File/Meme not found");
         }
     } else {
         msg.channel.sendMessage("**REEEEEE**, it's `" + settings.prefix + "play [filename/link]`");
     }
 };
 //says song that is currently playing
-const nowPlaying = function(msg) {
-	if(currentlyPlaying != ""){
-		msg.channel.send("Currently Playing: " + currentlyPlaying);
-	} else {
-		msg.channel.send("Not playing anything right now.");
-	}
+const nowPlaying = function (msg) {
+    if (currentlyPlaying != "") {
+        msg.channel.send("Currently Playing: " + currentlyPlaying);
+    } else {
+        msg.channel.send("Not playing anything right now.");
+    }
 }
 //Disconnect the bot from the voice channel.
 const disconnect = function (msg) {
@@ -347,28 +366,30 @@ const disconnect = function (msg) {
 //Change volume of the bot
 const volume = function (msg) {
     var call = msg.content.substring(settings.prefix.length);
-    call = call.split(" "); 
+    call = call.split(" ");
     if (!call[1] && dispatcher) {
-        msg.channel.sendMessage("The current volume is "+dispatcher.volume);
+        msg.channel.sendMessage("The current volume is " + dispatcher.volume);
     } else if (!dispatcher) {
         msg.channel.sendMessage("Sound Dispatcher is offline.");
     } else {
-        if (call[1]>=0 && call[1]<=2) {
+        if (call[1] >= 0 && call[1] <= 2) {
             dispatcher.setVolume(call[1]);
-            msg.channel.sendMessage("Volume has been set to "+call[1]);
+            msg.channel.sendMessage("Volume has been set to " + call[1]);
         } else {
-            msg.channel.sendMessage("Error! Volume can only be set between 0 and 2. Your value "+call[1]+" is out of bounds!");
+            msg.channel.sendMessage("Error! Volume can only be set between 0 and 2. Your value " + call[1] + " is out of bounds!");
         }
     }
 }
 //Used to play the stream/file
-const sound_play = function (msg,type,src) {
-    if (dispatcher) {dispatcher.end("Halted due to two audio files playing at the same time");}
+const sound_play = function (msg, type, src) {
+    if (dispatcher) {
+        dispatcher.end("Halted due to two audio files playing at the same time");
+    }
     const userVoiceID = msg.member.voiceChannelID;
     userVoice = msg.guild.channels.get(userVoiceID);
     userVoice.join().then(connection => {
         if (type === "file") {
-            dispatcher = connection.playFile('./sounds/'+src);
+            dispatcher = connection.playFile('./sounds/' + src);
         } else if (type === "stream") {
             dispatcher = connection.playStream(src);
         } else {
@@ -382,26 +403,26 @@ const sound_play = function (msg,type,src) {
             }
         });
     });
-}
+};
 //Return information about the user
 const userinfo = function (msg) {
     let reply = new Discord.RichEmbed();
     console.log(msg.member);
-    reply.addField("User ID",msg.author.id);
-    reply.addField("Account age",Math.floor(((new Date()-msg.author.createdAt)/86400000))+" days ago"+" | "+msg.author.createdAt);
-    reply.addField("Avatar",msg.author.avatarURL);
+    reply.addField("User ID", msg.author.id);
+    reply.addField("Account age", Math.floor(((new Date() - msg.author.createdAt) / 86400000)) + " days ago" + " | " + msg.author.createdAt);
+    reply.addField("Avatar", msg.author.avatarURL);
     reply.setColor(msg.member.highestRole.color);
     reply.setImage(msg.author.avatarURL);
     reply.timestamp = new Date();
-    reply.setAuthor("Solstice User Info | "+msg.author.username+"#"+msg.author.discriminator,bot.user.avatarURL);
-    msg.channel.sendEmbed(reply); 
+    reply.setAuthor("Solstice User Info | " + msg.author.username + "#" + msg.author.discriminator, bot.user.avatarURL);
+    msg.channel.sendEmbed(reply);
 };
 //For the loods
 const fuck = function (msg) {
     msg.channel.sendMessage("Wow, no, you l00d.");
 };
 //lots of kappa
-const memes = function (msg){
+const memes = function (msg) {
     const memepages = [
         "https://www.reddit.com/r/kreiswichs/",
         "https://www.reddit.com/r/nottheonion/",
@@ -411,25 +432,25 @@ const memes = function (msg){
         "https://www.reddit.com/r/iamverysmart/",
         "https://www.youtube.com/watch?v=yXXyfeWJz1M"
     ];
-    msg.channel.sendMessage(memepages[Math.floor(Math.random()*memepages.length)] +" ( ͡° ͜ʖ ͡°)");
-}
+    msg.channel.sendMessage(memepages[Math.floor(Math.random() * memepages.length)] + " ( ͡° ͜ʖ ͡°)");
+};
 //volvo pls fix
-const fix = function(msg){
+const fix = function (msg) {
     msg.channel.sendMessage("volvo, pls fix http://starecat.com/content/wp-content/uploads/engineer-engifar-engiwherever-you-are-titanic.jpg");
-}
+};
 //we'll bang okay
-const bang = function(msg){
+const bang = function (msg) {
     msg.channel.sendMessage("We'll bang, okay? :gun:");
-}
+};
 //Botbans users, and adds entries to the JSON file.
-const botban = function(msg){
-    if (accessCheck(msg,5,"15m")) {
+const botban = function (msg) {
+    if (accessCheck(msg, 5, "15m")) {
         var call = msg.content.substring(settings.prefix.length);
         call = call.split(" ");
         call.shift();
-        msg.channel.sendMessage(applyBotBan(call[0],call[1]));
+        msg.channel.sendMessage(applyBotBan(call[0], call[1]));
     }
-}
+};
 const commands = {
     debug: debug,
     ping: ping,
@@ -437,11 +458,11 @@ const commands = {
     play: play,
     music: play,
     skip: nextSong,
-	next: nextSong,
+    next: nextSong,
     clear: flushQueue,
-	flush: flushQueue,
-	queue: infoQueue,
-	np: nowPlaying,
+    flush: flushQueue,
+    queue: infoQueue,
+    np: nowPlaying,
     disconnect: disconnect,
     dc: disconnect,
     volume: volume,
@@ -477,22 +498,22 @@ bot.on("message", msg => {
         if (settings.useDiscordRoles && msg.member.roles.has(settings.botbanned_role_id)) {
             if (userlist.banned[msg.author.id] === undefined) {
                 if (settings.access_role_id) {
-                    msg.channel.sendMessage("<@&"+settings.access_role_id+">, the user <@"+msg.author.id+"> still has the botbanned role, but does not have a ban entry in the bot logs. Please double-check your records, and use `"+settings.prefix+"botban (time)`.");
+                    msg.channel.sendMessage("<@&" + settings.access_role_id + ">, the user <@" + msg.author.id + "> still has the botbanned role, but does not have a ban entry in the bot logs. Please double-check your records, and use `" + settings.prefix + "botban (time)`.");
                 } else {
-                    msg.channel.sendMessage("Attention, Mods! The user <@"+msg.author.id+"> still has the botbanned role, but does not have a ban entry in the bot logs. Please double-check your records, and use `"+settings.prefix+"botban (time)`.");
+                    msg.channel.sendMessage("Attention, Mods! The user <@" + msg.author.id + "> still has the botbanned role, but does not have a ban entry in the bot logs. Please double-check your records, and use `" + settings.prefix + "botban (time)`.");
                 }
                 return;
             } else if (userlist.banned[msg.author.id].expires === "never" || userlist.banned[msg.author.id].expires > new Date()) {
-                msg.channel.sendMessage("<@"+msg.author.id+">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
+                msg.channel.sendMessage("<@" + msg.author.id + ">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
                 console.log(msg.author.username + " attempted to use a command but is banned");
                 return;
             }
         } else if (!settings.useDiscordRoles && userlist.banned.hasOwnProperty(msg.author.id)) {
             if (userlist.banned[msg.author.id].expires === "never" || userlist.banned[msg.author.id].expires > new Date()) {
-                msg.channel.sendMessage("<@"+msg.author.id+">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
+                msg.channel.sendMessage("<@" + msg.author.id + ">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
                 console.log(msg.author.username + " attempted to use a command but is banned");
                 return;
-            } 
+            }
         }
         var call = msg.content.substring(settings.prefix.length);
         call = call.split(" ");
@@ -517,7 +538,9 @@ bot.on("ready", () => {
     if (!settings.owner_id) {
         console.log("No owner ID set! Terminate the bot process (hold ctrl+c in your console) and add it.");
     } else {
-        if (!userlist.mods.hasOwnProperty(settings.owner_id)){userlist.mods[settings.owner_id] = {};}  
+        if (!userlist.mods.hasOwnProperty(settings.owner_id)) {
+            userlist.mods[settings.owner_id] = {};
+        }
         userlist.mods[settings.owner_id].access = 99;
         userlist.mods[settings.owner_id].id = Number(settings.owner_id);
         fs.writeFile('userlist.json', JSON.stringify(userlist));

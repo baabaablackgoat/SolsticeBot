@@ -13,4 +13,4 @@ module.exports= {
     botbanned_role_id: "",
     //If useDiscordRoles is true, set this to the ID of the role that is assigned to people who you trust or are supposed to have higher access.
     access_role_id: ""
-}
+};

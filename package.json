@@ -2,7 +2,7 @@
   "name": "solsticebot",
   "version": "0.0.1",
   "description": "can shitpost alot",
-  "main": "solstice.js",
+  "main": "index.js",
   "dependencies": {
     "discord.js": "^11.0.0",
     "opusscript": "0.0.1",
@@ -10,7 +10,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node solstice.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
