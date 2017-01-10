@@ -248,203 +248,23 @@ function addBotBan(id, expirytime) {
 //##########################
 //####     COMMANDS     ####
 //##########################
-// Ends the current dispatcher to jump to the next song
-const nextSong = function (msg) {
-    if (vote(msg, "Skip current Song")) {
-        dispatcher.end();
-        setGame(settings.default_game);
-    }
-};
-// Runs nextSong and clears queue.
-const flushQueue = function (msg) {
-    queue = [];
-    if (playing) {
-        dispatcher.end();
-    }
-    setGame(settings.default_game);
-};
-//Lists current queue.
-const infoQueue = function (msg) {
-    if (queue.length > 0) {
-        var msgString = "Currently in Queue: \n";
-        var i = 1;
-        var item;
 
-        msgString += "0: " + currentlyPlaying + "\n";
-
-        queue.forEach(function (item) {
-            msgString += i + ": " + item["name"] + "\n";
-            i += 1;
-        });
-    } else if (playing) {
-        nowPlaying(msg);
-    } else {
-        var msgString = "There aren´t any items in the queue right now.";
-    }
-
-    msg.channel.sendMessage(msgString);
-}
-//Debug
-const debug = function (msg) {
-    msg.channel.sendCode("js", "//Debug function executed");
-    console.log(userlist);
-};
-//Ping, Pong!
-const ping = function (msg) {
-    msg.channel.sendMessage("Pong!");
-};
-//Stop the current node.js process with an exit message - if called by the bot owner, only. 
-const terminate = function (msg) {
-    disconnect(msg);
-    msg.channel.sendMessage(msg.member.nickname+", no! I will not smash the sun! *shattering sound*");
-    setTimeout(process.exit, 1000);
-};
-//Music and predefined files
-const play = function (msg) {
-    var call = msg.content.substring(settings.prefix.length);
-    call = call.split(" ");
-    if (call[1]) {
-        var file = files[call[1]];
-        if (call[1].toLowerCase() in files) {
-            var item = {
-                "name": call[1],
-                "stream": false,
-                "value": "./sounds/" + files[call[1]]
-            };
-            addtoQueue(msg, item);
-            checkQueue(msg);
-        } else if (call[1].startsWith("https://youtu.be") || call[1].startsWith("https://www.youtube.com")) {
-            msg.channel.sendMessage("Grabbing metadata...");
-            var ytInfo = ytdl.getInfo(call[1], {
-                filter: "audioonly"
-            }, function (err, info) {
-                if (!err) {
-                    var item = {
-                        "name": info["title"],
-                        "stream": true,
-                        "value": call[1]
-                    };
-                    addtoQueue(msg, item);
-                    checkQueue(msg);
-                } else {
-                    msg.channel.sendMessage("Stream not found!");
-                    console.log(err);
-                }
-            });
-        } else {
-            msg.channel.sendMessage("File/Meme not found");
-        }
-    } else {
-        msg.channel.sendMessage("**REEEEEE**, it's `" + settings.prefix + "play [filename/link]`");
-    }
-};
-//says song that is currently playing
-const nowPlaying = function (msg) {
-    if (currentlyPlaying != "") {
-        msg.channel.send("Currently Playing: " + currentlyPlaying);
-    } else {
-        msg.channel.send("Not playing anything right now.");
-    }
-}
-//Disconnect the bot from the voice channel.
-const disconnect = function (msg) {
-    if (dispatcher) {
-        dispatcher.end("Halted by user");
-        flushQueue(msg);
-        userVoice.leave();
-        msg.channel.send("Left voice channel.");
-        dispatcher = null;
-        VoiceConnection = null;
-        setGame(settings.default_game);
-    } else {
-        msg.channel.send("Not in a voice channel!");
-    }
-}
 //Change volume of the bot
-const volume = function (msg) {
-    var call = msg.content.substring(settings.prefix.length);
-    call = call.split(" ");
-    if (!call[1] && dispatcher) {
-        msg.channel.sendMessage("The current volume is " + dispatcher.volume);
-    } else if (!dispatcher) {
-        msg.channel.sendMessage("Sound Dispatcher is offline.");
-    } else {
-        if (call[1] >= 0 && call[1] <= 2) {
-            dispatcher.setVolume(call[1]);
-            msg.channel.sendMessage("Volume has been set to " + call[1]);
-        } else {
-            msg.channel.sendMessage("Error! Volume can only be set between 0 and 2. Your value " + call[1] + " is out of bounds!");
-        }
-    }
-}
+
 //Used to play the stream/file
-const sound_play = function (msg, type, src) {
-    if (dispatcher) {
-        dispatcher.end("Halted due to two audio files playing at the same time");
-    }
-    const userVoiceID = msg.member.voiceChannelID;
-    userVoice = msg.guild.channels.get(userVoiceID);
-    userVoice.join().then(connection => {
-        if (type === "file") {
-            dispatcher = connection.playFile('./sounds/' + src);
-        } else if (type === "stream") {
-            dispatcher = connection.playStream(src);
-        } else {
-            console.log("What the fuck, man?");
-        }
-        dispatcher.on('speaking', (event, listener) => {
-            if (!event) {
-                userVoice.leave();
-                dispatcher = null;
-                setGame(settings.default_game);
-            }
-        });
-    });
-};
+
 //Return information about the user
-const userinfo = function (msg) {
-    let reply = new Discord.RichEmbed();
-    console.log(msg.member);
-    reply.addField("User ID", msg.author.id);
-    reply.addField("Account age", Math.floor(((new Date() - msg.author.createdAt) / 86400000)) + " days ago" + " | " + msg.author.createdAt);
-    reply.addField("Avatar", msg.author.avatarURL);
-    reply.setColor(msg.member.highestRole.color);
-    reply.setImage(msg.author.avatarURL);
-    reply.timestamp = new Date();
-    reply.setAuthor("Solstice User Info | " + msg.author.username + "#" + msg.author.discriminator, bot.user.avatarURL);
-    msg.channel.sendEmbed(reply);
-};
+
 //For the loods
-const fuck = function (msg) {
-    msg.channel.sendMessage("Wow, no, you l00d.");
-};
+
 //lots of kappa
-const memes = function (msg) {
-    const memepages = [
-        "https://www.reddit.com/r/kreiswichs/",
-        "https://www.reddit.com/r/nottheonion/",
-        "https://www.reddit.com/r/showerthoughts/",
-        "https://www.reddit.com/r/GlobalOffensive/",
-        "https://www.reddit.com/r/Overwatch/",
-        "https://www.reddit.com/r/iamverysmart/",
-        "https://www.youtube.com/watch?v=yXXyfeWJz1M"
-    ];
-    msg.channel.sendMessage(memepages[Math.floor(Math.random() * memepages.length)] + " ( ͡° ͜ʖ ͡°)");
-};
+
 //volvo pls fix
-const fix = function (msg) {
-    msg.channel.sendMessage("volvo, pls fix http://starecat.com/content/wp-content/uploads/engineer-engifar-engiwherever-you-are-titanic.jpg");
-};
+
 //we'll bang okay
-const bang = function (msg) {
-    msg.channel.sendMessage("We'll bang, okay? :gun:");
-};
+
 //Botbans users, and adds entries to the JSON file.
-const botban = function (msg) {
-    var raw = msg.content.substring(settings.prefix.length);
-    let call = parseCommands(raw);
-    msg.channel.sendMessage(applyBotBan(call.args[0], call.args[1]));
-};
+
 //Displays a help dialogue for commands / lists all available commands the user has access to
 const help = function (msg) {
     let reply = [];

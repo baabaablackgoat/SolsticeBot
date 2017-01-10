@@ -1,3 +1,24 @@
+//Define all methods
+const sound_play = require("./../methods/sound_play");
+//Define commands
+const help = require("./../commands/help.js");
+const debug = require("./../commands/debug.js");
+const ping = require("./../commands/ping.js");
+const memes = require("./../commands/memes.js");
+const play = require("./../commands/play.js");
+const nextSong = require("./../commands/nextSong.js");
+const flushQueue = require("./../commands/flushQueue.js");
+const infoQueue = require("./../commands/infoQueue.js");
+const nowPlaying = require("./../commands/nowPlaying.js");
+const disconnect = require("./../commands/disconnect.js");
+const volume = require("./../commands/volume.js");
+const userinfo = require("./../commands/userinfo.js");
+const fuck = require("./../commands/fuck.js");
+const bang = require("./../commands/bang.js");
+const fix = require("./../commands/fix.js");
+const botban = require("./../commands/botban.js");
+const terminate = require("./../commands/terminate.js");
+
 module.exports = {
     help: {
         function: help,
