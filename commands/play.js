@@ -12,7 +12,7 @@ module.exports = function (bot,msg,args,options) {
                 "value": "./sounds/" + files[args[0]]
             };
             addtoQueue(bot, msg, item);
-            checkQueue(bot, msg);
+            checkQueue(bot, msg, args, options);
         } else if (args[0].startsWith("https://youtu.be") || args[0].startsWith("https://www.youtube.com")) {
             msg.channel.sendMessage("Grabbing metadata...");
             var ytInfo = ytdl.getInfo(args[0], {
@@ -25,7 +25,7 @@ module.exports = function (bot,msg,args,options) {
                         "value": args[0]
                     };
                     addtoQueue(bot, msg, item);
-                    checkQueue(bot, msg);
+                    checkQueue(bot, msg, args, options);
                 } else {
                     msg.channel.sendMessage("Stream not found!");
                     console.log(err);

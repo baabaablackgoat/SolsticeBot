@@ -16,7 +16,7 @@ bot._instance = {
     dispatcher: null,
     userVoice: null,
     VoiceConnection: null,
-}
+};
 const commands = require("./data/commands");
 
 bot.on("message", msg => {
