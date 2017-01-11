@@ -1,6 +1,8 @@
 module.exports = function (bot,msg,args,options) {
     const ytdl = require("ytdl-core");
     const files = require("./../data/files");
+    const addtoQueue = require("./../methods/addtoQueue");
+    const checkQueue = require("./../methods/checkQueue");
     if (args[0]) {
         var file = files[args[0]];
         if (args[0].toLowerCase() in files) {
@@ -9,10 +11,8 @@ module.exports = function (bot,msg,args,options) {
                 "stream": false,
                 "value": "./sounds/" + files[args[0]]
             };
-            const addtoQueue = require("./../methods/addtoQueue");
-            const checkQueue = require("./../methods/checkQueue");
-            addtoQueue(msg, item);
-            checkQueue(msg);
+            addtoQueue(bot, msg, item);
+            checkQueue(bot, msg);
         } else if (args[0].startsWith("https://youtu.be") || args[0].startsWith("https://www.youtube.com")) {
             msg.channel.sendMessage("Grabbing metadata...");
             var ytInfo = ytdl.getInfo(args[0], {
@@ -20,12 +20,12 @@ module.exports = function (bot,msg,args,options) {
             }, function (err, info) {
                 if (!err) {
                     var item = {
-                        "name": info["title"],
+                        "name": info.title,
                         "stream": true,
                         "value": args[0]
                     };
-                    addtoQueue(msg, item);
-                    checkQueue(msg);
+                    addtoQueue(bot, msg, item);
+                    checkQueue(bot, msg);
                 } else {
                     msg.channel.sendMessage("Stream not found!");
                     console.log(err);

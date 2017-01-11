@@ -1,8 +1,8 @@
 module.exports = function (bot,msg,args,options) {
-    queue = [];
-    if (playing) {
-        dispatcher.end();
+    bot._instance.queue = [];
+    if (bot._instance.playing) {
+        bot._instance.dispatcher.end();
     }
     const setGame = require("./../methods/setGame");
-    setGame(settings.default_game);
+    setGame(options.settings.default_game);
 };

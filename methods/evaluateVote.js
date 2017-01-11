@@ -1,11 +1,11 @@
 //checks if vote is now passed
-module.exports = function(msg, voteAction) {
+module.exports = function(bot, msg, voteAction) {
     const refreshUser = require("./refreshUser");
     refreshUser();
     var all = user.length;
     var voted = 0;
     user.forEach(function (currentUser) {
-        if (votes[voteAction].indexOf(currentUser.id) > -1) {
+        if (bot._dispatcher.votes[voteAction].indexOf(currentUser.id) > -1) {
             voted += 1;
         }
     });

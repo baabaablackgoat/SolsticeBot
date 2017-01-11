@@ -7,13 +7,16 @@ const settings = require("./settings.js");
 const files = require("./data/files");
 const parseCommands = require("./methods/parseCommands");
 let userlist = JSON.parse(fs.readFileSync('./data/userlist.json', 'utf8'));
-let queue = [];
-let playing = false;
-let currentlyPlaying = ""; // global vars for the music bot
-let user = [];
-let votes = {}; // global vars for the voting system
-let dispatcher, userVoice, VoiceConnection; //That's the voice channel the bot is talking in
-
+bot._instance = {
+    queue: [],
+    playing: false,
+    currentlyPlaying: "",
+    user = [],
+    votes = {},
+    dispatcher: null,
+    userVoice: null,
+    VoiceConnection: null,
+}
 const commands = require("./data/commands");
 
 bot.on("message", msg => {

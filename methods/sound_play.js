@@ -1,23 +1,23 @@
 module.exports = function (bot, msg, type, src) {
     const setGame = require("./setGame");
     const settings = require("./../settings");
-    if (dispatcher) {
-        dispatcher.end("Halted due to two audio files playing at the same time");
+    if (bot._instance.dispatcher) {
+        bot._instance.dispatcher.end("Halted due to two audio files playing at the same time");
     }
     const userVoiceID = msg.member.voiceChannelID;
-    userVoice = msg.guild.channels.get(userVoiceID);
-    userVoice.join().then(connection => {
+    bot._instance.userVoice = msg.guild.channels.get(userVoiceID);
+    bot._instance.userVoice.join().then(connection => {
         if (type === "file") {
-            dispatcher = connection.playFile('./sounds/' + src);
+            bot._instance.dispatcher = connection.playFile('./sounds/' + src);
         } else if (type === "stream") {
-            dispatcher = connection.playStream(src);
+            bot._instance.dispatcher = connection.playStream(src);
         } else {
             console.log("What the fuck, man?");
         }
-        dispatcher.on('speaking', (event, listener) => {
+        bot._instance.dispatcher.on('speaking', (event, listener) => {
             if (!event) {
-                userVoice.leave();
-                dispatcher = null;
+                bot._instance.userVoice.leave();
+                bot._instance.dispatcher = null;
                 setGame(bot,settings.default_game);
             }
         });

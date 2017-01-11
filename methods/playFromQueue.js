@@ -1,10 +1,12 @@
 //Plays the topmost song in the queue
-module.exports = function playFromQueue(msg, item) {
+module.exports = function playFromQueue(bot, msg, item) {
     const ytdl = require("ytdl-core");
-    if (typeof VoiceConnection !== 'undefined' && VoiceConnection) {
-        votes["Skip current Song"] = []; // reset vote skip
+    const setGame = require("./setGame");
+    const checkQueue = require("./checkQueue");
+    if (typeof bot._instance.VoiceConnection !== 'undefined' && bot._instance.VoiceConnection) {
+        bot._instance.votes["Skip current Song"] = []; // reset vote skip
         msg.channel.sendMessage("Now Playing: " + item.name);
-        currentlyPlaying = item.name;
+        bot._instance.currentlyPlaying = item.name;
         const setGame = require("./setGame");
         setGame(item.name);
 
@@ -12,16 +14,16 @@ module.exports = function playFromQueue(msg, item) {
             var readable = ytdl(item.value, {
                 'filter': 'audioonly'
             });
-            dispatcher = VoiceConnection.playStream(readable);
-            dispatcher.passes = 3;
+            bot._instance.dispatcher = bot._instance.VoiceConnection.playStream(readable);
+            bot._instance.dispatcher.passes = 3;
         } else {
-            dispatcher = VoiceConnection.playFile(item.value);
-            dispatcher.passes = 3;
+            bot._instance.dispatcher = bot._instance.VoiceConnection.playFile(item.value);
+            bot._instance.dispatcher.passes = 3;
         }
 
-        dispatcher.on('end', function () {
-            playing = false;
-            checkQueue(msg);
+        bot._instance.dispatcher.on('end', function () {
+            bot._instance.playing = false;
+            checkQueue(bot,msg);
         });
 
         /**
@@ -32,10 +34,10 @@ module.exports = function playFromQueue(msg, item) {
         });	
         **/
 
-        playing = true;
+        bot._instance.playing = true;
     } else {
         setTimeout(function () {
-            playFromQueue(msg, item);
+            playFromQueue(bot,msg, item);
             console.log("retry");
         }, 100);
     }

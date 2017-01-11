@@ -1,14 +1,14 @@
 module.exports = function (bot,msg,args,options) {
-    if (dispatcher) {
-        dispatcher.end("Halted by user");
+    if (bot._instance.dispatcher) {
+        bot._instance.dispatcher.end("Halted by user");
         const flushQueue = require("./../methods/flushQueue");
-        flushQueue(msg);
-        userVoice.leave();
+        flushQueue(bot,msg,args,options);
+        bot._instance.userVoice.leave();
         msg.channel.send("Left voice channel.");
-        dispatcher = null;
-        VoiceConnection = null;
+        bot._instance.dispatcher = null;
+        bot._instance.VoiceConnection = null;
         const setGame = require("./../methods/setGame");
-        setGame(settings.default_game);
+        setGame(options.settings.default_game);
     } else {
         msg.channel.send("Not in a voice channel!");
     }
