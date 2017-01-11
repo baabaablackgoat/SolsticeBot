@@ -1,5 +1,3 @@
-//Define all methods
-const sound_play = require("./../methods/sound_play");
 //Define commands
 const help = require("./../commands/help.js");
 const debug = require("./../commands/debug.js");
