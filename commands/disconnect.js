@@ -1,7 +1,7 @@
 module.exports = function (bot,msg,args,options) {
     if (bot._instance.dispatcher) {
         bot._instance.dispatcher.end("Halted by user");
-        const flushQueue = require("./../methods/flushQueue");
+        const flushQueue = require("./flushQueue");
         flushQueue(bot,msg,args,options);
         bot._instance.userVoice.leave();
         msg.channel.send("Left voice channel.");

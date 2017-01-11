@@ -1,5 +1,5 @@
 //checks if vote is now passed
-module.exports = function (bot, msg, voteAction) {
+module.exports = function (bot, msg, voteAction, args, options) {
     const refreshUser = require("./refreshUser");
     const user = refreshUser(bot);
     let all = user.length;

@@ -1,5 +1,5 @@
 //Plays the topmost song in the queue
-module.exports = function playFromQueue(bot, msg, item) {
+module.exports = function playFromQueue(bot, msg, item, args, options) {
     const ytdl = require("ytdl-core");
     const setGame = require("./setGame");
     const checkQueue = require("./checkQueue");
@@ -23,22 +23,12 @@ module.exports = function playFromQueue(bot, msg, item) {
 
         bot._instance.dispatcher.on('end', function () {
             bot._instance.playing = false;
-            checkQueue(bot,msg);
+            checkQueue(bot,msg,args,options);
         });
-
-        /**
-        dispatcher.on('error',function(err){
-        	console.log("dispatch error: " + err);
-        	playing = false;	
-        	checkQueue(msg);
-        });	
-        **/
-
         bot._instance.playing = true;
     } else {
         setTimeout(function () {
-            playFromQueue(bot,msg, item);
-            console.log("retry");
+            playFromQueue(bot,msg,item,args,options);
         }, 100);
     }
 };

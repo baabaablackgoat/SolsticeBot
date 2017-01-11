@@ -4,6 +4,11 @@ module.exports = function (bot,msg,args,options) {
     const addtoQueue = require("./../methods/addtoQueue");
     const checkQueue = require("./../methods/checkQueue");
     if (args[0]) {
+        if (args[0].toLowerCase() === "random" || args[0].toLowerCase() === "rdm") {
+            const temp = Object.keys(files);
+            args[0] = temp[Math.floor(Math.random()*temp.length)];
+            msg.channel.sendMessage(":heart::spades::heart::spades: Playing: "+args[0]);
+        }
         var file = files[args[0]];
         if (args[0].toLowerCase() in files) {
             var item = {

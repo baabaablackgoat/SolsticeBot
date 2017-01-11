@@ -10,11 +10,11 @@ module.exports=function(bot,msg,args,options) {
             var item = bot._instance.queue.shift();
             const playFromQueue = require("./playFromQueue");
             setTimeout(function () {
-                playFromQueue(bot,msg,item);
+                playFromQueue(bot,msg,item,args,options);
             }, 500);
         } else if (!bot._instance.playing && bot._instance.dispatcher) {
             bot._instance.currentlyPlaying = "";
-            const disconnect = require("./disconnect");
+            const disconnect = require("./../commands/disconnect");
             disconnect(bot,msg,args,options);
         }
     }

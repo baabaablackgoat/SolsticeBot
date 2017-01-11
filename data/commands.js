@@ -236,7 +236,7 @@ module.exports = {
         help_text: "Stops the bot.",
         help_indepth: "Closes the node process after returning a goodbye message.",
         help_args: false,
-        help_aliases: "break,die,smash",
+        help_aliases: "break,die,exterminate,smash",
     },
     break: {
         function: terminate,
@@ -246,7 +246,7 @@ module.exports = {
         help_text: "Stops the bot.",
         help_indepth: "Closes the node process after returning a goodbye message.",
         help_args: false,
-        help_aliases: "die,smash,terminate",
+        help_aliases: "die,exterminate,smash,terminate",
     },
     die: {
         function: terminate,
@@ -256,7 +256,7 @@ module.exports = {
         help_text: "Stops the bot.",
         help_indepth: "Closes the node process after returning a goodbye message.",
         help_args: false,
-        help_aliases: "break,smash,terminate",
+        help_aliases: "break,exterminate,smash,terminate",
     },
     smash: {
         function: terminate,
@@ -266,6 +266,16 @@ module.exports = {
         help_text: "Stops the bot.",
         help_indepth: "Closes the node process after returning a goodbye message.",
         help_args: false,
-        help_aliases: "break,die,terminate",
+        help_aliases: "break,die,exterminate,terminate",
+    },
+    exterminate: {
+        function: terminate,
+        access: 99,
+        punishment: "30m",
+        hidden: true,
+        help_text: "Stops the bot.",
+        help_indepth: "Closes the node process after returning a goodbye message.",
+        help_args: false,
+        help_aliases: "break,die,exterminate,terminate",
     },
 };
