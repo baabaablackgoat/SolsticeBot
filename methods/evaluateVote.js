@@ -6,7 +6,7 @@ module.exports = function (bot, msg, voteAction) {
     let voted = 0;
 
     user.forEach(function (currentUser) {
-        if (bot._dispatcher.votes[voteAction].indexOf(currentUser.id) > -1) {
+        if (bot._instance.votes[voteAction].indexOf(currentUser.id) > -1) {
             voted += 1;
         }
     });
