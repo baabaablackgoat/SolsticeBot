@@ -7,8 +7,7 @@ module.exports = function playFromQueue(bot, msg, item, args, options) {
         bot._instance.votes["Skip current Song"] = []; // reset vote skip
         msg.channel.sendMessage("Now Playing: " + item.name);
         bot._instance.currentlyPlaying = item.name;
-        const setGame = require("./setGame");
-        setGame(item.name);
+        setGame(bot,item.name);
 
         if (item.stream) {
             var readable = ytdl(item.value, {

@@ -91,7 +91,7 @@ bot.on("ready", () => {
         fs.writeFile('./data/userlist.json', JSON.stringify(userlist,"  ","  "));
     }
     const setGame = require("./methods/setGame");
-    setGame(settings.default_game);
+    setGame(bot,settings.default_game);
 });
 
 bot.login(settings.token);
