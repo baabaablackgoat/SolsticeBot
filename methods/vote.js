@@ -7,10 +7,10 @@ module.exports = function(bot,msg,voteAction) {
         bot._instance.votes[voteAction].push(msg.author.id);
     }
     const evaluateVote = require("./evaluateVote");
-    if (evaluateVote(msg, voteAction)) {
+    if (evaluateVote(bot, msg, voteAction)) {
         bot._instance.votes[voteAction] = [];
         return true;
     } else {
         return false;
     }
-}
+};

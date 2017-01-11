@@ -6,4 +6,5 @@ module.exports = function(bot) {
             user.push(GuildMember.user);
         }
     });
-}
+    return user;
+};

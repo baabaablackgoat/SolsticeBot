@@ -11,4 +11,4 @@ module.exports = function(bot, msg, voteAction) {
     });
     msg.channel.sendMessage(voteAction + ": " + voted + " / " + all);
     return ((voted / all) >= 0.5);
-}
+};
