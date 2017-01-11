@@ -81,7 +81,7 @@ bot.on("ready", () => {
         userlist.mods[settings.owner_id].id = Number(settings.owner_id);
         fs.writeFile('./data/userlist.json', JSON.stringify(userlist,"  ","  "));
     }
-    setGame(settings.default_game);
+    methods.setGame(settings.default_game);
 });
 
 bot.login(settings.token);
