@@ -1,6 +1,7 @@
 //Applies botbans to users. 
 module.exports = function(msg,mention,time) {
     const addBotBan = require("./addBotBan");
+    const userlist = require("./../data/userlist.json");
     if (mention) {
         if (!mention.startsWith("<@")) {
             return ("You asked me to botban someone, but you didn't provide a valid mention. Did the user leave the Guild?");
