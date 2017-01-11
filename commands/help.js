@@ -1,10 +1,11 @@
 module.exports = function (bot,msg,args,options) {
     const commands = require("./../data/commands.js");
+    const Discord = require("discord.js");
     let reply = [];
     let useraccess = options.useraccess;
-    let commandaccess = commands[args[0]].access;
     if (args[0]) {
         if (commands.hasOwnProperty(args[0])){
+            let commandaccess = commands[args[0]].access;
             if (useraccess >= commandaccess) {
                 let embed = new Discord.RichEmbed();
                 embed.setAuthor("Solstice Help Dialogue | "+args[0], bot.user.avatarURL);

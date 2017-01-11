@@ -44,7 +44,7 @@ bot.on("message", msg => {
             let useraccess;
             if (!userlist.mods.hasOwnProperty(msg.author.id)) {useraccess = 0} else {useraccess = userlist.mods[msg.author.id].access} //set useraccess
             if (commands[call.name].access <= useraccess) { //Is useraccess equal or greater than commands.command.access?
-                console.log(msg.author.username + " called command: " + call); //run command
+                console.log(msg.author.username + " called command: " + call.name + " " + call.args.join(",")); //run command
                 var fn = commands[call.name].function;
                 if (typeof fn === 'function') { //Is the function that executes the command available?
                     let args = call.args;
