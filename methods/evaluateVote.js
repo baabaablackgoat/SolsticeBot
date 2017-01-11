@@ -1,5 +1,6 @@
 //checks if vote is now passed
 module.exports = function(msg, voteAction) {
+    const refreshUser = require("./refreshUser");
     refreshUser();
     var all = user.length;
     var voted = 0;

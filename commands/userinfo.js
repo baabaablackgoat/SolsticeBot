@@ -1,4 +1,4 @@
-module.exports = function (msg) {
+module.exports = function (bot,msg,args,options) {
     let reply = new Discord.RichEmbed();
     console.log(msg.member);
     reply.addField("User ID", msg.author.id);

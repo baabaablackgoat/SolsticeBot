@@ -2,7 +2,6 @@
 
 const Discord = require("discord.js");
 const fs = require("fs");
-const ytdl = require("ytdl-core");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
 const files = require("./data/files");
@@ -15,7 +14,6 @@ let user = [];
 let votes = {}; // global vars for the voting system
 let dispatcher, userVoice, VoiceConnection; //That's the voice channel the bot is talking in
 
-const methods = require("./data/methods");
 const commands = require("./data/commands");
 
 bot.on("message", msg => {
@@ -40,29 +38,37 @@ bot.on("message", msg => {
                 return;
             }
         }
-        var call = msg.content.substring(settings.prefix.length);
-        call = call.split(" ");
-        if (commands.hasOwnProperty(call[0])) { //Is this command valid?
+        var raw = msg.content.substring(settings.prefix.length);
+        let call = parseCommands(raw);
+        if (commands.hasOwnProperty(call.name)) { //Is this command valid?
             let useraccess;
             if (!userlist.mods.hasOwnProperty(msg.author.id)) {useraccess = 0} else {useraccess = userlist.mods[msg.author.id].access} //set useraccess
-            if (commands[call[0]].access <= useraccess) { //Is useraccess equal or greater than commands.command.access?
+            if (commands[call.name].access <= useraccess) { //Is useraccess equal or greater than commands.command.access?
                 console.log(msg.author.username + " called command: " + call); //run command
-                var fn = commands[call[0]].function;
+                var fn = commands[call.name].function;
                 if (typeof fn === 'function') { //Is the function that executes the command available?
-                    fn(msg);
+                    let args = call.args;
+                    let options = {
+                        "access": commands[call.name].access,
+                        "useraccess": useraccess,
+                        "callname": call.name,
+                        "settings": settings,
+                    };
+                    fn(bot,msg,args,options);
                 } else { //Function not found
                     console.log("Fatal error - function not resolvable");
                 }
             } else { //Useraccess was smaller than command access value
-                console.log(msg.author.username+" called command "+call+" but doesn't have access: "+useraccess+"<"+commands[call[0]].access);
-                msg.channel.sendMessage("You do not have access to this command. | "+useraccess+"<"+commands[call[0]].access);
-                if (!commands[call[0]].punishment === false) {
-                    applyBotBan("<@"+msg.author.id+">",commands[call[0]].punishment);
+                console.log(msg.author.username+" called command "+call.name+" but doesn't have access: "+useraccess+"<"+commands[call.name].access);
+                msg.channel.sendMessage("You do not have access to this command. | "+useraccess+"<"+commands[call.name].access);
+                if (!commands[call.name].punishment === false) {
+                    const applyBotBan = require("./methods/applyBotBan");
+                    applyBotBan("<@"+msg.author.id+">",commands[call.name].punishment);
                     console.log("Automatically botbanned user.");
                 }
             }
         } else { //User entered unknown command
-            console.log(msg.author.username + " called an unknown command: " + call);
+            console.log(msg.author.username + " called an unknown command: " + call.name);
             msg.channel.sendMessage("Unknown command. `"+settings.prefix+"help`");
         }
     }
@@ -81,7 +87,8 @@ bot.on("ready", () => {
         userlist.mods[settings.owner_id].id = Number(settings.owner_id);
         fs.writeFile('./data/userlist.json', JSON.stringify(userlist,"  ","  "));
     }
-    methods.setGame(settings.default_game);
+    const setGame = require("./methods/setGame");
+    setGame(settings.default_game);
 });
 
 bot.login(settings.token);

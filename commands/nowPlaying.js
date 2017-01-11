@@ -1,4 +1,4 @@
-module.exports = function (msg) {
+module.exports = function (bot,msg,args,options) {
     if (currentlyPlaying != "") {
         msg.channel.send("Currently Playing: " + currentlyPlaying);
     } else {

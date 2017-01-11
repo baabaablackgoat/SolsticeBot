@@ -1,9 +1,11 @@
 //Plays the topmost song in the queue
-module.exports = function(msg, item) {
+module.exports = function playFromQueue(msg, item) {
+    const ytdl = require("ytdl-core");
     if (typeof VoiceConnection !== 'undefined' && VoiceConnection) {
         votes["Skip current Song"] = []; // reset vote skip
         msg.channel.sendMessage("Now Playing: " + item.name);
         currentlyPlaying = item.name;
+        const setGame = require("./setGame");
         setGame(item.name);
 
         if (item.stream) {

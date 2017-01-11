@@ -1,5 +1,5 @@
 //Modifies the bot's status (takes online,idle,dnd,invisible)
-module.exports = function(status) {
+module.exports = function(bot,status) {
     if (status === "online" || status === "idle" || status === "dnd" || status === "invisible") {
         bot.user.setStatus(status);
         console.log("Changed Status to " + status);

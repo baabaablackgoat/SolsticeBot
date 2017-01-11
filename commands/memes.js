@@ -1,4 +1,4 @@
-module.exports = function (msg) {
+module.exports = function (bot,msg,args,options) {
     const memepages = [
         "https://www.reddit.com/r/kreiswichs/",
         "https://www.reddit.com/r/nottheonion/",

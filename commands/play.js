@@ -1,26 +1,28 @@
-module.exports = function (msg) {
-    var call = msg.content.substring(settings.prefix.length);
-    call = call.split(" ");
-    if (call[1]) {
-        var file = files[call[1]];
-        if (call[1].toLowerCase() in files) {
+module.exports = function (bot,msg,args,options) {
+    const ytdl = require("ytdl-core");
+    const files = require("./../data/files");
+    if (args[0]) {
+        var file = files[args[0]];
+        if (args[0].toLowerCase() in files) {
             var item = {
-                "name": call[1],
+                "name": args[0],
                 "stream": false,
-                "value": "./sounds/" + files[call[1]]
+                "value": "./sounds/" + files[args[0]]
             };
+            const addtoQueue = require("./../methods/addtoQueue");
+            const checkQueue = require("./../methods/checkQueue");
             addtoQueue(msg, item);
             checkQueue(msg);
-        } else if (call[1].startsWith("https://youtu.be") || call[1].startsWith("https://www.youtube.com")) {
+        } else if (args[0].startsWith("https://youtu.be") || args[0].startsWith("https://www.youtube.com")) {
             msg.channel.sendMessage("Grabbing metadata...");
-            var ytInfo = ytdl.getInfo(call[1], {
+            var ytInfo = ytdl.getInfo(args[0], {
                 filter: "audioonly"
             }, function (err, info) {
                 if (!err) {
                     var item = {
                         "name": info["title"],
                         "stream": true,
-                        "value": call[1]
+                        "value": args[0]
                     };
                     addtoQueue(msg, item);
                     checkQueue(msg);
@@ -33,6 +35,6 @@ module.exports = function (msg) {
             msg.channel.sendMessage("File/Meme not found");
         }
     } else {
-        msg.channel.sendMessage("**REEEEEE**, it's `" + settings.prefix + "play [filename/link]`");
+        msg.channel.sendMessage("**REEEEEE**, it's `" + options.settings.prefix + "play [filename/link]`");
     }
 };

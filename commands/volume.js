@@ -1,16 +1,14 @@
-module.exports = function (msg) {
-    var call = msg.content.substring(settings.prefix.length);
-    call = call.split(" ");
-    if (!call[1] && dispatcher) {
+module.exports = function (bot,msg,args,options) {
+    if (!args[0] && dispatcher) {
         msg.channel.sendMessage("The current volume is " + dispatcher.volume);
     } else if (!dispatcher) {
         msg.channel.sendMessage("Sound Dispatcher is offline.");
     } else {
-        if (call[1] >= 0 && call[1] <= 2) {
-            dispatcher.setVolume(call[1]);
-            msg.channel.sendMessage("Volume has been set to " + call[1]);
+        if (args[0] >= 0 && args[0] <= 2) {
+            dispatcher.setVolume(args[0]);
+            msg.channel.sendMessage("Volume has been set to " + args[0]);
         } else {
-            msg.channel.sendMessage("Error! Volume can only be set between 0 and 2. Your value " + call[1] + " is out of bounds!");
+            msg.channel.sendMessage("Error! Volume can only be set between 0 and 2. Your value " + args[0] + " is out of bounds!");
         }
     }
 }

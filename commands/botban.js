@@ -1,5 +1,4 @@
-module.exports = function (msg) {
-    var raw = msg.content.substring(settings.prefix.length);
-    let call = parseCommands(raw);
-    msg.channel.sendMessage(applyBotBan(call.args[0], call.args[1]));
+module.exports = function (bot,msg,args,options) {
+    const applyBotBan = require("./../methods/applyBotBan");
+    msg.channel.sendMessage(applyBotBan(args[0],args[1]));
 };

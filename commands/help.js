@@ -1,34 +1,33 @@
-module.exports = function (msg) {
+module.exports = function (bot,msg,args,options) {
+    const commands = require("./../data/commands.js");
     let reply = [];
-    let useraccess;
-    if (!userlist.mods.hasOwnProperty(msg.author.id)){useraccess=0;}else{useraccess=userlist.mods[msg.author.id].access;}
-    var call = msg.content.substring(settings.prefix.length);
-    call = call.split(" ");
-    if (call[1]) {
-        if (commands.hasOwnProperty(call[1])){
-            if (useraccess >= commands[call[1]].access) {
+    let useraccess = options.useraccess;
+    let commandaccess = commands[args[0]].access;
+    if (args[0]) {
+        if (commands.hasOwnProperty(args[0])){
+            if (useraccess >= commandaccess) {
                 let embed = new Discord.RichEmbed();
-                embed.setAuthor("Solstice Help Dialogue | "+call[1], bot.user.avatarURL);
+                embed.setAuthor("Solstice Help Dialogue | "+args[0], bot.user.avatarURL);
                 embed.setColor([255,125,0]);
                 embed.setTitle("TL;DR:");
-                embed.setDescription(commands[call[1]].help_indepth);
-                if (commands[call[1]].help_args) {
-                    embed.addField("Arguments",commands[call[1]].help_args);
+                embed.setDescription(commands[args[0]].help_indepth);
+                if (commands[args[0]].help_args) {
+                    embed.addField("Arguments",commands[args[0]].help_args);
                 } else {
                     embed.addField("Arguments","This command takes no arguments.");
                 }
-                if (commands[call[1]].help_aliases) {
-                    embed.addField("Aliases",commands[call[1]].help_aliases);
+                if (commands[args[0]].help_aliases) {
+                    embed.addField("Aliases",commands[args[0]].help_aliases);
                 } else {
                     embed.addField("Aliases","This command has no aliases.");
                 }
-                embed.addField("Access","Requires access level of "+commands[call[1]].access+" or higher.\n(You are Access Level "+useraccess+".)");
+                embed.addField("Access","Requires access level of "+commandaccess+" or higher.\n(You are Access Level "+useraccess+".)");
                 msg.channel.sendEmbed(embed);
             } else {
-                msg.channel.sendMessage("You don't have access to the command `"+call[1]+"`.");
+                msg.channel.sendMessage("You don't have access to the command `"+args[0]+"`.");
             }
         } else {
-            msg.channel.sendMessage("`"+call[1]+"` is not a valid command.");
+            msg.channel.sendMessage("`"+args[0]+"` is not a valid command.");
         }
     } else {
         for (var key in commands){
