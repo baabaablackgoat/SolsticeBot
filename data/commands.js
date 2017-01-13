@@ -16,6 +16,7 @@ const bang = require("./../commands/bang.js");
 const fix = require("./../commands/fix.js");
 const botban = require("./../commands/botban.js");
 const terminate = require("./../commands/terminate.js");
+const accessRefresh = require("./../commands/accessRefresh.js");
 
 module.exports = {
     help: {
@@ -55,8 +56,18 @@ module.exports = {
         hidden: false,
         help_text: "Returns a random meme",
         help_indepth: "We Are Number One but it's actually the nutshack",
-        help_args: false,
-        help_aliases: false,
+        help_args: "[memetype]",
+        help_aliases: "meme",
+    },
+    meme: {
+        function: memes,
+        access: 0,
+        punishment: false,
+        hidden: true,
+        help_text: "Returns a random meme",
+        help_indepth: "We Are Number One but it's actually the nutshack",
+        help_args: "[memetype]",
+        help_aliases: "memes",
     },
     play: {
         function: play,
@@ -278,4 +289,14 @@ module.exports = {
         help_args: false,
         help_aliases: "break,die,exterminate,terminate",
     },
+    accessRefresh: {
+        function: accessRefresh,
+        access: 10,
+        punishment: false,
+        hidden: false,
+        help_text: "Reloads Role Access Values",
+        help_indepth: "Reloads all users that have the predefined roles and assigns them the predefined access values.",
+        help_args: false,
+        help_aliases: false,
+    }
 };

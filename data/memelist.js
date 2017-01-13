@@ -2,7 +2,6 @@ module.exports = {
     defaultmemes: {
             prefixes: [],
             values: [
-                "https://www.reddit.com/r/kreiswichs/",
                 "https://www.reddit.com/r/nottheonion/",
                 "https://www.reddit.com/r/showerthoughts/",
                 "https://www.reddit.com/r/GlobalOffensive/",
@@ -39,6 +38,9 @@ module.exports = {
             "https://www.youtube.com/watch?v=nwAL06N3XX4",
             "https://www.youtube.com/watch?v=6_4fhTO4-hg",
             "https://www.youtube.com/watch?v=1mvAecXHFaQ",
+            "https://www.youtube.com/watch?v=95TO_XzM0WU",
+            "https://www.reddit.com/r/kreiswichs/",
+            "https://www.reddit.com/r/the_schulz/",
             ]
         }
 };

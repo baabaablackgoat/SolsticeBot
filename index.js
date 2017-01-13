@@ -6,6 +6,7 @@ const bot = new Discord.Client();
 const settings = require("./settings.js");
 const files = require("./data/files");
 const parseCommands = require("./methods/parseCommands");
+const giveAccess = require("./methods/giveAccess");
 let userlist = JSON.parse(fs.readFileSync('./data/userlist.json', 'utf8'));
 bot._instance = {
     queue: [],
@@ -83,12 +84,7 @@ bot.on("ready", () => {
     if (!settings.owner_id) {
         console.log("No owner ID set! Terminate the bot process (hold ctrl+c in your console) and add it.");
     } else {
-        if (!userlist.mods.hasOwnProperty(settings.owner_id)) {
-            userlist.mods[settings.owner_id] = {};
-        }
-        userlist.mods[settings.owner_id].access = 99;
-        userlist.mods[settings.owner_id].id = Number(settings.owner_id);
-        fs.writeFile('./data/userlist.json', JSON.stringify(userlist,"  ","  "));
+        giveAccess(settings.owner_id,99,bot,null,null,null);
     }
     const setGame = require("./methods/setGame");
     setGame(bot,settings.default_game);
