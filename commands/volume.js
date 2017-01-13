@@ -1,4 +1,4 @@
-module.exports = function (bot, msg, args, options) {
+module.exports = function (bot,msg,args,options) {
     if (!args[0] && bot._instance.dispatcher) {
         msg.channel.sendMessage("The current volume is " + bot._instance.dispatcher.volume);
     } else if (!bot._instance.dispatcher) {

@@ -1,18 +1,17 @@
-const ytdl = require("ytdl-core");
-const files = require("./../data/files");
-const addtoQueue = require("./../methods/addtoQueue");
-const checkQueue = require("./../methods/checkQueue");
-
-module.exports = function (bot, msg, args, options) {
+module.exports = function (bot,msg,args,options) {
+    const ytdl = require("ytdl-core");
+    const files = require("./../data/files");
+    const addtoQueue = require("./../methods/addtoQueue");
+    const checkQueue = require("./../methods/checkQueue");
     if (args[0]) {
         if (args[0].toLowerCase() === "random" || args[0].toLowerCase() === "rdm") {
             const temp = Object.keys(files);
-            args[0] = temp[Math.floor(Math.random() * temp.length)];
-            msg.channel.sendMessage(":heart::spades::heart::spades: Playing: " + args[0]);
+            args[0] = temp[Math.floor(Math.random()*temp.length)];
+            msg.channel.sendMessage(":heart::spades::heart::spades: Playing: "+args[0]);
         }
-
+        var file = files[args[0]];
         if (args[0].toLowerCase() in files) {
-            let item = {
+            var item = {
                 "name": args[0],
                 "stream": false,
                 "value": "./sounds/" + files[args[0]]
@@ -21,7 +20,7 @@ module.exports = function (bot, msg, args, options) {
             checkQueue(bot, msg, args, options);
         } else if (args[0].startsWith("https://youtu.be") || args[0].startsWith("https://www.youtube.com")) {
             msg.channel.sendMessage("Grabbing metadata...");
-            let ytInfo = ytdl.getInfo(args[0], {
+            var ytInfo = ytdl.getInfo(args[0], {
                 filter: "audioonly"
             }, function (err, info) {
                 if (!err) {

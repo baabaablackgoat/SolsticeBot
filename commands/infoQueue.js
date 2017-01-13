@@ -1,12 +1,8 @@
-const nowPlaying = require("./../methods/nowPlaying");
-
-module.exports = function (bot, msg, args, options) {
-    let msgString = "peniz";
-
+module.exports = function (bot,msg,args,options) {
     if (bot._instance.queue.length > 0) {
-        msgString = "Currently in Queue: \n";
-        let i = 1;
-        let item;
+        var msgString = "Currently in Queue: \n";
+        var i = 1;
+        var item;
 
         msgString += "0: " + bot._instance.currentlyPlaying + "\n";
 
@@ -15,9 +11,10 @@ module.exports = function (bot, msg, args, options) {
             i += 1;
         });
     } else if (bot._instance.playing) {
-        nowPlaying(bot, msg, args, options);
+        const nowPlaying = require("./../methods/nowPlaying");
+        nowPlaying(bot,msg,args,options);
     } else {
-        msgString = "There aren´t any items in the queue right now.";
+        var msgString = "There aren´t any items in the queue right now.";
     }
 
     msg.channel.sendMessage(msgString);
