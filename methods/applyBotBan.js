@@ -21,26 +21,34 @@ module.exports = function (msg, mention, time) {
             } else if (time.endsWith("s")) {
                 let expirytime = new Date();
                 let bantime = Number(time.substring(0, time.length - 1));
+
                 expirytime.setSeconds(expirytime.getSeconds() + bantime);
                 addBotBan(msg, bannedUser, expirytime.getTime());
+
                 return ("The user with the ID " + bannedUser + " has been botbanned for " + time);
             } else if (time.endsWith("m")) {
                 let expirytime = new Date();
                 let bantime = Number(time.substring(0, time.length - 1));
+
                 expirytime.setMinutes(expirytime.getMinutes() + bantime);
                 addBotBan(msg, bannedUser, expirytime.getTime());
+
                 return ("The user with the ID " + bannedUser + " has been botbanned for " + time);
             } else if (time.endsWith("h")) {
                 let expirytime = new Date();
                 let bantime = Number(time.substring(0, time.length - 1));
+
                 expirytime.setHours(expirytime.getHours() + bantime);
                 addBotBan(msg, bannedUser, expirytime.getTime());
+
                 return ("The user with the ID " + bannedUser + " has been botbanned for " + time);
             } else if (time.endsWith("d")) {
                 let expirytime = new Date();
                 let bantime = Number(time.substring(0, time.length - 1));
+
                 expirytime.setDate(expirytime.getDate() + bantime);
                 addBotBan(msg, bannedUser, expirytime.getTime());
+
                 return ("The user with the ID " + bannedUser + " has been botbanned for " + time);
             } else {
                 return ("You asked me to botban the user with the ID " + bannedUser + " for a specific time, but you didn't provide a valid time.");
@@ -49,4 +57,4 @@ module.exports = function (msg, mention, time) {
     } else {
         return ("You asked me to botban someone, but you didn't provide a mention.");
     }
-}
+};

@@ -4,10 +4,9 @@ module.exports = function (bot, msg, args, options) {
     let msgString = "peniz";
 
     if (bot._instance.queue.length > 0) {
-        msgString = "Currently in Queue: \n";
         let i = 1;
-        let item;
 
+        msgString = "Currently in Queue: \n";
         msgString += "0: " + bot._instance.currentlyPlaying + "\n";
 
         bot._instance.queue.forEach(function (item) {
@@ -21,4 +20,4 @@ module.exports = function (bot, msg, args, options) {
     }
 
     msg.channel.sendMessage(msgString);
-}
+};

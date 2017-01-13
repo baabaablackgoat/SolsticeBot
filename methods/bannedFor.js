@@ -20,4 +20,4 @@ module.exports = function(expires) {
             return time + " seconds";
         }
     }
-}
+};

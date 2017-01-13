@@ -3,12 +3,15 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const bot = new Discord.Client();
-const settings = require("./settings.js");
+const userlist = require('./data/userlist.json');
+const settings = require("./settings");
 const files = require("./data/files");
 const parseCommands = require("./methods/parseCommands");
 const accessCheck = require("./methods/accessCheck");
 const giveAccess = require("./methods/giveAccess");
-let userlist = JSON.parse(fs.readFileSync('./data/userlist.json', 'utf8'));
+const commands = require("./data/commands");
+const setGame = require("./methods/setGame");
+
 bot._instance = {
     queue: [],
     playing: false,
@@ -19,7 +22,6 @@ bot._instance = {
     userVoice: null,
     VoiceConnection: null,
 };
-const commands = require("./data/commands");
 
 bot.on("message", msg => {
     if (msg.content.startsWith(settings.prefix) && !msg.author.bot) { //Invoker? Not a bot user?
@@ -34,23 +36,31 @@ bot.on("message", msg => {
             } else if (userlist.banned[msg.author.id].expires === "never" || userlist.banned[msg.author.id].expires > new Date()) {
                 msg.channel.sendMessage("<@" + msg.author.id + ">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
                 console.log(msg.author.username + " attempted to use a command but is banned");
+
                 return;
             }
         } else if (!settings.useDiscordRoles && userlist.banned.hasOwnProperty(msg.author.id)) {
             if (userlist.banned[msg.author.id].expires === "never" || userlist.banned[msg.author.id].expires > new Date()) {
                 msg.channel.sendMessage("<@" + msg.author.id + ">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
                 console.log(msg.author.username + " attempted to use a command but is banned");
+
                 return;
             }
         }
-        var raw = msg.content.substring(settings.prefix.length);
+        let raw = msg.content.substring(settings.prefix.length);
         let call = parseCommands(raw);
         if (commands.hasOwnProperty(call.name)) { //Is this command valid?
             let useraccess;
-            if (!userlist.mods.hasOwnProperty(msg.author.id)) {useraccess = 0} else {useraccess = userlist.mods[msg.author.id].access} //set useraccess
+
+            if (!userlist.mods.hasOwnProperty(msg.author.id)) {
+                useraccess = 0;
+            } else {
+                useraccess = userlist.mods[msg.author.id].access;
+            } //set useraccess
             if (accessCheck(msg, commands[call.name].access, commands[call.name].punishment)) { //Is useraccess equal or greater than commands.command.access?
                 console.log(msg.author.username + " called command: " + call.name + " " + call.args.join(",")); //run command
-                var fn = commands[call.name].function;
+                let fn = commands[call.name].function;
+
                 if (typeof fn === 'function') { //Is the function that executes the command available?
                     let args = call.args;
                     let options = {
@@ -59,14 +69,15 @@ bot.on("message", msg => {
                         "callname": call.name,
                         "settings": settings,
                     };
-                    fn(bot,msg,args,options);
+
+                    fn(bot, msg, args, options);
                 } else { //Function not found
                     console.log("Fatal error - function not resolvable");
                 }
             }
         } else { //User entered unknown command
             console.log(msg.author.username + " called an unknown command: " + call.name);
-            msg.channel.sendMessage("Unknown command. `"+settings.prefix+"help`");
+            msg.channel.sendMessage("Unknown command. `" + settings.prefix + "help`");
         }
     }
 });
@@ -77,10 +88,10 @@ bot.on("ready", () => {
     if (!settings.owner_id) {
         console.log("No owner ID set! Terminate the bot process (hold ctrl+c in your console) and add it.");
     } else {
-        giveAccess(settings.owner_id,99,bot,null,null,null);
+        giveAccess(settings.owner_id, 99, bot, null, null, null);
     }
-    const setGame = require("./methods/setGame");
-    setGame(bot,settings.default_game);
+    
+    setGame(bot, settings.default_game);
 });
 
 bot.login(settings.token);

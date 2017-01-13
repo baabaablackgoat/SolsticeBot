@@ -5,8 +5,9 @@ const refreshUser = require("./refreshUser");
 
 module.exports = function(bot,msg) {
     if (typeof bot._instance.VoiceConnection === 'undefined' || !bot._instance.VoiceConnection) {
-        console.log("connecting to channel");
         const userVoiceID = msg.member.voiceChannelID;
+
+        console.log("connecting to channel");
         bot._instance.userVoice = msg.guild.channels.get(userVoiceID);
         refreshUser(bot);
         bot._instance.userVoice.join().then(connection => {

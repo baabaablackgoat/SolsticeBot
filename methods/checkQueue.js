@@ -8,15 +8,15 @@ module.exports = function (bot, msg, args, options) {
         msg.channel.sendMessage("You're not in a voicechannel! Couldn't join a voice channel.");
     } else {
         if (!bot._instance.playing && bot._instance.queue.length > 0) {
-            joinChannel(bot, msg);
             let item = bot._instance.queue.shift();
+
+            joinChannel(bot, msg);
             setTimeout(function () {
                 playFromQueue(bot, msg, item, args, options);
             }, 500);
         } else if (!bot._instance.playing && bot._instance.dispatcher) {
             bot._instance.currentlyPlaying = "";
-
             disconnect(bot, msg, args, options);
         }
     }
-}
+};
