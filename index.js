@@ -6,6 +6,8 @@ const bot = new Discord.Client();
 const settings = require("./settings.js");
 const files = require("./data/files");
 const parseCommands = require("./methods/parseCommands");
+const accessCheck = require("./methods/accessCheck");
+const giveAccess = require("./methods/giveAccess");
 let userlist = JSON.parse(fs.readFileSync('./data/userlist.json', 'utf8'));
 bot._instance = {
     queue: [],
@@ -46,7 +48,7 @@ bot.on("message", msg => {
         if (commands.hasOwnProperty(call.name)) { //Is this command valid?
             let useraccess;
             if (!userlist.mods.hasOwnProperty(msg.author.id)) {useraccess = 0} else {useraccess = userlist.mods[msg.author.id].access} //set useraccess
-            if (commands[call.name].access <= useraccess) { //Is useraccess equal or greater than commands.command.access?
+            if (accessCheck(msg, commands[call.name].access, commands[call.name].punishment)) { //Is useraccess equal or greater than commands.command.access?
                 console.log(msg.author.username + " called command: " + call.name + " " + call.args.join(",")); //run command
                 var fn = commands[call.name].function;
                 if (typeof fn === 'function') { //Is the function that executes the command available?
@@ -60,14 +62,6 @@ bot.on("message", msg => {
                     fn(bot,msg,args,options);
                 } else { //Function not found
                     console.log("Fatal error - function not resolvable");
-                }
-            } else { //Useraccess was smaller than command access value
-                console.log(msg.author.username+" called command "+call.name+" but doesn't have access: "+useraccess+"<"+commands[call.name].access);
-                msg.channel.sendMessage("You do not have access to this command. | "+useraccess+"<"+commands[call.name].access);
-                if (!commands[call.name].punishment === false) {
-                    const applyBotBan = require("./methods/applyBotBan");
-                    applyBotBan("<@"+msg.author.id+">",commands[call.name].punishment);
-                    console.log("Automatically botbanned user.");
                 }
             }
         } else { //User entered unknown command
@@ -83,12 +77,7 @@ bot.on("ready", () => {
     if (!settings.owner_id) {
         console.log("No owner ID set! Terminate the bot process (hold ctrl+c in your console) and add it.");
     } else {
-        if (!userlist.mods.hasOwnProperty(settings.owner_id)) {
-            userlist.mods[settings.owner_id] = {};
-        }
-        userlist.mods[settings.owner_id].access = 99;
-        userlist.mods[settings.owner_id].id = Number(settings.owner_id);
-        fs.writeFile('./data/userlist.json', JSON.stringify(userlist,"  ","  "));
+        giveAccess(settings.owner_id,99,bot,null,null,null);
     }
     const setGame = require("./methods/setGame");
     setGame(bot,settings.default_game);

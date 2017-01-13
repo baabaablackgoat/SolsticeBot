@@ -1,21 +1,22 @@
 //Checks the current queue. If no song is playing,  the queue jumpstarts
+const joinChannel = require("./joinChannel");
+const playFromQueue = require("./playFromQueue");
+const disconnect = require("./../commands/disconnect");
 
-module.exports=function(bot,msg,args,options) {
+module.exports = function (bot, msg, args, options) {
     if (typeof msg.member.voiceChannelID === "undefined") {
         msg.channel.sendMessage("You're not in a voicechannel! Couldn't join a voice channel.");
     } else {
         if (!bot._instance.playing && bot._instance.queue.length > 0) {
-            const joinChannel = require("./joinChannel");
-            joinChannel(bot,msg);
-            var item = bot._instance.queue.shift();
-            const playFromQueue = require("./playFromQueue");
+            joinChannel(bot, msg);
+            let item = bot._instance.queue.shift();
             setTimeout(function () {
-                playFromQueue(bot,msg,item,args,options);
+                playFromQueue(bot, msg, item, args, options);
             }, 500);
         } else if (!bot._instance.playing && bot._instance.dispatcher) {
             bot._instance.currentlyPlaying = "";
-            const disconnect = require("./../commands/disconnect");
-            disconnect(bot,msg,args,options);
+
+            disconnect(bot, msg, args, options);
         }
     }
 }

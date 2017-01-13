@@ -1,6 +1,7 @@
 //checks if vote is now passed
-module.exports = function (bot, msg, voteAction, args, options) {
     const refreshUser = require("./refreshUser");
+    
+module.exports = function (bot, msg, voteAction, args, options) {
     const user = refreshUser(bot);
     let all = user.length;
     let voted = 0;

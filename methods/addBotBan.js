@@ -1,8 +1,9 @@
 //Used in applyBotBan to check if the user is already botbanned. If not, create new entry. If they are, update expiry date.
+const fs = require("fs");
+const settings = require("../settings");
+const userlist = require("../data/userlist.json");
+
 module.exports = function (msg, id, expirytime) {
-    const fs = require("fs");
-    const settings = require("../settings");
-    const userlist = require("../data/userlist.json");
     if (!userlist.banned.hasOwnProperty(id)) {
         userlist.banned[id] = {};
     }
