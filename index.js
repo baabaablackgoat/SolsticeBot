@@ -1,13 +1,17 @@
 "use strict";
 
-const Discord = require("discord.js");
 const fs = require("fs");
+const Discord = require("discord.js");
 const bot = new Discord.Client();
 const settings = require("./settings.js");
 const files = require("./data/files");
 const parseCommands = require("./methods/parseCommands");
 const giveAccess = require("./methods/giveAccess");
+const commands = require("./data/commands");
+const setGame = require("./methods/setGame");
+const applyBotBan = require("./methods/applyBotBan");
 let userlist = JSON.parse(fs.readFileSync('./data/userlist.json', 'utf8'));
+
 bot._instance = {
     queue: [],
     playing: false,
@@ -18,7 +22,7 @@ bot._instance = {
     userVoice: null,
     VoiceConnection: null,
 };
-const commands = require("./data/commands");
+
 
 bot.on("message", msg => {
     if (msg.content.startsWith(settings.prefix) && !msg.author.bot) { //Invoker? Not a bot user?
@@ -42,7 +46,7 @@ bot.on("message", msg => {
                 return;
             }
         }
-        var raw = msg.content.substring(settings.prefix.length);
+        let raw = msg.content.substring(settings.prefix.length);
         let call = parseCommands(raw);
         if (commands.hasOwnProperty(call.name)) { //Is this command valid?
             let useraccess;
@@ -66,7 +70,6 @@ bot.on("message", msg => {
                 console.log(msg.author.username+" called command "+call.name+" but doesn't have access: "+useraccess+"<"+commands[call.name].access);
                 msg.channel.sendMessage("You do not have access to this command. | "+useraccess+"<"+commands[call.name].access);
                 if (!commands[call.name].punishment === false) {
-                    const applyBotBan = require("./methods/applyBotBan");
                     applyBotBan("<@"+msg.author.id+">",commands[call.name].punishment);
                     console.log("Automatically botbanned user.");
                 }
@@ -86,7 +89,7 @@ bot.on("ready", () => {
     } else {
         giveAccess(settings.owner_id,99,bot,null,null,null);
     }
-    const setGame = require("./methods/setGame");
+
     setGame(bot,settings.default_game);
 });
 

@@ -1,8 +1,9 @@
-module.exports = function (bot,msg,args,options) {
-    const vote = require("./../methods/vote");
-    if (vote(bot, msg, "Skip current Song",args,options)) {
+const setGame = require("./../methods/setGame");
+const vote = require("./../methods/vote");
+
+module.exports = function (bot, msg, args, options) {
+    if (vote(bot, msg, "Skip current Song", args, options)) {
         bot._instance.dispatcher.end();
-        const setGame = require("./../methods/setGame");
-        setGame(bot,options.settings.default_game);
+        setGame(bot, options.settings.default_game);
     }
 };

@@ -1,5 +1,6 @@
+const Discord = require("discord.js");
+
 module.exports = function (bot,msg,args,options) {
-    const Discord = require("discord.js");
     let reply = new Discord.RichEmbed();
     console.log(msg.member);
     reply.addField("User ID", msg.author.id);
