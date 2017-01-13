@@ -1,7 +1,8 @@
-const commands = require("./../data/commands.js");
 const Discord = require("discord.js");
+const eachObject = require("../methods/eachObject");
 
 module.exports = function (bot, msg, args, options) {
+    const commands = require("../data/commands"); //needs to be placed in fn to avoid timing issues
     let reply = [];
     let useraccess = options.useraccess;
 
@@ -16,7 +17,7 @@ module.exports = function (bot, msg, args, options) {
                 embed.setColor([255, 125, 0]);
                 embed.setTitle("TL;DR:");
                 embed.setDescription(commands[args[0]].help_indepth);
-                
+
                 if (commands[args[0]].help_args) {
                     embed.addField("Arguments", commands[args[0]].help_args);
                 } else {
@@ -36,11 +37,13 @@ module.exports = function (bot, msg, args, options) {
             msg.channel.sendMessage("`" + args[0] + "` is not a valid command.");
         }
     } else {
-        for (let key in commands) {
-            if (!commands[key].hidden && useraccess >= commands[key].access) {
-                reply.push(key, " ".repeat(15 - key.length), commands[key].help_text, "\n");
+        eachObject(commands, (command,key) => {
+            //console.log(useraccess, commands[key].access);
+            if ((!command.hidden) && (useraccess >= command.access)) {
+                reply.push(key, " ".repeat(15 - key.length), command.help_text, "\n");
             }
-        }
+        });
+
         msg.channel.sendMessage("```" + reply.join("") + "```");
     }
 };
