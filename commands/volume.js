@@ -1,4 +1,4 @@
-module.exports = function (bot,msg,args,options) {
+module.exports = function (bot, msg, args, options) {
     if (!args[0] && bot._instance.dispatcher) {
         msg.channel.sendMessage("The current volume is " + bot._instance.dispatcher.volume);
     } else if (!bot._instance.dispatcher) {
@@ -11,4 +11,4 @@ module.exports = function (bot,msg,args,options) {
             msg.channel.sendMessage("Error! Volume can only be set between 0 and 2. Your value " + args[0] + " is out of bounds!");
         }
     }
-}
+};

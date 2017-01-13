@@ -1,6 +1,8 @@
-module.exports = function (bot,msg,args,options) {
-    const Discord = require("discord.js");
+const Discord = require("discord.js");
+
+module.exports = function (bot, msg, args, options) {
     let reply = new Discord.RichEmbed();
+
     console.log(msg.member);
     reply.addField("User ID", msg.author.id);
     reply.addField("Account age", Math.floor(((new Date() - msg.author.createdAt) / 86400000)) + " days ago" + " | " + msg.author.createdAt);

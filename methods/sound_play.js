@@ -2,10 +2,12 @@ const setGame = require("./setGame");
 const settings = require("./../settings");
 
 module.exports = function (bot, msg, type, src) {
+    const userVoiceID = msg.member.voiceChannelID;
+
     if (bot._instance.dispatcher) {
         bot._instance.dispatcher.end("Halted due to two audio files playing at the same time");
     }
-    const userVoiceID = msg.member.voiceChannelID;
+
     bot._instance.userVoice = msg.guild.channels.get(userVoiceID);
     bot._instance.userVoice.join().then(connection => {
         if (type === "file") {
