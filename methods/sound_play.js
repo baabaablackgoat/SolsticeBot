@@ -1,6 +1,7 @@
+const setGame = require("./setGame");
+const settings = require("./../settings");
+
 module.exports = function (bot, msg, type, src) {
-    const setGame = require("./setGame");
-    const settings = require("./../settings");
     if (bot._instance.dispatcher) {
         bot._instance.dispatcher.end("Halted due to two audio files playing at the same time");
     }
@@ -18,7 +19,7 @@ module.exports = function (bot, msg, type, src) {
             if (!event) {
                 bot._instance.userVoice.leave();
                 bot._instance.dispatcher = null;
-                setGame(bot,settings.default_game);
+                setGame(bot, settings.default_game);
             }
         });
     });
