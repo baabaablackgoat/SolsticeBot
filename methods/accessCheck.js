@@ -3,13 +3,15 @@ const userlist = require("./../data/userlist.json");
 const applyBotBan = require("./applyBotBan");
 
 module.exports = function (msg, requiredAccess, punishment) {
-    if (!userlist.mods.hasOwnProperty(msg.author.id) || userlist.mods[msg.author.id].access < requiredAccess) {
-        if (punishment) { //...if not false (bool) to allow passing the punishment directly
+    let userAccess = 0;
+    if (userlist.mods.hasOwnProperty(msg.author.id)) {userAccess = userlist.mods[msg.author.id].access;}
+    if (userAccess >= requiredAccess) {
+        return true;
+    } else {
+        if (punishment) {
             applyBotBan(msg, "<@!" + msg.author.id + ">", punishment);
         }
-        msg.channel.sendMessage("Access denied.");
+        msg.channel.sendMessage(msg.author.name+", you don't have access to this command. ("+userAccess+"<"+requiredAccess+")");
         return false;
-    } else {
-        return true;
     }
-}
+};
