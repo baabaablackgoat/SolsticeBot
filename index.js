@@ -1,16 +1,15 @@
 "use strict";
 
 const Discord = require("discord.js");
-const fs = require("fs");
 const bot = new Discord.Client();
 const userlist = require('./data/userlist.json');
 const settings = require("./settings");
-const files = require("./data/files");
 const parseCommands = require("./methods/parseCommands");
 const accessCheck = require("./methods/accessCheck");
 const giveAccess = require("./methods/giveAccess");
 const commands = require("./data/commands");
 const setGame = require("./methods/setGame");
+const bannedFor = require("./methods/bannedFor");
 
 bot._instance = {
     queue: [],
@@ -25,21 +24,7 @@ bot._instance = {
 
 bot.on("message", msg => {
     if (msg.content.startsWith(settings.prefix) && !msg.author.bot) { //Invoker? Not a bot user?
-        if (settings.useDiscordRoles && msg.member.roles.has(settings.botbanned_role_id)) { //Using Discord Roles (NYI), is the user banned?
-            if (userlist.banned[msg.author.id] === undefined) {
-                if (settings.access_role_id) {
-                    msg.channel.sendMessage("<@&" + settings.access_role_id + ">, the user <@" + msg.author.id + "> still has the botbanned role, but does not have a ban entry in the bot logs. Please double-check your records, and use `" + settings.prefix + "botban (time)`.");
-                } else {
-                    msg.channel.sendMessage("Attention, Mods! The user <@" + msg.author.id + "> still has the botbanned role, but does not have a ban entry in the bot logs. Please double-check your records, and use `" + settings.prefix + "botban (time)`.");
-                }
-                return;
-            } else if (userlist.banned[msg.author.id].expires === "never" || userlist.banned[msg.author.id].expires > new Date()) {
-                msg.channel.sendMessage("<@" + msg.author.id + ">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
-                console.log(msg.author.username + " attempted to use a command but is banned");
-
-                return;
-            }
-        } else if (!settings.useDiscordRoles && userlist.banned.hasOwnProperty(msg.author.id)) {
+        if (userlist.banned.hasOwnProperty(msg.author.id)) {
             if (userlist.banned[msg.author.id].expires === "never" || userlist.banned[msg.author.id].expires > new Date()) {
                 msg.channel.sendMessage("<@" + msg.author.id + ">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
                 console.log(msg.author.username + " attempted to use a command but is banned");
