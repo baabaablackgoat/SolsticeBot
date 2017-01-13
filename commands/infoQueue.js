@@ -1,4 +1,4 @@
-const nowPlaying = require("./../methods/nowPlaying");
+const nowPlaying = require("./nowPlaying");
 
 module.exports = function (bot, msg, args, options) {
     let msgString = "peniz";
