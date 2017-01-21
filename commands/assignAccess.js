@@ -5,7 +5,7 @@ module.exports = function (bot, msg, args, options) {
     if (getIDfromMention(msg)) {
         const level = Number(args[1]);
 
-        if (level) {
+        if (!isNaN(level)) {
             giveAccess(getIDfromMention(msg), level, bot, msg, args, options);
             msg.channel.sendMessage("Assigned access " + level + " to the user with the ID " + getIDfromMention(msg));
         } else {
