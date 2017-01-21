@@ -1,6 +1,7 @@
 module.exports = function(msg) {
-    let mentions = msg.mentions.users;
-    mentions.map(function(mention){
+    const mentions = msg.mentions.users.array();
+
+    return mentions.map(function(mention){
          return mention.id;
     });
 };
