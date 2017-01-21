@@ -17,6 +17,7 @@ const fix = require("./../commands/fix.js");
 const botban = require("./../commands/botban.js");
 const terminate = require("./../commands/terminate.js");
 const accessRefresh = require("./../commands/accessRefresh.js");
+const assignAccess = require("./../commands/assignAccess.js");
 
 module.exports = {
     help: {
@@ -229,6 +230,26 @@ module.exports = {
         help_args: false,
         help_aliases: false,
     },
+    accessRefresh: {
+        function: accessRefresh,
+        access: 10,
+        punishment: false,
+        hidden: false,
+        help_text: "Reloads Role Access Values",
+        help_indepth: "Reloads all users that have the predefined roles and assigns them the predefined access values.",
+        help_args: false,
+        help_aliases: false,
+    },
+    assignAccess: {
+        function: assignAccess,
+        access: 10,
+        punishment: false,
+        hidden: false,
+        help_text: "Gives the mentioned user bot access.",
+        help_indepth: "The mentioned user will recieve bot access as high as the specified level. Cannot assign a higher access level than the caller has.",
+        help_args: "[@mention] [accesslevel]",
+        help_aliases: false,
+    },
     botban: {
         function: botban,
         access: 5,
@@ -289,14 +310,4 @@ module.exports = {
         help_args: false,
         help_aliases: "break,die,exterminate,terminate",
     },
-    accessRefresh: {
-        function: accessRefresh,
-        access: 10,
-        punishment: false,
-        hidden: false,
-        help_text: "Reloads Role Access Values",
-        help_indepth: "Reloads all users that have the predefined roles and assigns them the predefined access values.",
-        help_args: false,
-        help_aliases: false,
-    }
 };
