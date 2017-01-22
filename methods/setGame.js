@@ -5,4 +5,4 @@ module.exports = function(bot,game) {
         bot.user.setGame(game);
         console.log("Changed Game presence to " + game);
     }
-}
+};
