@@ -20,6 +20,7 @@ const accessRefresh = require("./../commands/accessRefresh.js");
 const assignAccess = require("./../commands/assignAccess.js");
 const serverban = require("./../commands/ban.js");
 const kick = require("./../commands/kick.js");
+const roleban = require("./../commands/roleban.js");
 
 module.exports = {
     help: {
@@ -269,6 +270,16 @@ module.exports = {
         hidden: false,
         help_text: "Bans a user from the server the message was sent in.",
         help_indepth: "Bans the mentioned user from the server.",
+        help_args: "[@mention]",
+        help_aliases: false,
+    },
+    roleban: {
+        function: roleban,
+        access: 5,
+        punishment: "15m",
+        hidden: false,
+        help_text: "If enabled, rolebans a user.",
+        help_indepth: "Rolebans the mentioned user. This basically means that this user is assigned a role that has been preconfigured to not allow chatting in any channel except for one.",
         help_args: "[@mention]",
         help_aliases: false,
     },
