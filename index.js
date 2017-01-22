@@ -73,7 +73,7 @@ bot.on("ready", () => {
     if (!settings.owner_id) {
         console.log("No owner ID set! Terminate the bot process (hold ctrl+c in your console) and add it.");
     } else {
-        giveAccess(settings.owner_id, 99, bot, null, null, null);
+        giveAccess([settings.owner_id], 99, bot, null, null, null);
     }
     
     setGame(bot, settings.default_game);
