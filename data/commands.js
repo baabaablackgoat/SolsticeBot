@@ -18,6 +18,8 @@ const botban = require("./../commands/botban.js");
 const terminate = require("./../commands/terminate.js");
 const accessRefresh = require("./../commands/accessRefresh.js");
 const assignAccess = require("./../commands/assignAccess.js");
+const serverban = require("./../commands/ban.js");
+const kick = require("./../commands/kick.js");
 
 module.exports = {
     help: {
@@ -258,6 +260,26 @@ module.exports = {
         help_text: "Bans a user from using the bot.",
         help_indepth: "Bans a mentioned user for a specified time. Set the time to 'never' and the ban will be permanent.",
         help_args: "[@mention] [time in letter notation (30m)]",
+        help_aliases: false,
+    },
+    ban: {
+        function: serverban,
+        access: 10,
+        punishment: "45m",
+        hidden: false,
+        help_text: "Bans a user from the server the message was sent in.",
+        help_indepth: "Bans the mentioned user from the server.",
+        help_args: "[@mention]",
+        help_aliases: false,
+    },
+    kick: {
+        function: kick,
+        access: 10,
+        punishment: "15m",
+        hidden: false,
+        help_text: "Kicks a user from the server the message was sent in.",
+        help_indepth: "Kicks the mentioned user from the server.",
+        help_args: "[@mention]",
         help_aliases: false,
     },
     terminate: {

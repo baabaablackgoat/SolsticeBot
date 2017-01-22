@@ -9,7 +9,7 @@ module.exports = function (msg, requiredAccess, punishment) {
         return true;
     } else {
         if (punishment) {
-            applyBotBan(msg, "<@!" + msg.author.id + ">", punishment);
+            applyBotBan(msg,[msg.author.id], punishment, null);
         }
         msg.channel.sendMessage(msg.author.username+", you don't have access to this command. ("+userAccess+"<"+requiredAccess+")");
         
