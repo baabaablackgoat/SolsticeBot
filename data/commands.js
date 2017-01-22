@@ -196,8 +196,8 @@ module.exports = {
         punishment: false,
         hidden: false,
         help_text: "Shows user info",
-        help_indepth: "Shows a few informations about the person calling the command. Info of other users soon:tm:",
-        help_args: false,
+        help_indepth: "Shows a few informations about the person calling the command or a mentioned user.",
+        help_args: "[@mention]",
         help_aliases: false,
     },
     fuck: {
