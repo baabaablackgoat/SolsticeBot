@@ -3,6 +3,7 @@ const getIDfromMention = require("./../methods/getIDfromMention");
 module.exports = function(bot,msg,args,options) {
     if (!options.settings.roleban.enabled) {
         msg.channel.sendMessage("Rolebans have not been enabled. Ask the bot owner to enable them in settings.js.");
+        return;
     }
     let mentions = getIDfromMention(msg);
     if (mentions.length < 1) {
@@ -39,7 +40,7 @@ module.exports = function(bot,msg,args,options) {
                     for (let k = 0; k < user_roles.length; k++) {
                         if (role_list.indexOf(user_roles[k]) === -1) {
                             msg.guild.members.get(mentions[i]).removeRole(user_roles[k])
-                                .catch(err => {console.log(err)});
+                                .catch(err => {});
                         }
                     }
                 } else {
