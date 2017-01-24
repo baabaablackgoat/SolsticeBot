@@ -7,6 +7,11 @@ module.exports = function(bot,msg,args,options) {
         return;
     }
     for (let i=0;i<mentions.length;i++){
+        if (mentions[i] === msg.author.id) {
+            msg.guild.members.get(mentions[i]).addRole(options.settings.rolebanned_role);
+            msg.channel.sendMessage("You successfully rolebanned yourself. Congratulations, great work. http://i.giphy.com/9uoYC7cjcU6w8.gif");
+            return;
+        }
         let access = compareUserAccess(msg, msg.author.id, mentions[i], false, true);
         if(access === "err_role") {
             msg.channel.sendMessage("You cannot botban this user. They have a equal or higher role than you.");
