@@ -16,7 +16,7 @@ module.exports = function (bot, msg, args, options) {
         }
     });
     eachObject(assignedUserAccess, (val, key, index) => {
-        giveAccess(key, Math.max(...val), bot, msg, args, options);
+        giveAccess([key], Math.max(...val), false, bot, msg, args, options);
     });
     msg.channel.sendMessage("Access Values have been refreshed.");
 };
