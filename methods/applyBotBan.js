@@ -1,13 +1,19 @@
 //Applies botbans to users. 
 const addBotBan = require("./addBotBan");
 const userlist = require("./../data/userlist.json");
+const compareUserAccess = require("./../methods/compareUserAccess");
 
 module.exports = function (msg, mention, time, options) {
     if (mention.length > 0) {
         for(let i=0; i<mention.length; i++){
             let bannedUser = mention[i];
+            if (compareUserAccess(msg, msg.author.id,mention[i],true,true) !== "clear") {
+                msg.channel.sendMessage("The user you tried to botban has a equal/higher role or access level than you!");
+                return;
+            }
             if (userlist.mods.hasOwnProperty(bannedUser) && userlist.mods[bannedUser].access >= options.settings.ban_immunity) {
                 msg.channel.sendMessage("The user you tried to ban is immune!");
+                return;
             }
             if (!time) {
                 time = options.settings.default_bantime;

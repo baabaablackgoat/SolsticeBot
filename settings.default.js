@@ -7,7 +7,7 @@ module.exports= {
     prefix: "!",
     //Set the "game" the bot is playing by default.
     default_game: "with unhandled promises",
-    //Use this object to assign access values to any role. ("Role id":access)
+    //Use this object to assign access values to any role. ("Role id":access) NYI
     access_roles: {
         "178640889285967872": 3, // Royal Family
         "267809120059392000": 5, // Bot 🔑 role
@@ -16,5 +16,16 @@ module.exports= {
     //If no ban time is specified, bot-ban a user for this time. s = seconds, m = minutes, h = hours, d = days, "never" = permanent
     default_bantime: "3d",
     //Anyone in userlist.json with an access value of this or higher is immune to the botban.
-    ban_immunity: 5
+    ban_immunity: 5,
+    //The following object is used to define roleban stuff.
+    roleban : {
+        //Set to false if you do not wish to use this feature. 
+        enabled: true, 
+        //Enter the ID of the rolebanned role.
+        role: "267801226647699457", 
+        //false or "false" will not remove roles from target. "whitelist" removes all roles that are defined in role_list, "blacklist" removes all roles but the ones in role_list.
+        strip_roles: false,
+        //Used in conjunction with strip_roles, see comment above.
+        role_list: []
+    }
 };

@@ -1,9 +1,4 @@
-const getIDfromMention = require("./../methods/getIDfromMention");
+const getRoleID = require("./../methods/getRoleID");
 module.exports = function (bot, msg, args, options) {
-    msg.channel.sendCode("js", "//Debug function executed");
-    if (getIDfromMention(msg).length > 0){
-        console.log("true");
-    } else {
-        console.log("false");
-    }
+    msg.channel.sendMessage("Out of order.");
 };
