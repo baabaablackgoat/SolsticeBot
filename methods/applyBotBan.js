@@ -8,6 +8,7 @@ module.exports = function (msg, mention, time, options) {
             let bannedUser = mention[i];
             if (userlist.mods.hasOwnProperty(bannedUser) && userlist.mods[bannedUser].access >= options.settings.ban_immunity) {
                 msg.channel.sendMessage("The user you tried to ban is immune!");
+                return;
             }
             if (!time) {
                 time = options.settings.default_bantime;
