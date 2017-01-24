@@ -8,16 +8,16 @@ module.exports = function(bot,msg,args,options) {
     }
     for (let i=0;i<mentions.length;i++){
         if (mentions[i] === msg.author.id) {
-            msg.guild.members.get(mentions[i]).addRole(options.settings.rolebanned_role);
+            msg.guild.members.get(mentions[i]).addRole(options.settings.roleban.role);
             msg.channel.sendMessage("You successfully rolebanned yourself. Congratulations, great work. http://i.giphy.com/9uoYC7cjcU6w8.gif");
             return;
         }
         let access = compareUserAccess(msg, msg.author.id, mentions[i], false, true);
         if(access === "err_role") {
-            msg.channel.sendMessage("You cannot botban this user. They have a equal or higher role than you.");
+            msg.channel.sendMessage("You cannot roleban this user. They have a equal or higher role than you.");
             return;
         } else if (access === "clear") {
-            msg.guild.members.get(mentions[i]).addRole(options.settings.rolebanned_role);
+            msg.guild.members.get(mentions[i]).addRole(options.settings.roleban.role);
             msg.channel.sendMessage(msg.guild.members.get(mentions[i]).displayName + " has been rolebanned.");
         } else {
             msg.channel.sendMessage("`Internal Error, bug the bot owner or @TrueMGF#0114 about this`");

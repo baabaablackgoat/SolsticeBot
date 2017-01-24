@@ -17,6 +17,15 @@ module.exports= {
     default_bantime: "3d",
     //Anyone in userlist.json with an access value of this or higher is immune to the botban.
     ban_immunity: 5,
-    //Use this object to define the Roleban role, in case you wish to use this feature.
-    rolebanned_role: "267801226647699457"
+    //The following object is used to define roleban stuff.
+    roleban : {
+        //Set to false if you do not wish to use this feature. 
+        enabled: true, 
+        //Enter the ID of the rolebanned role.
+        role: "267801226647699457", 
+        //false or "false" will not remove roles from target. "whitelist" removes all roles that are defined in role_list, "blacklist" removes all roles but the ones in role_list.
+        strip_roles: false,
+        //Used in conjunction with strip_roles, see comment above.
+        role_list: []
+    }
 };
