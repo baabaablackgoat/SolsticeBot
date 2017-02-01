@@ -6,6 +6,7 @@ module.exports = function (bot, msg, args, options) {
     let keywords = [];
     let purgeBots = false;
     let purgeEmbeds = false;
+    let purgeSystem = false;
     let lastArg = Number(args[args.length - 1]);
     let purgeAmount;
 
@@ -25,6 +26,8 @@ module.exports = function (bot, msg, args, options) {
             purgeBots = true;
         } else if (arg === "embed" || arg === "embeds") {
             purgeEmbeds = true;
+        } else if (arg === "system") {
+            purgeSystem = true;
         } else {
             const testForMention = mentionRegex.test(arg);
 
@@ -36,10 +39,11 @@ module.exports = function (bot, msg, args, options) {
     let purge_settings = {
         bots: purgeBots,
         embeds: purgeEmbeds,
+        system: purgeSystem,
         amount: purgeAmount
     };
     const runPurge = function(bot,msg,args,keywords,mentions,purge_settings){
-        if (keywords.length === 0 && mentions.length === 0 && !purge_settings.bots && !purge_settings.embeds) { //No keywords, no mentions, no specified purge types? Time for annihilation!
+        if (keywords.length === 0 && mentions.length === 0 && !purge_settings.bots && !purge_settings.embeds && !purge_settings.system) { //No keywords, no mentions, no specified purge types? Time for annihilation!
             if (purge_settings.amount < 1) {msg.channel.sendMessage("There was an attempt https://media.giphy.com/media/7rj2ZgttvgomY/giphy.gif"); return;} //unless someone's trolling and requests to delete 0 messages.
             console.log("Deleting the last "+purge_settings.amount+" messages in "+msg.channel.name);
             if (purge_settings.amount === 1) { //This check is only here because bulk delete only supports 2 - 100 messages at once.
@@ -69,6 +73,9 @@ module.exports = function (bot, msg, args, options) {
                         removelist.push(messages[i]);
                     }
                     if (purge_settings.bots && messages[i].author.bot) {
+                        removelist.push(messages[i]);
+                    }
+                    if (purge_settings.system && messages[i].system) {
                         removelist.push(messages[i]);
                     }
                 }
