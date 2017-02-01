@@ -21,6 +21,7 @@ const assignAccess = require("./../commands/assignAccess.js");
 const serverban = require("./../commands/ban.js");
 const kick = require("./../commands/kick.js");
 const roleban = require("./../commands/roleban.js");
+const purge = require("./../commands/purge.js");
 
 module.exports = {
     help: {
@@ -291,6 +292,16 @@ module.exports = {
         help_text: "Kicks a user from the server the message was sent in.",
         help_indepth: "Kicks the mentioned user from the server.",
         help_args: "[@mention]",
+        help_aliases: false,
+    },
+    purge: {
+        function: purge,
+        access: 5,
+        punishment: false,
+        hidden: false,
+        help_text: "Removes messages based on given arguments.",
+        help_indepth: "Purge deletes messages based on the arguments you give it. You can pass it user mention(s) to purge messages from this/these users, keyword(s) to remove all messages matching the keyword, etc. Entering a number will terminate the argument list and defines the amount of messages to scan. Only pass a number to remove all previous x messages.",
+        help_args: "[@mentionA][@mentionB][keywordA][keywordB][messageCount]",
         help_aliases: false,
     },
     terminate: {
