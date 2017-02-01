@@ -78,6 +78,12 @@ module.exports = function (bot, msg, args, options) {
                     if (purge_settings.system && messages[i].system) {
                         removelist.push(messages[i]);
                     }
+                    console.log(messages[i].attachments.array());
+                    if (purge_settings.embeds) {
+                        if (messages[i].embeds.length > 0 || messages[i].attachments.array().length > 0) {
+                            removelist.push(messages[i]);
+                        }
+                    }
                 }
                 if (removelist.length > 1) {
                     console.log("Deleting "+removelist.length+" messages in "+msg.channel.name);
