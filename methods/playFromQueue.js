@@ -22,6 +22,7 @@ module.exports = function playFromQueue(bot, msg, item, args, options) {
         }
 
         bot._instance.dispatcher.on('end', function () {
+            const checkQueue = require("./checkQueue");
             bot._instance.playing = false;
             checkQueue(bot, msg, args, options);
         });

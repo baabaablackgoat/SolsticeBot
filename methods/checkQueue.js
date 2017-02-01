@@ -9,7 +9,6 @@ module.exports = function (bot, msg, args, options) {
     } else {
         if (!bot._instance.playing && bot._instance.queue.length > 0) {
             let item = bot._instance.queue.shift();
-
             joinChannel(bot, msg);
             setTimeout(function () {
                 playFromQueue(bot, msg, item, args, options);
