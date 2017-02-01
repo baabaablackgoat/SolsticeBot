@@ -1,5 +1,5 @@
 const getIDfromMention = require("./../methods/getIDfromMention");
-const mentionRegex =/<@!?[!0-9]+>/g;
+const mentionRegex =/<@!*[0-9]+>/g;
 module.exports = function (bot,msg,args,options) {
     //Purge has a set syntax. Mentions or keywords that shall be purged are declared before the amount of messages to scan.
     //If a number is detected, the command stops evaluating, and executes.
@@ -26,7 +26,7 @@ module.exports = function (bot,msg,args,options) {
         } else if (args[argsPos] === "embed" || args[argsPos] === "embeds"){
             purgeEmbeds = true;
         } else {
-            if (!mentionRegex.test(args[argsPos])) {
+            if (mentionRegex.test(args[argsPos])) {console.log("Found a mention, escaping it.");} else {
                 keywords.push(args[argsPos]);
             }
         }
