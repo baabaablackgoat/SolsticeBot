@@ -1,5 +1,5 @@
 const getIDfromMention = require("./../methods/getIDfromMention");
-const mentionRegex = /<@!*[0-9]+>/g;
+const mentionRegex = /<@!*[0-9]+>/;
 
 module.exports = function (bot, msg, args, options) {
     //Purge has a set syntax. Mentions or keywords that shall be purged are declared before the amount of messages to scan.
@@ -11,32 +11,37 @@ module.exports = function (bot, msg, args, options) {
     let keywords = [];
     let purgeBots = false;
     let purgeEmbeds = false;
+    let lastArg = Number(args[args.length - 1]);
+    let purgeAmount;
 
-    if (args.length === 0) { //check if any arguments were provided
+    if (!isNaN(lastArg)) {
+        args.pop();
+        purgeAmount = lastArg;
+    } else {
+        purgeAmount = true
+    };
+
+    if (!args.length) { //check if any arguments were provided
         msg.channel.sendMessage("You asked me to purge messages, but you provided no arguments.");
         return;
     }
-    while (argsPos < args.length) { //Loop over all objects in the arguments - or get kicked out if a number is detected.
-
-        if (!isNaN(Number(args[argsPos]))) { // Number detected, bail!
-            msg.channel.sendMessage("Everybody walk the dinosaur");
-            return; //Replace this with calling the bulk delete function
-
-        } else if (args[argsPos] === "bot" || args[argsPos] === "bots") {
+    args.forEach(arg => {
+        if (arg === "bot" || arg === "bots") {
             purgeBots = true;
-        } else if (args[argsPos] === "embed" || args[argsPos] === "embeds") {
+        } else if (arg === "embed" || arg === "embeds") {
             purgeEmbeds = true;
         } else {
-            const testForMention=mentionRegex.test(args[argsPos]);
+            const testForMention = mentionRegex.test(arg);
 
             if (testForMention) {
                 console.log("Found a mention, escaping it.");
             } else {
                 console.log("EEEEVIL");
+                keywords.push(arg);
             }
         }
-        argsPos++;
-    }
+    });
+
     msg.channel.sendMessage("Purge isn't ready yet. Debug information:");
     msg.channel.sendCode("fix", " mentions:" + mentions + "\n keywords:" + keywords + "\n bools:" + purgeBots + purgeEmbeds);
     //As soon as it's done, execute the bulk delete.
