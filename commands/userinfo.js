@@ -4,7 +4,7 @@ module.exports = function (bot, msg, args, options) {
         id: msg.author.id,
         createdAt: msg.author.createdAt,
         avatarURL: msg.author.avatarURL,
-        highestRole: msg.author.highestRole,
+        highestRole: msg.member.highestRole,
         username: msg.author.username,
         discriminator: msg.author.discriminator,
     };
