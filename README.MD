@@ -3,11 +3,8 @@ Mostly a test bot, but feel free to use it =P
 
 ##Important!
 ###First:
-For some reasons, the required npm packages don't always install by themselves.
-And yes, I do have a package.json.
-Here's the full command you'll need:
-
-`npm install ytdl-core discord.js opusscript`
+You need a few npm packages for the bot to work, else it will crash on startup.
+There is a packages.json present, just run `npm install` in the folder where your bot instance is in. A new folder called node_modules should show up.
 
 ###Second:
 It is not unlikely that the bot will lag out while streaming from youtube - especially when you're having another up or downstream running.
@@ -33,7 +30,7 @@ When forking/downloading this repo, you are missing a file called settings.js.
 
 This file has been excluded/gitignored because it contains your bot token. Soopr sekrit. Donut steel.
 
-You can use settings.default.js to make your own from a template, or copy this block down below.
+You can use settings.default.js to make your own from a template, or copy this block down below. (Updated 2017-02-02)
 
 ```js
 module.exports= {
@@ -42,14 +39,29 @@ module.exports= {
     //Get your User ID (Hint: Discord Developer Mode) and put it here.
     owner_id: "youruserid",
     //Set the prefix/invoker the bot listens to.
-    prefix: "yourprefix",
+    prefix: "!",
     //Set the "game" the bot is playing by default.
     default_game: "with unhandled promises",
-    //Set this to true if you want to create roles on your Server. Set it to false if you want to use userlist.js ("hidden bans") instead.
-    useDiscordRoles: true,
-    //If useDiscordRoles is true, set this to the ID of the role that is assigned to people who are no longer allowed to use the bot.
-    botbanned_role_id: "botbannedroleid", 
-    //If useDiscordRoles is true, set this to the ID of the role that is assigned to people who you trust or are supposed to have higher access.
-    access_role_id: "trustedroleid" 
-}
+    //Use this object to assign access values to any role. ("Role id":access) NYI
+    access_roles: {
+        "178640889285967872": 3, 
+        "267809120059392000": 5, 
+        "195240975595995138": 2, 
+    },
+    //If no ban time is specified, bot-ban a user for this time. s = seconds, m = minutes, h = hours, d = days, "never" = permanent
+    default_bantime: "3d",
+    //Anyone in userlist.json with an access value of this or higher is immune to the botban.
+    ban_immunity: 5,
+    //The following object is used to define roleban stuff.
+    roleban : {
+        //Set to false if you do not wish to use this feature. 
+        enabled: true, 
+        //Enter the ID of the rolebanned role.
+        role: "role_id_here", 
+        //false or "false" will not remove roles from target. "whitelist" removes all roles that are defined in role_list, "blacklist" removes all roles but the ones in role_list.
+        strip_roles: false,
+        //Used in conjunction with strip_roles, see comment above.
+        role_list: []
+    }
+};
 ```
