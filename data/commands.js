@@ -29,19 +29,23 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
-        help_text: "Show commands & indepth help",
-        help_indepth: "Pass it a command name, and you shall recieve!",
-        help_args: "[command]",
+        help: {
+            text: "Show commands & indepth help",
+            indepth: "Pass it a command name, and you shall recieve!",
+            args: "[command]"
+        },
         aliases: ["help"],
     },
     debug: {
         function: debug,
         access: 5,
         punishment: false,
-        hidden: false,
-        help_text: "Runs the debug function",
-        help_indepth: "I can't go against my programming. This will run whatever is in debug.",
-        help_args: "No args specified",
+        hidden: true,
+        help: {
+            text: "Runs the debug function",
+            indepth: "I can't go against my programming. This will run whatever is in debug.",
+            args: "No args specified"
+        },
         aliases: ["debug"],
     },
     ping: {
@@ -49,9 +53,11 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
-        help_text: "Pong!",
-        help_indepth: "Ping, pong, and on, and on",
-        help_args: false,
+        help: {
+            text: "Pong!",
+            indepth: "Ping, pong, and on, and on",
+            args: false,
+        },
         aliases: ["ping"],
     },
     memes: {
@@ -59,9 +65,11 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
-        help_text: "Returns a random meme",
-        help_indepth: "We Are Number One but it's actually the nutshack",
-        help_args: "[memetype]",
+        help: {
+            text: "Returns a random meme",
+            indepth: "We are number one but it's actually the nutshack",
+            args: "[memetype]",
+        },
         aliases: ["memes","meme"],
     },
     play: {
@@ -69,9 +77,11 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
-        help_text: "Adds songs to the queue",
-        help_indepth: "Adds either predefined local files or valid YouTube links to the music bot queue.",
-        help_args: "[name or url]",
+        help: {
+            text: "Adds songs to the queue",
+            indepth: "Adds either predefined local files or valid YouTube links to the music bot queue.",
+            args: "[name or url]"
+        },
         aliases: ["play","music"],
     },
     skip: {
@@ -79,9 +89,11 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
-        help_text: "Voteskip the current song",
-        help_indepth: "Adds your vote to voteskip the current song. If 50% or more of the VC attendants vote to skip, the next song plays.",
-        help_args: false,
+        help: {
+            text: "Voteskip the current song",
+            indepth: "Adds your vote to voteskip the current song. If 50% or more of the VC attendants vote to skip, the next song plays.",
+            args: false,
+        },
         aliases: ["skip","next"],
     },
     clear: {
@@ -89,9 +101,11 @@ module.exports = {
         access: 2,
         punishment: false,
         hidden: false,
-        help_text: "Empties the musicbot queue",
-        help_indepth: "Clears out all entries in the current queue and disconnects the bot from any VC.",
-        help_args: false,
+        help: {
+            text: "Empties the musicbot queue",
+            indepth: "Clears out all entries in the current queue and disconnects the bot from any VC.", 
+            args: false
+        },
         aliases: ["clear","flush"],
     }, 
     queue: {
@@ -99,9 +113,11 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
-        help_text: "Lists the current queue",
-        help_indepth: "Lists all current songs in the musicbot",
-        help_args: false,
+        help: {
+            text: "Lists the current queue",
+            indepth: "Lists all current songs in the musicbot",
+            args: false,
+        },
         aliases: ["queue","q"],
     },
     np: {
@@ -109,9 +125,11 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
-        help_text: "Shows current song",
-        help_indepth: "Returns the song the musicbot is playing right now",
-        help_args: false,
+        help: {
+            text: "Shows current song",
+            indepth: "Returns the song the musicbot is playing right now",
+            args: false,
+        },
         aliases: ["np","nowplaying"],
     },
     disconnect: {
@@ -119,9 +137,11 @@ module.exports = {
         access: 2,
         punishment: false,
         hidden: false,
-        help_text: "Disconnect from VC",
-        help_indepth: "Disconnects the bot from any voicechannel it's connected to",
-        help_args: false,
+        help: {
+            text: "Disconnect from VC",
+            indepth: "Disconnects the bot from any voicechannel it's connected to",
+            args: false,
+        },
         aliases: ["disconnect","dc"],
     },
     volume: {
@@ -129,9 +149,11 @@ module.exports = {
         access: 1,
         punishment: false,
         hidden: false,
-        help_text: "Changes musicbot volume",
-        help_indepth: "Changes the volume the bot is playing audio with. Warning: Anything above 1.5 will sound distorted!",
-        help_args: "[volume (0-2)]",
+        help: {
+            text: "Changes musicbot volume",
+            indepth: "Changes the volume the bot is playing audio with. Warning: Anything above 1.5 will sound distorted!",
+            args: "[volume (0-2)]",
+        },
         aliases: ["volume","vol"],
     },
     userinfo: {
@@ -139,9 +161,11 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
-        help_text: "Shows user info",
-        help_indepth: "Shows a few informations about the person calling the command or a mentioned user.",
-        help_args: "[@mention]",
+        help: {
+            text: "Shows user info",
+            indepth: "Shows a few informations about the person calling the command or a mentioned user.",
+            args: "[@mention]",
+        },
         aliases: ["userinfo"],
     },
     fuck: {
@@ -149,9 +173,11 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: true,
-        help_text: "...",
-        help_indepth: "...",
-        help_args: false,
+        help: {
+            text: "...",
+            indepth: "...",
+            args: false,
+        },
         aliases: ["fuck"],
     },
     bang: {
@@ -159,9 +185,11 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: true,
-        help_text: "We'll bang, okay?",
-        help_indepth: "We'll bang, okay?",
-        help_args: false,
+        help: {
+            text: "We'll bang, okay?",
+            indepth: "We'll bang, okay?",
+            args: false,
+        },
         aliases: ["bang"],
     },
     fix: {
@@ -169,9 +197,11 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: true,
-        help_text: "volvo, pls fix",
-        help_indepth: "volvo, pls fix",
-        help_args: false,
+        help: {
+            text: "volvo, pls fix",
+            indepth: "volvo, pls fix",
+            args: false,
+        },
         aliases: ["fix"],
     },
     accessRefresh: {
@@ -179,9 +209,11 @@ module.exports = {
         access: 10,
         punishment: false,
         hidden: false,
-        help_text: "Reloads Role Access Values",
-        help_indepth: "Reloads all users that have the predefined roles and assigns them the predefined access values.",
-        help_args: false,
+        help: {
+            text: "Reloads Role Access Values",
+            indepth: "Reloads all users that have the predefined roles and assigns them the predefined access values.",
+            args: false,
+        },
         aliases: ["accessrefresh","refreshaccess","reloadaccess","accessreload"],
     },
     assignAccess: {
@@ -189,9 +221,11 @@ module.exports = {
         access: 10,
         punishment: false,
         hidden: false,
-        help_text: "Gives the mentioned user bot access.",
-        help_indepth: "The mentioned user will recieve bot access as high as the specified level. Cannot assign a higher access level than the caller has.",
-        help_args: "[@mention] [accesslevel]",
+        help: {
+            text: "Gives the mentioned user bot access.",
+            indepth: "The mentioned user will recieve bot access as high as the specified level. Cannot assign a higher access level than the caller has.",
+            args: "[@mention] [accesslevel]",
+        },
         aliases: ["assignaccess","accessassign","giveaccess","setaccess"],
     },
     botban: {
@@ -199,9 +233,11 @@ module.exports = {
         access: 5,
         punishment: "15m",
         hidden: false,
-        help_text: "Bans a user from using the bot.",
-        help_indepth: "Bans a mentioned user for a specified time. Set the time to 'never' and the ban will be permanent.",
-        help_args: "[@mention] [time in letter notation (30m)]",
+        help: {
+            text: "Bans a user from using the bot.",
+            indepth: "Bans a mentioned user for a specified time. Set the time to 'never' and the ban will be permanent.",
+            args: "[@mention] [time in letter notation (30m)]",
+        },
         aliases: ["botban"],
     },
     ban: {
@@ -209,9 +245,11 @@ module.exports = {
         access: 10,
         punishment: "45m",
         hidden: false,
-        help_text: "Bans a user from the server the message was sent in.",
-        help_indepth: "Bans the mentioned user from the server.",
-        help_args: "[@mention]",
+        help: {
+            text: "Bans a user from the server the message was sent in.",
+            indepth: "Bans the mentioned user from the server.",
+            args: "[@mention]",
+        },
         aliases: ["ban"],
     },
     roleban: {
@@ -219,9 +257,11 @@ module.exports = {
         access: 5,
         punishment: "15m",
         hidden: false,
-        help_text: "If enabled, rolebans a user.",
-        help_indepth: "Rolebans the mentioned user. This basically means that this user is assigned a role that has been preconfigured to not allow chatting in any channel except for one.",
-        help_args: "[@mention]",
+        help: {
+            text: "If enabled, rolebans a user.",
+            indepth: "Rolebans the mentioned user. This basically means that this user is assigned a role that has been preconfigured to not allow chatting in any channel except for one.",
+            args: "[@mention]",
+        },
         aliases: ["roleban","toss"],
     },
     kick: {
@@ -229,9 +269,11 @@ module.exports = {
         access: 10,
         punishment: "15m",
         hidden: false,
-        help_text: "Kicks a user from the server the message was sent in.",
-        help_indepth: "Kicks the mentioned user from the server.",
-        help_args: "[@mention]",
+        help: {
+            text: "Kicks a user from the server the message was sent in.",
+            indepth: "Kicks the mentioned user from the server.",
+            args: "[@mention]",
+        },
         aliases: ["kick"],
     },
     purge: {
@@ -239,19 +281,23 @@ module.exports = {
         access: 5,
         punishment: false,
         hidden: false,
-        help_text: "Removes messages based on given arguments.",
-        help_indepth: "Purge deletes messages based on the arguments you give it. You can pass it user mention(s) to purge messages from this/these users, keyword(s) to remove all messages matching the keyword, etc. Entering a number will terminate the argument list and defines the amount of messages to scan. Only pass a number to remove all previous x messages.",
-        help_args: "[@mentionA][@mentionB][keywordA][keywordB][messageCount]",
-        aliases: ["purge,remove"],
+        help: {
+            text: "Removes messages based on given arguments.",
+            indepth: "Purge deletes messages based on the arguments you give it. You can pass it user mention(s) to purge messages from this/these users, keyword(s) to remove all messages matching the keyword, etc. Entering a number will terminate the argument list and defines the amount of messages to scan. Only pass a number to remove all previous x messages.",
+            args: "[@mentionA][@mentionB][keywordA][keywordB][messageCount]",
+        },
+        aliases: ["purge","remove"],
     },
     terminate: {
         function: terminate,
         access: 99,
         punishment: "30m",
         hidden: false,
-        help_text: "Stops the bot.",
-        help_indepth: "Closes the node process after returning a goodbye message.",
-        help_args: false,
+        help: {
+            text: "Stops the bot.",
+            indepth: "Closes the node process after returning a goodbye message.",
+            args: false,
+        },
         aliases: ["terminate","break","die","exterminate","smash","end"],
     },
 };

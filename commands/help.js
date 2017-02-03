@@ -16,10 +16,10 @@ module.exports = function (bot, msg, args, options) {
                 embed.setAuthor("Solstice Help Dialogue | " + args[0], bot.user.avatarURL);
                 embed.setColor([255, 125, 0]);
                 embed.setTitle("TL;DR:");
-                embed.setDescription(commands[args[0]].help_indepth);
+                embed.setDescription(commands[args[0]].help.indepth);
 
-                if (commands[args[0]].help_args) {
-                    embed.addField("Arguments", commands[args[0]].help_args);
+                if (commands[args[0]].help.args) {
+                    embed.addField("Arguments", commands[args[0]].help.args);
                 } else {
                     embed.addField("Arguments", "This command takes no arguments.");
                 }
@@ -40,7 +40,7 @@ module.exports = function (bot, msg, args, options) {
         eachObject(commands, (command,key) => {
             //console.log(useraccess, commands[key].access);
             if ((!command.hidden) && (useraccess >= command.access)) {
-                reply.push(key, " ".repeat(15 - key.length), command.help_text, "\n");
+                reply.push(key, " ".repeat(15 - key.length), command.help.text, "\n");
             }
         });
 
