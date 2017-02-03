@@ -10,6 +10,7 @@ const giveAccess = require("./methods/giveAccess");
 const commands = require("./data/commands");
 const setGame = require("./methods/setGame");
 const bannedFor = require("./methods/bannedFor");
+const commandKeys = Object.keys(commands); 
 
 bot._instance = {
     queue: [],
@@ -36,9 +37,9 @@ bot.on("message", msg => {
         let call = parseCommands(raw);
 
         const commandCheck = function(call) {
-            for (let i = 0; i < commands.array().length; i++) {
-                if (commands.array()[i].aliases.indexOf(call.name) > -1) {
-                    return commands.array()[i];
+            for (let i = 0; i < commandKeys.length; i++) {
+                if (commands[commandKeys[i]].aliases.indexOf(call.name) > -1) {
+                    return commands[commandKeys[i]];
                 }
             }
             //If the function didn't return early / quit the for loop
