@@ -312,7 +312,6 @@ module.exports = {
             text: "Unmutes a muted user.",
             indepth: "Unmutes a muted user. Provide a mention.",
             args: "[@mention]",
-
         },
         aliases: ["unmute", "ungag"]
     },
