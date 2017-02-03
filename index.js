@@ -36,26 +36,26 @@ bot.on("message", msg => {
         let call = parseCommands(raw);
 
         const commandCheck = function(call) {
-            for (i = 0; i < commands.array().length; i++) {
+            for (let i = 0; i < commands.array().length; i++) {
                 if (commands.array()[i].aliases.indexOf(call.name) > -1) {
-                    //return the command/function
+                    console.log(commands.array()[i]);
+                    return commands.array()[i];
                 }
             }
-        }
+            //If the function didn't return early / quit the for loop
+            return false;
+        };
 
         //Do the detection stuff here :eyes:
-        if (false) {}
-
-        /* "old" command check. Loop over the aliases instead
-        if (commands.hasOwnProperty(call.name)) { //Is this command valid?
+        let command_id = commandCheck(call);
+        if (command_id) {
             let useraccess;
-
             if (!userlist.mods.hasOwnProperty(msg.author.id)) {
                 useraccess = 0;
             } else {
                 useraccess = userlist.mods[msg.author.id].access;
             } //set useraccess
-            if (accessCheck(msg, commands[call.name].access, commands[call.name].punishment)) { //Is useraccess equal or greater than commands.command.access?
+            if (accessCheck(msg, command_id[call.name].access, commands[call.name].punishment)) { //Is useraccess equal or greater than commands.command.access?
                 console.log(msg.author.username + " called command: " + call.name + " " + call.args.join(",")); //run command
                 let fn = commands[call.name].function;
 
@@ -73,9 +73,8 @@ bot.on("message", msg => {
                     console.log("Fatal error - function not resolvable");
                 }
             }
-        }
-        */
-         else { //User entered unknown command
+
+        } else { //User entered unknown command
             console.log(msg.author.username + " called an unknown command: " + call.name);
             msg.channel.sendMessage("Unknown command. `" + settings.prefix + "help`");
         }
