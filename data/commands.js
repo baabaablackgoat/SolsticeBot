@@ -22,6 +22,8 @@ const serverban = require("./../commands/ban.js");
 const kick = require("./../commands/kick.js");
 const roleban = require("./../commands/roleban.js");
 const purge = require("./../commands/purge.js");
+const mute = require("./../commands/mute.js");
+const unmute = require("./../commands/unmute.js");
 
 module.exports = {
     help: {
@@ -287,6 +289,32 @@ module.exports = {
             args: "[@mentionA][@mentionB][keywordA][keywordB][messageCount]",
         },
         aliases: ["purge","remove"],
+    },
+    mute: {
+        function: mute,
+        access: 3,
+        punishment: "15m",
+        hidden: false,
+        help: {
+            text: "Mutes a user for a defined time.",
+            indepth: "Mutes a mentioned user for a specified time. Set the time to 'never' and the mute will be permanent. Mute means that every message the bot can see will be automatically deleted.",
+            args: "[@mention] [time in letter notation (30m)]",
+
+        },
+        aliases: ["mute", "gag"]
+    },
+    unmute: {
+        function: unmute,
+        access: 3,
+        punishment: "15m",
+        hidden: false,
+        help: {
+            text: "Unmutes a muted user.",
+            indepth: "Unmutes a muted user. Provide a mention.",
+            args: "[@mention]",
+
+        },
+        aliases: ["unmute", "ungag"]
     },
     terminate: {
         function: terminate,
