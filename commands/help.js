@@ -23,8 +23,8 @@ module.exports = function (bot, msg, args, options) {
                 } else {
                     embed.addField("Arguments", "This command takes no arguments.");
                 }
-                if (commands[args[0]].help_aliases) {
-                    embed.addField("Aliases", commands[args[0]].help_aliases);
+                if (commands[args[0]].aliases) {
+                    embed.addField("Aliases", commands[args[0]].aliases);
                 } else {
                     embed.addField("Aliases", "This command has no aliases.");
                 }

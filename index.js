@@ -34,6 +34,10 @@ bot.on("message", msg => {
         }
         let raw = msg.content.substring(settings.prefix.length);
         let call = parseCommands(raw);
+
+        //Do the detection stuff here :eyes:
+
+        /* "old" command check. Loop over the aliases instead
         if (commands.hasOwnProperty(call.name)) { //Is this command valid?
             let useraccess;
 
@@ -60,7 +64,9 @@ bot.on("message", msg => {
                     console.log("Fatal error - function not resolvable");
                 }
             }
-        } else { //User entered unknown command
+        }
+        */
+         else { //User entered unknown command
             console.log(msg.author.username + " called an unknown command: " + call.name);
             msg.channel.sendMessage("Unknown command. `" + settings.prefix + "help`");
         }
