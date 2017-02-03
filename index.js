@@ -35,7 +35,16 @@ bot.on("message", msg => {
         let raw = msg.content.substring(settings.prefix.length);
         let call = parseCommands(raw);
 
+        const commandCheck = function(call) {
+            for (i = 0; i < commands.array().length; i++) {
+                if (commands.array()[i].aliases.indexOf(call.name) > -1) {
+                    //return the command/function
+                }
+            }
+        }
+
         //Do the detection stuff here :eyes:
+        if (false) {}
 
         /* "old" command check. Loop over the aliases instead
         if (commands.hasOwnProperty(call.name)) { //Is this command valid?
