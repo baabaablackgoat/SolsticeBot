@@ -10,6 +10,7 @@ const giveAccess = require("./methods/giveAccess");
 const commands = require("./data/commands");
 const setGame = require("./methods/setGame");
 const bannedFor = require("./methods/bannedFor");
+const commandKeys = Object.keys(commands); 
 
 bot._instance = {
     queue: [],
@@ -34,22 +35,33 @@ bot.on("message", msg => {
         }
         let raw = msg.content.substring(settings.prefix.length);
         let call = parseCommands(raw);
-        if (commands.hasOwnProperty(call.name)) { //Is this command valid?
-            let useraccess;
 
+        const commandCheck = function(call) {
+            for (let i = 0; i < commandKeys.length; i++) {
+                if (commands[commandKeys[i]].aliases.indexOf(call.name) > -1) {
+                    return commands[commandKeys[i]];
+                }
+            }
+            //If the function didn't return early / quit the for loop
+            return false;
+        };
+
+        let command_id = commandCheck(call);
+        if (command_id) {
+            let useraccess;
             if (!userlist.mods.hasOwnProperty(msg.author.id)) {
                 useraccess = 0;
             } else {
                 useraccess = userlist.mods[msg.author.id].access;
             } //set useraccess
-            if (accessCheck(msg, commands[call.name].access, commands[call.name].punishment)) { //Is useraccess equal or greater than commands.command.access?
+            if (accessCheck(msg, command_id.access, command_id.punishment)) { //Is useraccess equal or greater than commands.command.access?
                 console.log(msg.author.username + " called command: " + call.name + " " + call.args.join(",")); //run command
-                let fn = commands[call.name].function;
+                let fn = command_id.function;
 
                 if (typeof fn === 'function') { //Is the function that executes the command available?
                     let args = call.args;
                     let options = {
-                        "access": commands[call.name].access,
+                        "access": command_id.access,
                         "useraccess": useraccess,
                         "callname": call.name,
                         "settings": settings,
@@ -60,6 +72,7 @@ bot.on("message", msg => {
                     console.log("Fatal error - function not resolvable");
                 }
             }
+
         } else { //User entered unknown command
             console.log(msg.author.username + " called an unknown command: " + call.name);
             msg.channel.sendMessage("Unknown command. `" + settings.prefix + "help`");
