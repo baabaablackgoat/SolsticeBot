@@ -3,12 +3,24 @@ const eachObject = require("../methods/eachObject");
 
 module.exports = function (bot, msg, args, options) {
     const commands = require("../data/commands"); //needs to be placed in fn to avoid timing issues
+    const commandKeys = Object.keys(commands); 
     let reply = [];
     let useraccess = options.useraccess;
 
+    const commandCheck = function(call) {
+        for (let i = 0; i < commandKeys.length; i++) {
+            if (commands[commandKeys[i]].aliases.indexOf(call) > -1) {
+                return commands[commandKeys[i]];
+            }
+        }
+        //If the function didn't return early / quit the for loop
+        return false;
+    };
+
     if (args[0]) {
-        if (commands.hasOwnProperty(args[0])) {
-            let commandaccess = commands[args[0]].access;
+        let command_id = commandCheck(args[0]);
+        if (command_id) {
+            let commandaccess = command_id.access;
 
             if (useraccess >= commandaccess) {
                 let embed = new Discord.RichEmbed();
@@ -16,15 +28,15 @@ module.exports = function (bot, msg, args, options) {
                 embed.setAuthor("Solstice Help Dialogue | " + args[0], bot.user.avatarURL);
                 embed.setColor([255, 125, 0]);
                 embed.setTitle("TL;DR:");
-                embed.setDescription(commands[args[0]].help.indepth);
+                embed.setDescription(command_id.help.indepth);
 
-                if (commands[args[0]].help.args) {
-                    embed.addField("Arguments", commands[args[0]].help.args);
+                if (command_id.help.args) {
+                    embed.addField("Arguments", command_id.help.args);
                 } else {
                     embed.addField("Arguments", "This command takes no arguments.");
                 }
-                if (commands[args[0]].aliases) {
-                    embed.addField("Aliases", commands[args[0]].aliases);
+                if (command_id.aliases) {
+                    embed.addField("Aliases", command_id.aliases);
                 } else {
                     embed.addField("Aliases", "This command has no aliases.");
                 }
