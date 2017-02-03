@@ -38,7 +38,6 @@ bot.on("message", msg => {
         const commandCheck = function(call) {
             for (let i = 0; i < commands.array().length; i++) {
                 if (commands.array()[i].aliases.indexOf(call.name) > -1) {
-                    console.log(commands.array()[i]);
                     return commands.array()[i];
                 }
             }
@@ -46,7 +45,6 @@ bot.on("message", msg => {
             return false;
         };
 
-        //Do the detection stuff here :eyes:
         let command_id = commandCheck(call);
         if (command_id) {
             let useraccess;
@@ -55,14 +53,14 @@ bot.on("message", msg => {
             } else {
                 useraccess = userlist.mods[msg.author.id].access;
             } //set useraccess
-            if (accessCheck(msg, command_id[call.name].access, commands[call.name].punishment)) { //Is useraccess equal or greater than commands.command.access?
+            if (accessCheck(msg, command_id.access, command_id.punishment)) { //Is useraccess equal or greater than commands.command.access?
                 console.log(msg.author.username + " called command: " + call.name + " " + call.args.join(",")); //run command
-                let fn = commands[call.name].function;
+                let fn = command_id.function;
 
                 if (typeof fn === 'function') { //Is the function that executes the command available?
                     let args = call.args;
                     let options = {
-                        "access": commands[call.name].access,
+                        "access": command_id.access,
                         "useraccess": useraccess,
                         "callname": call.name,
                         "settings": settings,
