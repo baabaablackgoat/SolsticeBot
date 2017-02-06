@@ -24,6 +24,7 @@ const roleban = require("./../commands/roleban.js");
 const purge = require("./../commands/purge.js");
 const mute = require("./../commands/mute.js");
 const unmute = require("./../commands/unmute.js");
+const hugs = require("./../commands/hugs.js");
 
 module.exports = {
     help: {
@@ -205,6 +206,18 @@ module.exports = {
             args: false,
         },
         aliases: ["fix"],
+    },
+    hugs: {
+        function: hugs,
+        access: 0,
+        punishment: false,
+        hidden: true,
+        help: {
+            text: "*huggu*",
+            indepth: "Sometimes, you're just in need of a hug.",
+            args: false,
+        },
+        aliases: ["hugs","hug","huggu"],
     },
     accessRefresh: {
         function: accessRefresh,
