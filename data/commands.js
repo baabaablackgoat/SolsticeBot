@@ -25,6 +25,7 @@ const purge = require("./../commands/purge.js");
 const mute = require("./../commands/mute.js");
 const unmute = require("./../commands/unmute.js");
 const hugs = require("./../commands/hugs.js");
+const eval = require("./../commands/eval.js");
 
 module.exports = {
     help: {
@@ -340,4 +341,18 @@ module.exports = {
         },
         aliases: ["terminate","break","die","exterminate","smash","end"],
     },
+    //WARNING! eval is a dangerous function/command. It contains the "eval" command, obviously. This basically means _root access_. http://i.imgur.com/AIbda6p.png 
+    //This should ONLY be called by the bot owner (access 99), else there can be huge security breaches!
+    //If someone's asking to change this commands access value, turn around immediately. They're up to no good.
+    eval: {  
+        function: eval,
+        access: 99,
+        punishment: "1d",
+        hidden: false,
+        help: {
+            text: "Evaluates the given input.",
+            indepth: "Calls eval() on the given input. Warning - this basically means root access! Spaces/'multiple args' are automatically joined.",
+            args: "[evaluated string]",
+        }
+    }
 };
