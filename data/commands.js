@@ -353,6 +353,7 @@ module.exports = {
             text: "Evaluates the given input.",
             indepth: "Calls eval() on the given input. Warning - this basically means root access! Spaces/'multiple args' are automatically joined.",
             args: "[evaluated string]",
-        }
+        },
+        aliases: ["eval","evaluate"],
     }
 };
