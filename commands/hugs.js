@@ -34,7 +34,11 @@ module.exports = function(bot,msg,args,options) {
             msg.channel.sendMessage("iceuuuu! \n *huggu*");
             break;
         case "178470784984023040":
-            msg.channel.sendMessage("...nah, Niklas. You're not getting any hugs.");
+            if (msg.author.presence.status === "dnd") {
+                msg.channel.sendMessage("...you'll be alright, Niklas. Everything is going to be fine. \n *huggu* \n https://www.youtube.com/watch?v=ntTtFs1_GNM");
+            } else {
+                msg.channel.sendMessage("Greetings, my lord. \n *huggu*");
+            }
             break;
         case "128985967875850240": 
             msg.channel.sendMessage("Feeeeeliiiix! \n *huggu*");
