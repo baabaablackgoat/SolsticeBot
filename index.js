@@ -49,7 +49,7 @@ bot.on("message", msg => {
 
         const commandCheck = function(call) {
             for (let i = 0; i < commandKeys.length; i++) {
-                if (commands[commandKeys[i]].aliases.indexOf(call.name) > -1) {
+                if (commands[commandKeys[i]].aliases.indexOf(call.name.toLowerCase()) > -1) {
                     return commands[commandKeys[i]];
                 }
             }
