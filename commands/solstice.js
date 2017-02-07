@@ -32,8 +32,10 @@ module.exports = function(bot,msg,args,options) {
     } else {
         remaining.raw = (target - now) / 1000;
     }
-    console.log(target, now, remaining.raw);
     // remaining.raw = remaining.raw + (offset * 60) //account for timezone offsets
+    if (remaining.raw >= 86400000) {
+        msg.channel.sendMessage("_tick, tock, **krrt**_ \nSorry, Solstice can only display dates that are 1000 days (minus one second) in the future. Three digit days, you know.");
+    }
     remaining.secs = (Math.floor(remaining.raw % 60)).toString();
     remaining.mins = (Math.floor((remaining.raw % 3600) / 60)).toString();
     remaining.hrs = (Math.floor((remaining.raw % 86400) / 3600)).toString();
@@ -42,6 +44,35 @@ module.exports = function(bot,msg,args,options) {
     if (remaining.mins.length < 2) {remaining.mins = "0"+remaining.mins;}
     if (remaining.hrs.length < 2) {remaining.hrs = "0"+remaining.hrs;}
     if (remaining.days.length < 3) {if (remaining.days.length < 2) {remaining.days = "00"+remaining.days;} else {remaining.days = "0"+remaining.days;}}
-    let resultStr = remaining.days+":"+remaining.hrs+":"+remaining.mins+":"+remaining.secs;
-    msg.channel.sendMessage(resultStr);
-}
+    let resultStr = remaining.days+"_"+remaining.hrs+"_"+remaining.mins+"_"+remaining.secs;
+    gm()
+        .in('-background','transparent')
+        .in('-page','+0+0')
+        .in('data/solstice/'+resultStr[0]+'.png')
+        .in('-page','+36+0')
+        .in('data/solstice/'+resultStr[1]+'.png')
+        .in('-page','+72+0')
+        .in('data/solstice/'+resultStr[2]+'.png')
+        .in('-page','+111+0')
+        .in('data/solstice/_.png')
+        .in('-page','+126+0')
+        .in('data/solstice/'+resultStr[4]+'.png')
+        .in('-page','+162+0')
+        .in('data/solstice/'+resultStr[5]+'.png')
+        .in('-page','+201+0')
+        .in('data/solstice/_.png')
+        .in('-page','+216+0')
+        .in('data/solstice/'+resultStr[7]+'.png')
+        .in('-page','+252+0')
+        .in('data/solstice/'+resultStr[8]+'.png')
+        .in('-page','+291+0')
+        .in('data/solstice/_.png')
+        .in('-page','+306+0')
+        .in('data/solstice/'+resultStr[10]+'.png')
+        .in('-page','+342+0')
+        .in('data/solstice/'+resultStr[11]+'.png')
+        .mosaic()
+        .write('outputs/solstice.png', function (err) {if (err) {console.log(err);} else {
+            msg.channel.sendFile("outputs/solstice.png","solstice.png","_tick, tock_");
+        }});   
+};
