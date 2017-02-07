@@ -26,6 +26,7 @@ const mute = require("./../commands/mute.js");
 const unmute = require("./../commands/unmute.js");
 const hugs = require("./../commands/hugs.js");
 const eval = require("./../commands/eval.js");
+const solstice = require("./../commands/solstice.js");
 
 module.exports = {
     help: {
@@ -171,6 +172,18 @@ module.exports = {
             args: "[@mention]",
         },
         aliases: ["userinfo"],
+    },
+    solstice: {
+        function: solstice,
+        access: 0,
+        punishment: false,
+        hidden: false,
+        help: {
+            text: "*tick, tock* - Countdown to Solstice.",
+            indepth: "This command is a hommage to OneShot. If no args are provided, it displays the time until the Spring Equinox. You can pass it a JS-parseable date to set your own target. All Dates are based on UTC.",
+            args: "[Date]",
+        },
+        aliases: ["solstice","countdown"],
     },
     fuck: {
         function: fuck,
