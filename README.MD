@@ -7,6 +7,11 @@ You need a few npm packages for the bot to work, else it will crash on startup.
 There is a packages.json present, just run `npm install` in the folder where your bot instance is in. A new folder called node_modules should show up.
 
 ###Second:
+Some commands (especially `solstice`) rely on having a command-line image editor. This is based around the package `gm`.
+
+[Go here](http://aheckmann.github.io/gm/), and install either of the dependencies. I personally test with [GraphicsMagick.](http://www.graphicsmagick.org/)
+
+###Third:
 It is not unlikely that the bot will lag out while streaming from youtube - especially when you're having another up or downstream running.
 This can be fixed by increasing the buffer.
 
@@ -16,7 +21,7 @@ In line 15, pass `{'highWaterMark': 2097152}` to the PassThrough.
 
 `var stream = new PassThrough({'highWaterMark': 2097152});`
 
-###Third:
+###Fourth:
 If you don't have FFMPEG installed and added to PATH, the bot will crash upon attempting to play any audio.
 And for some goddamn reason, FFMPEG likes to act up. You can either install and add it manually, *or* if you're on Windows,
 then you can use [Chocolatey.](https://chocolatey.org/install)
@@ -25,7 +30,7 @@ then you can use [Chocolatey.](https://chocolatey.org/install)
 
 `choco install ffmpeg` should do the trick.
 
-###Fourth:
+###Fifth:
 When forking/downloading this repo, you are missing a file called settings.js.
 
 This file has been excluded/gitignored because it contains your bot token. Soopr sekrit. Donut steel.
