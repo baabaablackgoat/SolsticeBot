@@ -139,11 +139,32 @@ bot.on("messageDeleteBulk", msgs => {
     }
 });
 
-/*
-bot.on("messageUpdate", (old,new) => {
-    if (settings.modlog.enabled && settings.modlog.messages.purge) {}
+bot.on("messageUpdate", (msg_old,msg_new) => {
+    if (settings.modlog.enabled && settings.modlog.messages.edit.enabled) {
+        let reply = new Discord.RichEmbed();
+        if (msg_old.content !== msg_new.content) {
+            if (settings.modlog.messages.edit.old_content) {
+                reply.addField("Former Message: ",msg_old.content);
+            }
+             if (settings.modlog.messages.edit.new_content) {
+                reply.addField("New Message: ",msg_new.content);
+            }
+        }
+        if (msg_old.attachments !== msg_old.attachments) {
+            if (settings.modlog.messages.edit.old_content) {
+                reply.addField("Former Attachments: ",msg_old.attachments);
+            }
+            if (settings.modlog.messages.edit.new_content) {
+                reply.addField("New Attachments: ",msg_new.attachments);
+            }
+        }
+        reply.setAuthor(msg_new.author.username,msg_new.author.avatarURL);
+        reply.setTitle("Message edited in #"+msg_new.channel.name+", Message ID:`"+msg_new.id+"`");
+        reply.setColor([0,125,255]);
+        reply.setTimestamp(msg_new.editedAt);
+        logchannel.sendEmbed(reply);
+    }
 });
-*/
 
 bot.on("channelCreate", channel => {
     if (settings.modlog.enabled && settings.modlog.server.channelCreate) {
