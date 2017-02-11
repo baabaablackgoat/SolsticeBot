@@ -140,7 +140,7 @@ bot.on("messageDeleteBulk", msgs => {
 });
 
 bot.on("messageUpdate", (msg_old,msg_new) => {
-    if (settings.modlog.enabled && settings.modlog.messages.edit.enabled) {
+    if (settings.modlog.enabled && settings.modlog.messages.edit.enabled && !msg_old.author.bot) {
         let reply = new Discord.RichEmbed();
         if (msg_old.content !== msg_new.content) {
             if (settings.modlog.messages.edit.old_content) {
