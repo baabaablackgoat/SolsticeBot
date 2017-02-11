@@ -104,4 +104,12 @@ bot.on("ready", () => {
     setGame(bot, settings.default_game);
 });
 
+bot.on("reconnecting", () => {
+    console.log("Lost connection! Attempting to reconnect...");
+});
+
+bot.on("error", err => {
+    console.error(err);
+});
+
 bot.login(settings.token);
