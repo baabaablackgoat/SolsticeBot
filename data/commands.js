@@ -220,7 +220,7 @@ module.exports = {
             indepth: "ur a l00d",
             args: false,
         },
-        aliases: ["cock"],
+        aliases: ["cock","upcock"],
     },
     fix: {
         function: fix,
