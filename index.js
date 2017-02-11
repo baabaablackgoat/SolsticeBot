@@ -69,7 +69,6 @@ bot.on("message", msg => {
             if (accessCheck(msg, command_id.access, command_id.punishment)) { //Is useraccess equal or greater than commands.command.access?
                 console.log(msg.author.username + " called command: " + call.name + " " + call.args.join(",")); //run command
                 let fn = command_id.function;
-
                 if (typeof fn === 'function') { //Is the function that executes the command available?
                     let args = call.args;
                     let options = {
@@ -78,13 +77,19 @@ bot.on("message", msg => {
                         "callname": call.name,
                         "settings": settings,
                     };
-
                     fn(bot, msg, args, options);
+                    if (settings.modlog.enabled && settings.modlog.bot.commands) {
+                        let reply = new Discord.RichEmbed();
+                        reply.setAuthor(msg.author.username,msg.author.avatarURL);
+                        reply.setTitle("Called command: "+call.name);
+                        reply.setDescription("Provided Arguments: "+args);
+                        reply.setColor([0,0,0]);
+                        logchannel.sendEmbed(reply);
+                    }
                 } else { //Function not found
                     console.log("Fatal error - function not resolvable");
                 }
             }
-
         } else { //User entered unknown command
             console.log(msg.author.username + " called an unknown command: " + call.name);
             msg.channel.sendMessage("Unknown command. `" + settings.prefix + "help`");

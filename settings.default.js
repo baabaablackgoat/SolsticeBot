@@ -54,6 +54,9 @@ module.exports= {
             },
             delete: true,
             purge: true,
+        },
+        bot: {
+            commands: true,
         }
     }
 };
