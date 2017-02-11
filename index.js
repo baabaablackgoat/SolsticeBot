@@ -219,8 +219,7 @@ bot.on("guildBanAdd", (guild,user) => {
         let reply = new Discord.RichEmbed();
         reply.setAuthor("Member was banned", user.avatarURL);
         reply.setTitle(user.username+"("+user.id+")");
-        reply.addField("New user count:", guild.members.size);
-        reply.setColor([125,75,0]);
+        reply.setColor([125,0,0]);
         reply.setTimestamp(new Date());
         logchannel.sendEmbed(reply);
     } 
