@@ -121,7 +121,7 @@ bot.on("messageDelete", msg => {
         reply.setAuthor(msg.author.username,msg.author.avatarURL);
         reply.setTitle("Message deleted from #"+msg.channel.name+", Message ID:`"+msg.id+"`");
         reply.setDescription("```fix\n"+msg.content+"\n```");
-        reply.setColor([255,0,0]);
+        reply.setColor([255,125,180]);
         reply.setTimestamp(new Date());
         logchannel.sendEmbed(reply);
     }
@@ -167,5 +167,30 @@ bot.on("channelDelete", channel => {
     }
 });
 
+bot.on("guildMemberAdd", member => {
+    if (settings.modlog.enabled && settings.modlog.members.join) {
+        let reply = new Discord.RichEmbed();
+        reply.setAuthor("Member joined", member.user.avatarURL);
+        reply.setTitle(member.user.username);
+        reply.setDescription("Account age: "+Math.floor(((new Date() - member.user.createdAt) / 86400000))+" days (see timestamp)");
+        reply.addField("New user count:", logchannel.guild.members.size);
+        reply.setColor([255,255,0]);
+        reply.setTimestamp(member.user.createdAt);
+        logchannel.sendEmbed(reply);
+    }
+});
+
+bot.on("guildMemberRemove", member => {
+    if (settings.modlog.enabled && settings.modlog.members.join) {
+        let reply = new Discord.RichEmbed();
+        reply.setAuthor("Member left/was kicked", member.user.avatarURL);
+        reply.setTitle(member.user.username);
+        reply.setDescription("Joined "+Math.floor((new Date() - member.joinedTimestamp)/86400000)+" days ago (see timestamp)");
+        reply.addField("New user count:", logchannel.guild.members.size);
+        reply.setColor([125,75,0]);
+        reply.setTimestamp(member.joinedAt);
+        logchannel.sendEmbed(reply);
+    }
+});
 
 bot.login(settings.token);
