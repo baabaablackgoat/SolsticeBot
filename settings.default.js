@@ -47,7 +47,11 @@ module.exports= {
             roles: true,
         },
         messages: {
-            edit: true,
+            edit: {
+                enabled: true,
+                old_content: true,
+                new_content: true
+            },
             delete: true,
             purge: true,
         }
