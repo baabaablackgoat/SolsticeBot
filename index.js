@@ -214,4 +214,38 @@ bot.on("guildMemberRemove", member => {
     }
 });
 
+bot.on("guildBanAdd", (guild,user) => {
+   if (settings.modlog.enabled && settings.modlog.members.ban) {
+        let reply = new Discord.RichEmbed();
+        reply.setAuthor("Member left/was kicked", user.avatarURL);
+        reply.setTitle(user.username);
+        reply.addField("New user count:", guild.members.size);
+        reply.setColor([125,75,0]);
+        reply.setTimestamp(new Date());
+        logchannel.sendEmbed(reply);
+    } 
+});
+
+bot.on("guildMemberUpdate", (old_member,new_member) => {
+    if (settings.modlog.enabled && settings.modlog.members.nick && old_member.nickname !== new_member.nickname) {
+        let reply = new Discord.RichEmbed();
+        reply.setAuthor("Nickname changed", new_member.user.avatarURL);
+        reply.setTitle(old_member.nickname+ " => " + new_member.nickname);
+        reply.setColor([125,125,125]);
+        reply.setTimestamp(new Date());
+        logchannel.sendEmbed(reply);
+    }
+});
+
+bot.on("userUpdate",(old_user, new_user)=> {
+    if (settings.modlog.enabled && settings.modlog.members.username && old_user.username !== new_user.username) {
+        let reply = new Discord.RichEmbed();
+        reply.setAuthor("Username changed", new_user.avatarURL);
+        reply.setTitle(old_user.username+ " => " + new_user.username);
+        reply.setColor([125,125,125]);
+        reply.setTimestamp(new Date());
+        logchannel.sendEmbed(reply);
+    }
+});
+
 bot.login(settings.token);
