@@ -11,6 +11,7 @@ const commands = require("./data/commands");
 const setGame = require("./methods/setGame");
 const bannedFor = require("./methods/bannedFor");
 const commandKeys = Object.keys(commands); 
+let logchannel;
 
 bot._instance = {
     queue: [],
@@ -92,7 +93,6 @@ bot.on("message", msg => {
 });
 
 bot.on("ready", () => {
-    console.log("Solstice is ready.");
     //The following block automatically adds the bot owner to the mods userlist, with an access value of 99. This should always grant an override.
     if (!settings.owner_id) {
         console.log("No owner ID set! Terminate the bot process (hold ctrl+c in your console) and add it.");
@@ -100,8 +100,11 @@ bot.on("ready", () => {
         let options = {"settings": settings,};
         giveAccess([settings.owner_id], 99, true, bot, null, null, options);
     }
-    
     setGame(bot, settings.default_game);
+    console.log("Solstice is ready.");
+    if (settings.modlog.enabled) {
+        logchannel = bot.channels.get(settings.modlog.channel_id);
+    }
 });
 
 bot.on("reconnecting", () => {
@@ -111,5 +114,58 @@ bot.on("reconnecting", () => {
 bot.on("error", err => {
     console.error(err);
 });
+
+bot.on("messageDelete", msg => {
+    if (settings.modlog.enabled && settings.modlog.messages.delete && !msg.author.bot) {
+        let reply = new Discord.RichEmbed();
+        reply.setAuthor(msg.author.username,msg.author.avatarURL);
+        reply.setTitle("Message deleted from #"+msg.channel.name+", Message ID:`"+msg.id+"`");
+        reply.setDescription("```fix\n"+msg.content+"\n```");
+        reply.setColor([255,0,0]);
+        reply.setTimestamp(new Date());
+        logchannel.sendEmbed(reply);
+    }
+});
+
+bot.on("messageDeleteBulk", msgs => {
+    if (settings.modlog.enabled && settings.modlog.messages.purge) {
+        let msgArray = msgs.array();
+        let reply = new Discord.RichEmbed();
+        reply.setAuthor("#"+msgArray[0].channel.name+" purged", bot.user.avatarURL);
+        reply.setTitle(msgArray.length+" messages have been deleted.");
+        reply.setColor([255,0,0]);
+        reply.setTimestamp(new Date());
+        logchannel.sendEmbed(reply);
+    }
+});
+
+/*
+bot.on("messageUpdate", (old,new) => {
+    if (settings.modlog.enabled && settings.modlog.messages.purge) {}
+});
+*/
+
+bot.on("channelCreate", channel => {
+    if (settings.modlog.enabled && settings.modlog.server.channelCreate) {
+        let reply = new Discord.RichEmbed();
+        reply.setAuthor("Channel created", channel.guild.iconURL);
+        reply.setTitle("#"+channel.name);
+        reply.setColor([125,255,0]);
+        reply.setTimestamp(new Date());
+        logchannel.sendEmbed(reply);
+    }
+});
+
+bot.on("channelDelete", channel => {
+    if (settings.modlog.enabled && settings.modlog.server.channelCreate) {
+        let reply = new Discord.RichEmbed();
+        reply.setAuthor("Channel deleted", channel.guild.iconURL);
+        reply.setTitle("#"+channel.name);
+        reply.setColor([255,125,0]);
+        reply.setTimestamp(new Date());
+        logchannel.sendEmbed(reply);
+    }
+});
+
 
 bot.login(settings.token);
