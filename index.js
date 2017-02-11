@@ -245,6 +245,41 @@ bot.on("guildMemberUpdate", (old_member,new_member) => {
         reply.setTimestamp(new Date());
         logchannel.sendEmbed(reply);
     }
+    if (settings.modlog.enabled && settings.modlog.members.roles && old_member.roles !== new_member.roles) {
+        let oldroles = old_member.roles.keyArray().sort();
+        let newroles = new_member.roles.keyArray().sort();
+        let changedRole = {
+            type: "",
+            role_id: ""
+        };
+        if (oldroles.length > newroles.length) { 
+            changedRole.type="rm";   
+            let i=0;
+            while(oldroles[i]===newroles[i]){
+                i++;
+            }
+            changedRole.role_id = oldroles[i];
+        } else {
+            changedRole.type="add";   
+            let i=0;
+            while(oldroles[i]===newroles[i]){
+                i++;
+            }
+            changedRole.role_id = newroles[i];
+        }
+        let reply = new Discord.RichEmbed();
+        if (changedRole.type === "add") {
+            reply.setTitle("Role added");
+            reply.setColor([75,125,0]);
+        } else if (changedRole.type === "rm") {
+            reply.setTitle("Role removed");
+            reply.setColor([0,125,125]);
+        }
+        reply.setAuthor(new_member.user.username, new_member.user.avatarURL);
+        reply.setDescription(old_member.guild.roles.get(changedRole.role_id).name);
+        reply.setTimestamp(new Date());
+        logchannel.sendEmbed(reply); 
+    }
 });
 
 bot.on("userUpdate",(old_user, new_user)=> {
