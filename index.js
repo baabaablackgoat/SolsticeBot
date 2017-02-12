@@ -287,7 +287,7 @@ bot.on("guildMemberUpdate", (old_member,new_member) => {
     }
 });
 
-bot.on("userUpdate",(old_user, new_user)=> {
+bot.on("userUpdate", (old_user,new_user)=> {
     if (settings.modlog.enabled && settings.modlog.members.username && old_user.username !== new_user.username) {
         let reply = new Discord.RichEmbed();
         reply.setAuthor("Username changed", new_user.avatarURL);
@@ -295,6 +295,86 @@ bot.on("userUpdate",(old_user, new_user)=> {
         reply.setColor([125,125,125]);
         reply.setTimestamp(new Date());
         logchannel.sendEmbed(reply);
+    }
+});
+
+bot.on("guildUpdate", (old_guild,new_guild)=> {
+    if (settings.modlog.enabled && settings.modlog.server.guildUpdate) {
+        if (old_guild.afkChannelID !== new_guild.afkChannelID) {
+            let reply = new Discord.RichEmbed();
+            reply.setColor([200,200,255]);
+            reply.setAuthor("AFK channel changed",new_guild.iconURL);
+            reply.setTitle(old_guild.channels.get(old_guild.afkChannelID).name+" => "+new_guild.channels.get(new_guild.afkChannelID).name);
+            logchannel.sendEmbed(reply);
+        }
+        if (old_guild.afkTimeout !== new_guild.afkTimeout) {
+            let reply = new Discord.RichEmbed();
+            reply.setColor([200,200,255]);
+            reply.setAuthor("AFK timeout changed",new_guild.iconURL);
+            reply.setTitle(old_guild.afkTimeout+" => "+new_guild.afkTimeout);
+            logchannel.sendEmbed(reply);
+        }
+        if (old_guild.defaultChannel !== new_guild.defaultChannel) {
+            let reply = new Discord.RichEmbed();
+            reply.setColor([200,200,255]);
+            reply.setAuthor("Default channel changed",new_guild.iconURL);
+            reply.setTitle(old_guild.defaultChannel.name+" => "+new_guild.defaultChannel.name);
+            logchannel.sendEmbed(reply);   
+        }
+        if (old_guild.verificationLevel !== new_guild.verificationLevel) {
+            let reply = new Discord.RichEmbed();
+            reply.setColor([200,200,255]);
+            reply.setAuthor("Verification level changed",new_guild.iconURL);
+            reply.setTitle(old_guild.verificationLevel+" => "+new_guild.verificationLevel);
+            logchannel.sendEmbed(reply);
+        }
+        if (old_guild.iconURL !== new_guild.iconURL) {
+            let reply = new Discord.RichEmbed();
+            reply.setColor([200,200,255]);
+            reply.setAuthor("Guild icon changed",new_guild.iconURL);
+            reply.setTitle(old_guild.iconURL+" => "+new_guild.iconURL);
+            logchannel.sendEmbed(reply);
+        }
+    }
+});
+
+bot.on("roleCreate", role => {
+    if (settings.modlog.enabled && settings.modlog.server.guildUpdate) {
+        let reply = new Discord.RichEmbed();
+        reply.setColor([200,200,255]);
+        reply.setAuthor("Role created",role.guild.iconURL);
+        reply.setTitle(role.name+" ("+role.id+")");
+        logchannel.sendEmbed(reply);
+    }
+});
+
+bot.on("roleDelete", role => {
+    if (settings.modlog.enabled && settings.modlog.server.guildUpdate) {
+        let reply = new Discord.RichEmbed();
+        reply.setColor([200,200,255]);
+        reply.setAuthor("Role deleted",role.guild.iconURL);
+        reply.setTitle(role.name+" ("+role.id+")");
+        logchannel.sendEmbed(reply);
+    }
+});
+
+bot.on("roleUpdate", (old_role,new_role) => {
+    if (settings.modlog.enabled && settings.modlog.server.guildUpdate) {
+        let reply = new Discord.RichEmbed();
+        reply.setColor([200,200,255]);
+        reply.setAuthor("Role edited - "+old_role.name,new_role.guild.iconURL);
+        if (old_role.position !== new_role.position) {
+            reply.setTitle("Position changed: "+old_role.position+" => "+new_role.position);
+            logchannel.sendEmbed(reply);
+        }
+        if (old_role.color !== new_role.color) {
+            reply.setTitle("Color changed: "+old_role.color+" => "+new_role.color);
+            logchannel.sendEmbed(reply);
+        }
+        if (old_role.name !== new_role.name) {
+            reply.setTitle("Name changed: "+old_role.name+" => "+new_role.name);
+            logchannel.sendEmbed(reply);
+        }
     }
 });
 
