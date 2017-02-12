@@ -27,5 +27,41 @@ module.exports= {
         strip_roles: false,
         //Used in conjunction with strip_roles, see comment above.
         role_list: []
+    },
+    //The following is used to setup the mod log.
+    modlog : {
+        enabled: true,
+        channel_id: "199631735711989760",
+        server: {
+            guildUpdate: true,
+            channelCreate : true,
+            channelDelete: true,
+            channelUpdate: true,
+        },
+        members: {
+            join: true,
+            leave: true,
+            ban: true,
+            nick: true,
+            username: true,
+            roles: true,
+        },
+        messages: {
+            edit: {
+                enabled: true,
+                old_content: true,
+                new_content: true
+            },
+            delete: true,
+            purge: true,
+            timebased: {
+                enabled: true,
+                mintime: 1,
+                maxtime: 10,
+            }
+        },
+        bot: {
+            commands: true,
+        }
     }
 };

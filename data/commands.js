@@ -14,6 +14,7 @@ const userinfo = require("./../commands/userinfo.js");
 const fuck = require("./../commands/fuck.js");
 const bang = require("./../commands/bang.js");
 const fix = require("./../commands/fix.js");
+const cock = require("./../commands/cock.js");
 const botban = require("./../commands/botban.js");
 const terminate = require("./../commands/terminate.js");
 const accessRefresh = require("./../commands/accessRefresh.js");
@@ -208,6 +209,18 @@ module.exports = {
             args: false,
         },
         aliases: ["bang"],
+    },
+    cock: {
+        function: cock,
+        access: 0,
+        punishment: false,
+        hidden: true,
+        help: {
+            text: "Bawk bawk",
+            indepth: "ur a l00d",
+            args: false,
+        },
+        aliases: ["cock","upcock"],
     },
     fix: {
         function: fix,
