@@ -122,6 +122,10 @@ bot.on("error", err => {
 
 bot.on("messageDelete", msg => {
     if (settings.modlog.enabled && settings.modlog.messages.delete && !msg.author.bot) {
+        if (settings.modlog.messages.timebased.enabled) {
+            let now = new Date();
+            if ((now-msg.createdTimestamp)/1000 < settings.modlog.messages.timebased.mintime || (now-msg.createdTimestamp)/1000 > settings.modlog.messages.timebased.maxtime) {return;}
+        }
         let reply = new Discord.RichEmbed();
         reply.setAuthor(msg.author.username,msg.author.avatarURL);
         reply.setTitle("Message deleted from #"+msg.channel.name+", Message ID:`"+msg.id+"`");
@@ -146,6 +150,10 @@ bot.on("messageDeleteBulk", msgs => {
 
 bot.on("messageUpdate", (msg_old,msg_new) => {
     if (settings.modlog.enabled && settings.modlog.messages.edit.enabled && !msg_old.author.bot && msg_old) {
+        if (settings.modlog.messages.timebased.enabled) {
+            let now = new Date();
+            if ((now-msg_old.createdTimestamp)/1000 < settings.modlog.messages.timebased.mintime || (now-msg_old.createdTimestamp)/1000 > settings.modlog.messages.timebased.maxtime) {return;}
+        }
         let reply = new Discord.RichEmbed();
         if (msg_old.content !== msg_new.content) {
             if (settings.modlog.messages.edit.old_content) {

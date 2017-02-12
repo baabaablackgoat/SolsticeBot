@@ -54,6 +54,11 @@ module.exports= {
             },
             delete: true,
             purge: true,
+            timebased: {
+                enabled: true,
+                mintime: 1,
+                maxtime: 10,
+            }
         },
         bot: {
             commands: true,
