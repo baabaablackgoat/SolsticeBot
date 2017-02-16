@@ -160,10 +160,14 @@ bot.on("messageUpdate", (msg_old,msg_new) => {
         if (lev(msg_old.content, msg_new.content) <= settings.typo.length) {
             if (settings.typo.meme_mode) {
                 let old_array = msg_old.split(" ").map(
-                    //Do something to remove markdown chars
+                    function(string){
+                        return string.replace(/[\*\\_~`]/g,"");
+                    }
                 );
                 let new_array = msg_new.split(" ").map(
-                    //Do something to remove markdown chars
+                    function(string){
+                        return string.replace(/[\*\\_~`]/g,"");
+                    }
                 );
                 let wordpos = 0;
                 let deployed = false;
