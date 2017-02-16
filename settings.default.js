@@ -62,6 +62,11 @@ module.exports= {
         },
         bot: {
             commands: true,
+            invalid: true, //This effects the notification in chat if a nonexistant command was entered. Invalid commands are never truly logged.
         }
+    },
+    typo: {
+        length: 2,
+        meme_mode: true,
     }
 };

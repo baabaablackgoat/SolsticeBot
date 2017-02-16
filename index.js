@@ -1,6 +1,7 @@
 "use strict";
 
 const Discord = require("discord.js");
+const lev = require("levenshtein-string-distance");
 const bot = new Discord.Client();
 const userlist = require('./data/userlist.json');
 const settings = require("./settings");
@@ -155,6 +156,25 @@ bot.on("messageUpdate", (msg_old,msg_new) => {
         if (settings.modlog.messages.timebased.enabled) {
             let now = new Date();
             if ((now-msg_old.createdTimestamp)/1000 < settings.modlog.messages.timebased.mintime || (now-msg_old.createdTimestamp)/1000 > settings.modlog.messages.timebased.maxtime) {return;}
+        }
+        if (lev(msg_old.content, msg_new.content) <= settings.typo.length) {
+            if (settings.typo.meme_mode) {
+                let old_array = msg_old.split(" ").map(
+                    //Do something to remove markdown chars
+                );
+                let new_array = msg_new.split(" ").map(
+                    //Do something to remove markdown chars
+                );
+                let wordpos = 0;
+                let deployed = false;
+                while (wordpos < msg_old.length && !deployed) {
+                    if (old_array[wordpos] !== new_array[wordpos]) {
+                        msg_old.channel.sendMessage(old_array[wordpos]+"\n**"+old_array[wordpos]+"\n__"+old_array[wordpos]+"__**");
+                        deployed = true;
+                    }
+                }
+            }
+            return;
         }
         let reply = new Discord.RichEmbed();
         if (msg_old.content !== msg_new.content) {
