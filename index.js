@@ -159,22 +159,21 @@ bot.on("messageUpdate", (msg_old,msg_new) => {
         }
         if (lev(msg_old.content, msg_new.content) <= settings.modlog.messages.edit.typo.length) {
             if (settings.modlog.messages.edit.typo.meme_mode) {
-                let old_array = msg_old.split(" ").map(
+                let old_array = msg_old.content.split(" ").map(
                     function(string){
                         return string.replace(/[\*\\_~`]/g,"");
                     }
                 );
-                let new_array = msg_new.split(" ").map(
+                let new_array = msg_new.content.split(" ").map(
                     function(string){
                         return string.replace(/[\*\\_~`]/g,"");
                     }
                 );
-                let wordpos = 0;
-                let deployed = false;
-                while (wordpos < msg_old.length && !deployed) {
-                    if (old_array[wordpos] !== new_array[wordpos]) {
-                        msg_old.channel.sendMessage(old_array[wordpos]+"\n**"+old_array[wordpos]+"\n__"+old_array[wordpos]+"__**");
-                        deployed = true;
+                console.log(old_array,new_array);
+                for (let pos = 0; pos < old_array.length; pos++) {
+                    if (old_array[pos] !== new_array[pos]) {
+                        msg_old.channel.sendMessage(old_array[pos]+"\n**"+old_array[pos]+"\n__"+old_array[pos]+"__**");
+                        return;
                     }
                 }
             }
