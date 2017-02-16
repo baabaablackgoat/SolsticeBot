@@ -5,6 +5,20 @@ module.exports = function(bot,msg,args,options) {
         return;
     }
     let members = getMembersfromMention(msg);
+    /*
+    if (members.id_list.length < 1) {
+        //If no members were found (or the user isn't on the server...)
+        for (let j=0;j<args.length;j++) {
+            console.log(args[j]);
+            members.id_list.push(args[j]);
+            members.values[args[j]] = bot.users.get(args[j]);
+        }
+        //Check if any new members were added from that.
+        if (members.id_list.length < 1) {
+            msg.channel.sendMessage("You didn't provide a valid mention or ID.");
+            return;
+        }
+    }*/
     for (let i = 0; i < members.id_list.length; i++) {
         if (members.values[members.id_list[i]].highestRole.position >= msg.member.highestRole.position){
             msg.channel.sendMessage("You cannot ban this user! He is on the same or a higher role!");

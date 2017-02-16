@@ -157,8 +157,8 @@ bot.on("messageUpdate", (msg_old,msg_new) => {
             let now = new Date();
             if ((now-msg_old.createdTimestamp)/1000 < settings.modlog.messages.timebased.mintime || (now-msg_old.createdTimestamp)/1000 > settings.modlog.messages.timebased.maxtime) {return;}
         }
-        if (lev(msg_old.content, msg_new.content) <= settings.typo.length) {
-            if (settings.typo.meme_mode) {
+        if (lev(msg_old.content, msg_new.content) <= settings.modlog.messages.edit.typo.length) {
+            if (settings.modlog.messages.edit.typo.meme_mode) {
                 let old_array = msg_old.split(" ").map(
                     function(string){
                         return string.replace(/[\*\\_~`]/g,"");

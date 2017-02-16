@@ -50,7 +50,11 @@ module.exports= {
             edit: {
                 enabled: true,
                 old_content: true,
-                new_content: true
+                new_content: true,
+                typo: {
+                    length: 2,
+                    meme_mode: true,
+                },
             },
             delete: true,
             purge: true,
@@ -65,8 +69,4 @@ module.exports= {
             invalid: true, //This effects the notification in chat if a nonexistant command was entered. Invalid commands are never truly logged.
         }
     },
-    typo: {
-        length: 2,
-        meme_mode: true,
-    }
 };
