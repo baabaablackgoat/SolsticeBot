@@ -78,7 +78,7 @@ bot.on("message", msg => {
                         "settings": settings,
                     };
                     fn(bot, msg, args, options);
-                    if (settings.modlog.enabled && settings.modlog.bot.commands) {
+                    if (settings.modlog.enabled && settings.modlog.bot.commands && command_id.log) {
                         let reply = new Discord.RichEmbed();
                         reply.setAuthor(msg.author.username,msg.author.avatarURL);
                         reply.setTitle("Called command: "+call.name);
@@ -92,7 +92,9 @@ bot.on("message", msg => {
             }
         } else { //User entered unknown command
             console.log(msg.author.username + " called an unknown command: " + call.name);
-            msg.channel.sendMessage("Unknown command. `" + settings.prefix + "help`");
+            if (settings.modlog.bot.invalid) {
+                msg.channel.sendMessage("Unknown command. `" + settings.prefix + "help`");
+            }
         }
     }
 });

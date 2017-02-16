@@ -35,6 +35,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Show commands & indepth help",
             indepth: "Pass it a command name, and you shall recieve!",
@@ -47,6 +48,7 @@ module.exports = {
         access: 5,
         punishment: false,
         hidden: true,
+        log: true,
         help: {
             text: "Runs the debug function",
             indepth: "I can't go against my programming. This will run whatever is in debug.",
@@ -59,6 +61,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Pong!",
             indepth: "Ping, pong, and on, and on",
@@ -71,6 +74,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Returns a random meme",
             indepth: "We are number one but it's actually the nutshack",
@@ -83,6 +87,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Adds songs to the queue",
             indepth: "Adds either predefined local files or valid YouTube links to the music bot queue.",
@@ -95,6 +100,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Voteskip the current song",
             indepth: "Adds your vote to voteskip the current song. If 50% or more of the VC attendants vote to skip, the next song plays.",
@@ -107,6 +113,7 @@ module.exports = {
         access: 2,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Empties the musicbot queue",
             indepth: "Clears out all entries in the current queue and disconnects the bot from any VC.", 
@@ -119,6 +126,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Lists the current queue",
             indepth: "Lists all current songs in the musicbot",
@@ -131,6 +139,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Shows current song",
             indepth: "Returns the song the musicbot is playing right now",
@@ -143,6 +152,7 @@ module.exports = {
         access: 2,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Disconnect from VC",
             indepth: "Disconnects the bot from any voicechannel it's connected to",
@@ -155,6 +165,7 @@ module.exports = {
         access: 1,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Changes musicbot volume",
             indepth: "Changes the volume the bot is playing audio with. Warning: Anything above 1.5 will sound distorted!",
@@ -167,6 +178,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Shows user info",
             indepth: "Shows a few informations about the person calling the command or a mentioned user.",
@@ -179,6 +191,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "*tick, tock* - Countdown to Solstice.",
             indepth: "This command is a hommage to OneShot. If no args are provided, it displays the time until the Spring Equinox. You can pass it a JS-parseable date to set your own target. All Dates are based on UTC.",
@@ -191,6 +204,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: true,
+        log: true,
         help: {
             text: "...",
             indepth: "...",
@@ -203,6 +217,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: true,
+        log: true,
         help: {
             text: "We'll bang, okay?",
             indepth: "We'll bang, okay?",
@@ -215,6 +230,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: true,
+        log: true,
         help: {
             text: "Bawk bawk",
             indepth: "ur a l00d",
@@ -227,6 +243,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: true,
+        log: true,
         help: {
             text: "volvo, pls fix",
             indepth: "volvo, pls fix",
@@ -239,6 +256,7 @@ module.exports = {
         access: 0,
         punishment: false,
         hidden: true,
+        log: true,
         help: {
             text: "*huggu*",
             indepth: "Sometimes, you're just in need of a hug.",
@@ -251,6 +269,7 @@ module.exports = {
         access: 10,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Reloads Role Access Values",
             indepth: "Reloads all users that have the predefined roles and assigns them the predefined access values.",
@@ -263,6 +282,7 @@ module.exports = {
         access: 10,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Gives the mentioned user bot access.",
             indepth: "The mentioned user will recieve bot access as high as the specified level. Cannot assign a higher access level than the caller has.",
@@ -275,6 +295,7 @@ module.exports = {
         access: 5,
         punishment: "15m",
         hidden: false,
+        log: true,
         help: {
             text: "Bans a user from using the bot.",
             indepth: "Bans a mentioned user for a specified time. Set the time to 'never' and the ban will be permanent.",
@@ -287,6 +308,7 @@ module.exports = {
         access: 10,
         punishment: "45m",
         hidden: false,
+        log: true,
         help: {
             text: "Bans a user from the server the message was sent in.",
             indepth: "Bans the mentioned user from the server.",
@@ -299,6 +321,7 @@ module.exports = {
         access: 5,
         punishment: "15m",
         hidden: false,
+        log: true,
         help: {
             text: "If enabled, rolebans a user.",
             indepth: "Rolebans the mentioned user. This basically means that this user is assigned a role that has been preconfigured to not allow chatting in any channel except for one.",
@@ -311,6 +334,7 @@ module.exports = {
         access: 10,
         punishment: "15m",
         hidden: false,
+        log: true,
         help: {
             text: "Kicks a user from the server the message was sent in.",
             indepth: "Kicks the mentioned user from the server.",
@@ -323,6 +347,7 @@ module.exports = {
         access: 5,
         punishment: false,
         hidden: false,
+        log: true,
         help: {
             text: "Removes messages based on given arguments.",
             indepth: "Purge deletes messages based on the arguments you give it. You can pass it user mention(s) to purge messages from this/these users, keyword(s) to remove all messages matching the keyword, etc. Entering a number will terminate the argument list and defines the amount of messages to scan. Only pass a number to remove all previous x messages.",
@@ -335,6 +360,7 @@ module.exports = {
         access: 3,
         punishment: "15m",
         hidden: false,
+        log: true,
         help: {
             text: "Mutes a user for a defined time.",
             indepth: "Mutes a mentioned user for a specified time. Set the time to 'never' and the mute will be permanent. Mute means that every message the bot can see will be automatically deleted.",
@@ -348,6 +374,7 @@ module.exports = {
         access: 3,
         punishment: "15m",
         hidden: false,
+        log: true,
         help: {
             text: "Unmutes a muted user.",
             indepth: "Unmutes a muted user. Provide a mention.",
@@ -360,6 +387,7 @@ module.exports = {
         access: 99,
         punishment: "30m",
         hidden: false,
+        log: true,
         help: {
             text: "Stops the bot.",
             indepth: "Closes the node process after returning a goodbye message.",
@@ -375,6 +403,7 @@ module.exports = {
         access: 99,
         punishment: "1d",
         hidden: false,
+        log: true,
         help: {
             text: "Evaluates the given input.",
             indepth: "Calls eval() on the given input. Warning - this basically means root access! Spaces/'multiple args' are automatically joined.",
