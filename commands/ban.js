@@ -11,7 +11,7 @@ module.exports = function(bot,msg,args,options) {
             return;
         }
         members.values[members.id_list[i]].ban()
-            .then(() => {msg.channel.sendMessage("Goodbye forever. https://www.youtube.com/watch?v=FXPKJUE86d0");})
+            .then(() => {msg.channel.sendMessage("**"+members.values[members.id_list[i]].user.username+"**, ID "+members.values[members.id_list[i]].id+", has been banned. Goodbye forever. <https://www.youtube.com/watch?v=FXPKJUE86d0>");})
             .catch(err => {
                 msg.channel.sendMessage("Something went wrong... Maybe I do not have the permissions to ban this user.");
                 console.log(err);
@@ -34,7 +34,7 @@ module.exports = function(bot,msg,args,options) {
             for (let j=0; j<banned_ids.length; j++) {
                 console.log(banned_ids[j], typeof banned_ids);
                 msg.guild.ban(banned_ids[j])
-                    .then(()=>{msg.channel.sendMessage("The user with the ID "+banned_ids[j]+" was banned. Goodbye forever. https://www.youtube.com/watch?v=FXPKJUE86d0")})
+                    .then(()=>{msg.channel.sendMessage("The user with the ID "+banned_ids[j]+" was banned. Goodbye forever. <https://www.youtube.com/watch?v=FXPKJUE86d0>")})
                     .catch(err=>{
                         msg.channel.sendMessage("Something went wrong... Maybe I don't have the permission to ban this user.\n ```\n"+err+"```");
                         console.log(err);
