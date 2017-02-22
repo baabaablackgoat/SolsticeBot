@@ -32,7 +32,12 @@ module.exports = function(bot,msg,args,options) {
             return;
         } else {
             for (let j=0; j<banned_ids.length; j++) {
-                console.log(banned_ids[j], typeof banned_ids);
+                if (msg.guild.members[banned_ids[j]]) { //Check if the user is present on the server before doing anything.
+                    if (msg.guild.members[banned_ids[j]].highestRole.position >= msg.member.highestRole.position){ //If the member is present, compare the roles.
+                        msg.channel.sendMessage("You cannot ban this user! He is on the same or a higher role!");
+                        return;
+                    }
+                }
                 msg.guild.ban(banned_ids[j])
                     .then(()=>{msg.channel.sendMessage("The user with the ID "+banned_ids[j]+" was banned. Goodbye forever. <https://www.youtube.com/watch?v=FXPKJUE86d0>")})
                     .catch(err=>{
