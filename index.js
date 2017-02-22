@@ -154,8 +154,10 @@ bot.on("messageDeleteBulk", msgs => {
 bot.on("messageUpdate", (msg_old,msg_new) => {
     if (settings.modlog.enabled && settings.modlog.messages.edit.enabled && !msg_old.author.bot && msg_old) {
         if (settings.modlog.messages.timebased.enabled) {
-            let now = new Date();
-            if ((now-msg_old.createdTimestamp)/1000 < settings.modlog.messages.timebased.mintime || (now-msg_old.createdTimestamp)/1000 > settings.modlog.messages.timebased.maxtime) {return;}
+            let msgtime = new Date() - msg_old.createdAt;
+            if (msgtime/1000 < settings.modlog.messages.timebased.mintime || msgtime/1000 > settings.modlog.messages.timebased.maxtime) {
+                return;
+            }
         }
         if (lev(msg_old.content, msg_new.content) <= settings.modlog.messages.edit.typo.length) {
             if (settings.modlog.messages.edit.typo.meme_mode) {
@@ -169,7 +171,6 @@ bot.on("messageUpdate", (msg_old,msg_new) => {
                         return string.replace(/[\*\\_~`]/g,"");
                     }
                 );
-                console.log(old_array,new_array);
                 for (let pos = 0; pos < old_array.length; pos++) {
                     if (old_array[pos] !== new_array[pos]) {
                         msg_old.channel.sendMessage(old_array[pos]+"\n**"+old_array[pos]+"\n__"+old_array[pos]+"__**");
