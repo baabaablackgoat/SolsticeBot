@@ -11,7 +11,14 @@ const giveAccess = require("./methods/giveAccess");
 const commands = require("./data/commands");
 const setGame = require("./methods/setGame");
 const bannedFor = require("./methods/bannedFor");
-const commandKeys = Object.keys(commands); 
+const compareStrings = require("./methods/compareStrings");
+const commandKeys = Object.keys(commands);
+let allCommands = []; //nts: make this look neat and pretty by applying modules :P
+for (let i=0;i<commandKeys.length;i++){ 
+    if (!commands[commandKeys[i]].hidden) { //Do not compare to the hidden commands.
+        allCommands = allCommands.concat(commands[commandKeys[i]].aliases);
+    }
+}
 let logchannel;
 
 bot._instance = {
@@ -94,7 +101,7 @@ bot.on("message", msg => {
         } else { //User entered unknown command
             console.log(msg.author.username + " called an unknown command: " + call.name);
             if (settings.modlog.bot.invalid) {
-                msg.channel.sendMessage("Unknown command. `" + settings.prefix + "help`");
+                msg.channel.sendMessage("Unknown command. Did you mean `"+compareStrings(call.name,allCommands)+"`?");
             }
         }
     }
