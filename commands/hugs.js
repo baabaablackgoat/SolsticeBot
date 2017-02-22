@@ -43,6 +43,9 @@ module.exports = function(bot,msg,args,options) {
         case "128985967875850240": 
             msg.channel.sendMessage("Feeeeeliiiix! \n *huggu*");
             break; 
+        case "184008067661168640":
+            msg.channel.sendMessage("ey b0ss, i habe hugs \n *huggu*");
+            break;
         default:
             normalhugs();
             break;
