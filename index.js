@@ -159,7 +159,7 @@ bot.on("messageUpdate", (msg_old,msg_new) => {
                 return;
             }
         }
-        if (lev(msg_old.content, msg_new.content) <= settings.modlog.messages.edit.typo.length) {
+        if (lev(msg_old.content, msg_new.content) <= settings.modlog.messages.edit.typo.length && settings.modlog.messages.edit.typo.check) {
             if (settings.modlog.messages.edit.typo.meme_mode) {
                 let old_array = msg_old.content.split(" ").map(
                     function(string){

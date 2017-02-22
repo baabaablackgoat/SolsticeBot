@@ -52,6 +52,7 @@ module.exports= {
                 old_content: true,
                 new_content: true,
                 typo: {
+                    check: true,
                     length: 2,
                     meme_mode: true,
                 },
