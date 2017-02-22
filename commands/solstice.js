@@ -20,10 +20,9 @@ module.exports = function(bot,msg,args,options) {
         msg.channel.sendMessage("_tick, tock, **krrt**_ \nWhoops, too many arguments! Please provide only one argument. \n(Hint:  encase it in quotation marks)");
         return;
     } else { 
-        console.log(typeof args[0]);
         target = new Date(args[0]);
-        target.setMinutes(target.getMinutes + offset);
-        if (isNaN(target.getTime)) {
+        target.setMinutes(target.getMinutes() + offset);
+        if (isNaN(target.getTime())) {
             msg.channel.sendMessage("_tick, tock, **krrt**_ \n```fix\n"+target+"\n```\nWhoops! Something was wrong with your datestring. Your date returned as invalid. Make sure you use a JavaScript compatible Date format. \n https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Date");
             return;
         }
