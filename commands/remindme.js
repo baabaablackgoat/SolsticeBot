@@ -15,8 +15,25 @@ module.exports = function(bot,msg,args,options) {
             }
         } else {
             let raw = args[1];
-            
-            let result = target.split();
+            let split = target.split(":");
+            let result = {
+                days: 0,
+                hrs: 0,
+                mins: 0
+            };
+            if (split.length > 3) {
+                msg.channel.sendMessage("Whoops, your input had too many target arguments! I can only take up to three time inputs (dd:hh:mm)");
+                return;
+            } else {
+                split.reverse();
+                //Do a check if it's undefined or if it's not a number.
+                //If undefined, replace with 0
+                //if NaN, throw an error.
+                result.days = split[0];
+                result.hrs = split[1];
+                result.mins = split[2];
+            } 
+
         }
         if (msg.author.id in bot.globalVars.remindMe) {
             let data = bot.globalVars.remindMe[msg.author.id];
