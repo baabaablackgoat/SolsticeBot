@@ -1,7 +1,6 @@
 module.exports = function(bot){
     let now = new Date();
     let reminders = bot.globalVars.remindMe;
-    console.log(reminders);
     for (let i in reminders) {
         if (now.getTime() > reminders[i].target) {
             console.log("expired: UserID/key"+i);

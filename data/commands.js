@@ -199,6 +199,19 @@ module.exports = {
         },
         aliases: ["solstice","countdown"],
     },
+    remind: {
+        function: remindme,
+        access: 0,
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            text: "Pings you with a message of your choice after a set time.",
+            indepth: "Give this command a message and a target, and it will ping you in the same channel with that information. ",
+            args: "[message], [hh:mm:ss OR js-date]",
+        },
+        aliases: ["remind", "remindme"],
+    },
     fuck: {
         function: fuck,
         access: 0,
