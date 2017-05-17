@@ -2,6 +2,7 @@
 //(X) => object consisting of 4 numerical values and the date it would target. Returns false if invalid.
 module.exports = function (input,mode) {
     let now = new Date();
+    let abort = false;
     let result = {
         days: 0,
         hrs: 0,
@@ -13,7 +14,6 @@ module.exports = function (input,mode) {
 
     //Check if date is parseable.
     if (!isNaN(new Date(input))) { //This obviously ignores the mode.
-        console.log("date is parseable");
         result.target = new Date(input);
         let diff = result.target.getTime()-now.getTime();
         result.days = Math.floor(diff/86400000);
@@ -24,10 +24,13 @@ module.exports = function (input,mode) {
         let raw = input.split(":").map(i=>Number(i));
         raw.forEach(item=>{
             if (isNaN(item)) {
-                console.log("error-NaN");
-                return false;
+                abort = true;
+                return;
             }
         });
+        if (abort) {
+            return false;
+        }
         console.log("valid duration");
         if (mode === "dmh") { //raw is one of the following: 3 days | 3 days,3 hours | 3 days,3 hours,3 minutes 
             let temp = raw[0]*86400000;

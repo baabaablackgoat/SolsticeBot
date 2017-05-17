@@ -276,7 +276,8 @@ module.exports = {
             text: "Shows current JS time (WIP)",
             indepth: "Will eventually show all timezones and other variants of displaying the time.",
             args: false,
-        }
+        },
+        aliases: ["now"],
     },
     hugs: {
         function: hugs,
