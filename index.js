@@ -11,6 +11,7 @@ const giveAccess = require("./methods/giveAccess");
 const commands = require("./data/commands");
 const setGame = require("./methods/setGame");
 const bannedFor = require("./methods/bannedFor");
+const remindMeRefresh = require("./methods/remindMeRefresh.js");
 const compareStrings = require("./methods/compareStrings");
 const commandKeys = Object.keys(commands);
 let allCommands = []; //nts: make this look neat and pretty by applying modules :P
@@ -30,6 +31,14 @@ bot._instance = {
     dispatcher: null,
     userVoice: null,
     VoiceConnection: null,
+};
+
+bot.globalVars = {
+    remindMe: {}
+};
+
+bot.intervals = {
+    remindMe: setInterval(function(){remindMeRefresh(bot);},1000),
 };
 
 bot.on("message", msg => {
