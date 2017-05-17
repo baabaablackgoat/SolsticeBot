@@ -34,13 +34,7 @@ bot._instance = {
 };
 
 bot.globalVars = {
-    remindMe: {
-        "178470784984023040": {
-            target: 0,
-            text: "fucking delete this default test reminder already",
-            channel: "199631735711989760", //#spam
-        },
-    }
+    remindMe: {}
 };
 
 bot.intervals = {
