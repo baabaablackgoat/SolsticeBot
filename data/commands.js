@@ -30,6 +30,7 @@ const evaluate = require("./../commands/eval.js");
 const solstice = require("./../commands/solstice.js");
 const remindme = require("./../commands/remindme.js");
 const now = require("./../commands/now.js");
+const hentai = require("./../commands/hentie.js");
 
 module.exports = {
     help: {
@@ -291,6 +292,19 @@ module.exports = {
             args: false,
         },
         aliases: ["hugs","hug","huggu"],
+    },
+    hentai: {
+        function: hentai,
+        access: 0,
+        punishment: false,
+        hidden: true,
+        log: true,
+        help: {
+            text: "You sick bastard.",
+            indepth: "You sick bastard.",
+            args: false,
+        },
+        aliases: ["hentai","hentie"]
     },
     accessRefresh: {
         function: accessRefresh,

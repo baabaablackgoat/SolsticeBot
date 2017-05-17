@@ -13,25 +13,25 @@ module.exports = function (bot, msg, args, options) {
             let result = giveAccess(mentionIds, level, override, bot, msg, args, options);
             switch (result) {
                 case "ok": 
-                    msg.channel.sendMessage("Assigned access " + level + " to the user with the ID " + mentionIds);
+                    msg.channel.send("Assigned access " + level + " to the user with the ID " + mentionIds);
                     break;
                 case "err_override":
-                    msg.channel.sendMessage("Running this command would leave the targeted user with a lower access level. Override is required.");
+                    msg.channel.send("Running this command would leave the targeted user with a lower access level. Override is required.");
                     break;
                 case "err_access_insufficient":
-                    msg.channel.sendMessage("You cannot assign an equal or higher access level! Override is required.");
+                    msg.channel.send("You cannot assign an equal or higher access level! Override is required.");
                     break;
                 case "err_owner":
-                    msg.channel.sendMessage("You cannot overwrite the owner's bot access level.");
+                    msg.channel.send("You cannot overwrite the owner's bot access level.");
                     break;
                 default:
-                    msg.channel.sendMessage("Fatal Error - unknown error cause! Bug TrueMGF about it, would ya.");
+                    msg.channel.send("Fatal Error - unknown error cause! Bug TrueMGF about it, would ya.");
                     break;
             }
         } else {
-            msg.channel.sendMessage("You didn't provide a valid access level.");
+            msg.channel.send("You didn't provide a valid access level.");
         }
     } else {
-        msg.channel.sendMessage("You didn't provide a valid mention.");
+        msg.channel.send("You didn't provide a valid mention.");
     }
 };

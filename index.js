@@ -46,7 +46,7 @@ bot.on("message", msg => {
     if (userlist.muted.hasOwnProperty(msg.author.id)){
         if (userlist.muted[msg.author.id].expires === "never" || userlist.muted[msg.author.id].expires > new Date()) {
             msg.delete();
-            msg.channel.sendMessage("`Your message was automatically deleted since you are muted.`")
+            msg.channel.send("`Your message was automatically deleted since you are muted.`")
                 .then(response => response.delete(3000));
                 return; //Avoid calling the other stuff the bot provides
         }
@@ -57,7 +57,7 @@ bot.on("message", msg => {
     if (msg.content.startsWith(settings.prefix) && !msg.author.bot) { //Invoker? Not a bot user?
         if (userlist.banned.hasOwnProperty(msg.author.id)) {
             if (userlist.banned[msg.author.id].expires === "never" || userlist.banned[msg.author.id].expires > new Date()) {
-                msg.channel.sendMessage("<@" + msg.author.id + ">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
+                msg.channel.send("<@" + msg.author.id + ">, you are botbanned for another " + bannedFor(userlist.banned[msg.author.id].expires));
                 console.log(msg.author.username + " attempted to use a command but is banned");
                 return;
             }
@@ -101,7 +101,7 @@ bot.on("message", msg => {
                         reply.setTitle("Called command: "+call.name);
                         reply.setDescription("Provided Arguments: "+args);
                         reply.setColor([0,0,0]);
-                        logchannel.sendEmbed(reply);
+                        logchannel.send("",{embed:reply});
                     }
                 } else { //Function not found
                     console.log("Fatal error - function not resolvable");
@@ -110,7 +110,7 @@ bot.on("message", msg => {
         } else { //User entered unknown command
             console.log(msg.author.username + " called an unknown command: " + call.name);
             if (settings.modlog.bot.invalid) {
-                msg.channel.sendMessage("Unknown command. Did you mean `"+compareStrings(call.name,allCommands)+"`?");
+                msg.channel.send("Unknown command. Did you mean `"+compareStrings(call.name,allCommands)+"`?");
             }
         }
     }
@@ -151,7 +151,7 @@ bot.on("messageDelete", msg => {
         reply.setDescription("```fix\n"+msg.content+"\n```");
         reply.setColor([255,125,180]);
         reply.setTimestamp(new Date());
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
 });
 
@@ -163,7 +163,7 @@ bot.on("messageDeleteBulk", msgs => {
         reply.setTitle(msgArray.length+" messages have been deleted.");
         reply.setColor([255,0,0]);
         reply.setTimestamp(new Date());
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
 });
 
@@ -189,7 +189,7 @@ bot.on("messageUpdate", (msg_old,msg_new) => {
                 );
                 for (let pos = 0; pos < old_array.length; pos++) {
                     if (old_array[pos] !== new_array[pos]) {
-                        msg_old.channel.sendMessage(old_array[pos]+"\n**"+old_array[pos]+"\n__"+old_array[pos]+"__**");
+                        msg_old.channel.send(old_array[pos]+"\n**"+old_array[pos]+"\n__"+old_array[pos]+"__**");
                         return;
                     }
                 }
@@ -217,7 +217,7 @@ bot.on("messageUpdate", (msg_old,msg_new) => {
         reply.setTitle("Message edited in #"+msg_new.channel.name+", Message ID:`"+msg_new.id+"`");
         reply.setColor([0,125,255]);
         reply.setTimestamp(msg_new.editedAt);
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
 });
 
@@ -228,7 +228,7 @@ bot.on("channelCreate", channel => {
         reply.setTitle("#"+channel.name);
         reply.setColor([125,255,0]);
         reply.setTimestamp(new Date());
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
 });
 
@@ -239,7 +239,7 @@ bot.on("channelDelete", channel => {
         reply.setTitle("#"+channel.name);
         reply.setColor([255,125,0]);
         reply.setTimestamp(new Date());
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
 });
 
@@ -252,7 +252,7 @@ bot.on("guildMemberAdd", member => {
         reply.addField("New user count:", logchannel.guild.members.size);
         reply.setColor([255,255,0]);
         reply.setTimestamp(member.user.createdAt);
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
 });
 
@@ -265,7 +265,7 @@ bot.on("guildMemberRemove", member => {
         reply.addField("New user count:", logchannel.guild.members.size);
         reply.setColor([125,75,0]);
         reply.setTimestamp(member.joinedAt);
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
 });
 
@@ -276,7 +276,7 @@ bot.on("guildBanAdd", (guild,user) => {
         reply.setTitle(user.username+"("+user.id+")");
         reply.setColor([125,0,0]);
         reply.setTimestamp(new Date());
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     } 
 });
 
@@ -287,7 +287,7 @@ bot.on("guildBanRemove", (guild,user) => {
         reply.setTitle(user.username+"("+user.id+")");
         reply.setColor([125,255,255]);
         reply.setTimestamp(new Date());
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     } 
 });
 
@@ -298,7 +298,7 @@ bot.on("guildMemberUpdate", (old_member,new_member) => {
         reply.setTitle(old_member.nickname+ " => " + new_member.nickname);
         reply.setColor([125,125,125]);
         reply.setTimestamp(new Date());
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
     if (settings.modlog.enabled && settings.modlog.members.roles && old_member.roles !== new_member.roles) {
         let oldroles = old_member.roles.keyArray().sort();
@@ -333,7 +333,7 @@ bot.on("guildMemberUpdate", (old_member,new_member) => {
         reply.setAuthor(new_member.user.username, new_member.user.avatarURL);
         reply.setDescription(old_member.guild.roles.get(changedRole.role_id).name);
         reply.setTimestamp(new Date());
-        logchannel.sendEmbed(reply); 
+        logchannel.send("",{embed:reply}); 
     }
 });
 
@@ -344,7 +344,7 @@ bot.on("userUpdate", (old_user,new_user)=> {
         reply.setTitle(old_user.username+ " => " + new_user.username);
         reply.setColor([125,125,125]);
         reply.setTimestamp(new Date());
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
 });
 
@@ -355,35 +355,35 @@ bot.on("guildUpdate", (old_guild,new_guild)=> {
             reply.setColor([200,200,255]);
             reply.setAuthor("AFK channel changed",new_guild.iconURL);
             reply.setTitle(old_guild.channels.get(old_guild.afkChannelID).name+" => "+new_guild.channels.get(new_guild.afkChannelID).name);
-            logchannel.sendEmbed(reply);
+            logchannel.send("",{embed:reply});
         }
         if (old_guild.afkTimeout !== new_guild.afkTimeout) {
             let reply = new Discord.RichEmbed();
             reply.setColor([200,200,255]);
             reply.setAuthor("AFK timeout changed",new_guild.iconURL);
             reply.setTitle(old_guild.afkTimeout+" => "+new_guild.afkTimeout);
-            logchannel.sendEmbed(reply);
+            logchannel.send("",{embed:reply});
         }
         if (old_guild.defaultChannel !== new_guild.defaultChannel) {
             let reply = new Discord.RichEmbed();
             reply.setColor([200,200,255]);
             reply.setAuthor("Default channel changed",new_guild.iconURL);
             reply.setTitle(old_guild.defaultChannel.name+" => "+new_guild.defaultChannel.name);
-            logchannel.sendEmbed(reply);   
+            logchannel.send("",{embed:reply});   
         }
         if (old_guild.verificationLevel !== new_guild.verificationLevel) {
             let reply = new Discord.RichEmbed();
             reply.setColor([200,200,255]);
             reply.setAuthor("Verification level changed",new_guild.iconURL);
             reply.setTitle(old_guild.verificationLevel+" => "+new_guild.verificationLevel);
-            logchannel.sendEmbed(reply);
+            logchannel.send("",{embed:reply});
         }
         if (old_guild.iconURL !== new_guild.iconURL) {
             let reply = new Discord.RichEmbed();
             reply.setColor([200,200,255]);
             reply.setAuthor("Guild icon changed",new_guild.iconURL);
             reply.setTitle(old_guild.iconURL+" => "+new_guild.iconURL);
-            logchannel.sendEmbed(reply);
+            logchannel.send("",{embed:reply});
         }
     }
 });
@@ -394,7 +394,7 @@ bot.on("roleCreate", role => {
         reply.setColor([200,200,255]);
         reply.setAuthor("Role created",role.guild.iconURL);
         reply.setTitle(role.name+" ("+role.id+")");
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
 });
 
@@ -404,7 +404,7 @@ bot.on("roleDelete", role => {
         reply.setColor([200,200,255]);
         reply.setAuthor("Role deleted",role.guild.iconURL);
         reply.setTitle(role.name+" ("+role.id+")");
-        logchannel.sendEmbed(reply);
+        logchannel.send("",{embed:reply});
     }
 });
 
@@ -415,15 +415,15 @@ bot.on("roleUpdate", (old_role,new_role) => {
         reply.setAuthor("Role edited - "+old_role.name,new_role.guild.iconURL);
         if (old_role.position !== new_role.position) {
             reply.setTitle("Position changed: "+old_role.position+" => "+new_role.position);
-            logchannel.sendEmbed(reply);
+            logchannel.send("",{embed:reply});
         }
         if (old_role.color !== new_role.color) {
             reply.setTitle("Color changed: "+old_role.color+" => "+new_role.color);
-            logchannel.sendEmbed(reply);
+            logchannel.send("",{embed:reply});
         }
         if (old_role.name !== new_role.name) {
             reply.setTitle("Name changed: "+old_role.name+" => "+new_role.name);
-            logchannel.sendEmbed(reply);
+            logchannel.send("",{embed:reply});
         }
     }
 });

@@ -41,12 +41,12 @@ module.exports = function (bot, msg, args, options) {
                     embed.addField("Aliases", "This command has no aliases.");
                 }
                 embed.addField("Access", "Requires access level of " + commandaccess + " or higher.\n(You are Access Level " + useraccess + ".)");
-                msg.channel.sendEmbed(embed);
+                msg.channel.send("",{embed:embed});
             } else {
-                msg.channel.sendMessage("You don't have access to the command `" + args[0] + "`.");
+                msg.channel.send("You don't have access to the command `" + args[0] + "`.");
             }
         } else {
-            msg.channel.sendMessage("`" + args[0] + "` is not a valid command.");
+            msg.channel.send("`" + args[0] + "` is not a valid command.");
         }
     } else {
         eachObject(commands, (command,key) => {
@@ -56,6 +56,6 @@ module.exports = function (bot, msg, args, options) {
             }
         });
 
-        msg.channel.sendMessage("```" + reply.join("") + "```");
+        msg.channel.send("```" + reply.join("") + "```");
     }
 };

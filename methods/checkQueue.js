@@ -5,7 +5,7 @@ const disconnect = require("./../commands/disconnect");
 
 module.exports = function (bot, msg, args, options) {
     if (typeof msg.member.voiceChannelID === "undefined") {
-        msg.channel.sendMessage("You're not in a voicechannel! Couldn't join a voice channel.");
+        msg.channel.send("You're not in a voicechannel! Couldn't join a voice channel.");
     } else {
         if (!bot._instance.playing && bot._instance.queue.length > 0) {
             let item = bot._instance.queue.shift();

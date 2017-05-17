@@ -8,5 +8,5 @@ module.exports = function (bot, msg, args, options) {
     } else if (memelist.maimais.prefixes.indexOf(args[0]) >= 0) {
         selectedmeme = "maimais";
     }
-    msg.channel.sendMessage(memelist[selectedmeme].values[Math.floor(Math.random() * memelist[selectedmeme].values.length)] + " ( ͡° ͜ʖ ͡°)");
+    msg.channel.send(memelist[selectedmeme].values[Math.floor(Math.random() * memelist[selectedmeme].values.length)] + " ( ͡° ͜ʖ ͡°)");
 };

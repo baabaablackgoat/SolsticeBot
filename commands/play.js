@@ -8,7 +8,7 @@ module.exports = function (bot, msg, args, options) {
         if (args[0].toLowerCase() === "random" || args[0].toLowerCase() === "rdm") {
             const temp = Object.keys(files);
             args[0] = temp[Math.floor(Math.random() * temp.length)];
-            msg.channel.sendMessage(":heart::spades::heart::spades: Playing: " + args[0]);
+            msg.channel.send(":heart::spades::heart::spades: Playing: " + args[0]);
         }
         if (args[0].toLowerCase() in files) {
             let item = {
@@ -19,7 +19,7 @@ module.exports = function (bot, msg, args, options) {
             addtoQueue(bot, msg, item);
             checkQueue(bot, msg, args, options);
         } else if (args[0].startsWith("https://youtu.be") || args[0].startsWith("https://www.youtube.com")) {
-            msg.channel.sendMessage("Grabbing metadata...");
+            msg.channel.send("Grabbing metadata...");
             ytdl.getInfo(args[0], {
                 filter: "audioonly"
             }, function (err, info) {
@@ -32,14 +32,14 @@ module.exports = function (bot, msg, args, options) {
                     addtoQueue(bot, msg, item);
                     checkQueue(bot, msg, args, options);
                 } else {
-                    msg.channel.sendMessage("Stream not found!");
+                    msg.channel.send("Stream not found!");
                     console.log(err);
                 }
             });
         } else {
-            msg.channel.sendMessage("File/Meme not found");
+            msg.channel.send("File/Meme not found");
         }
     } else {
-        msg.channel.sendMessage("**REEEEEE**, it's `" + options.settings.prefix + "play [filename/link]`");
+        msg.channel.send("**REEEEEE**, it's `" + options.settings.prefix + "play [filename/link]`");
     }
 };

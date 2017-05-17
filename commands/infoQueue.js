@@ -19,5 +19,5 @@ module.exports = function (bot, msg, args, options) {
         msgString = "There aren´t any items in the queue right now.";
     }
 
-    msg.channel.sendMessage(msgString);
+    msg.channel.send(msgString);
 };

@@ -17,13 +17,13 @@ module.exports = function(bot,msg,args,options) {
     if (args.length < 1) {
         target = new Date(Date.UTC(2017,2,20));
     } else if (args.length > 1) { //User did not provide 1 (encased) argument => ignore input
-        msg.channel.sendMessage("_tick, tock, **krrt**_ \nWhoops, too many arguments! Please provide only one argument. \n(Hint:  encase it in quotation marks)");
+        msg.channel.send("_tick, tock, **krrt**_ \nWhoops, too many arguments! Please provide only one argument. \n(Hint:  encase it in quotation marks)");
         return;
     } else { 
         target = new Date(args[0]);
         target.setMinutes(target.getMinutes() + offset);
         if (isNaN(target.getTime())) {
-            msg.channel.sendMessage("_tick, tock, **krrt**_ \n```fix\n"+target+"\n```\nWhoops! Something was wrong with your datestring. Your date returned as invalid. Make sure you use a JavaScript compatible Date format. \n https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Date");
+            msg.channel.send("_tick, tock, **krrt**_ \n```fix\n"+target+"\n```\nWhoops! Something was wrong with your datestring. Your date returned as invalid. Make sure you use a JavaScript compatible Date format. \n https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Date");
             return;
         }
     }
@@ -34,7 +34,7 @@ module.exports = function(bot,msg,args,options) {
     }
     // remaining.raw = remaining.raw + (offset * 60) //account for timezone offsets
     if (remaining.raw >= 86400000) {
-        msg.channel.sendMessage("_tick, tock, **krrt**_ \nSorry, Solstice can only display dates that are 1000 days (minus one second) in the future. Three digit days, you know.");
+        msg.channel.send("_tick, tock, **krrt**_ \nSorry, Solstice can only display dates that are 1000 days (minus one second) in the future. Three digit days, you know.");
     }
     remaining.secs = (Math.floor(remaining.raw % 60)).toString();
     remaining.mins = (Math.floor((remaining.raw % 3600) / 60)).toString();
@@ -73,6 +73,6 @@ module.exports = function(bot,msg,args,options) {
         .in('data/solstice/'+resultStr[11]+'.png')
         .mosaic()
         .write('outputs/solstice.png', function (err) {if (err) {console.log(err);} else {
-            msg.channel.sendFile("outputs/solstice.png","solstice.png","_tick, tock_");
+            msg.channel.send("_tick, tock_",{files:["./outputs/solstice.png"]}); 
         }});   
 };

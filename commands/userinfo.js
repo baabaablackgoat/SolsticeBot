@@ -26,5 +26,5 @@ module.exports = function (bot, msg, args, options) {
     richEmbed.setImage(reply.avatarURL);
     richEmbed.timestamp = new Date();
     richEmbed.setAuthor("Solstice User Info | " + reply.username + "#" + reply.discriminator, bot.user.avatarURL);
-    msg.channel.sendEmbed(richEmbed);
+    msg.channel.send("",{embed:richEmbed});
 };

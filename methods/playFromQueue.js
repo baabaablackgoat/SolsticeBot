@@ -6,7 +6,7 @@ const checkQueue = require("./checkQueue");
 module.exports = function playFromQueue(bot, msg, item, args, options) {
     if (typeof bot._instance.VoiceConnection !== 'undefined' && bot._instance.VoiceConnection) {
         bot._instance.votes["Skip current Song"] = []; // reset vote skip
-        msg.channel.sendMessage("Now Playing: " + item.name);
+        msg.channel.send("Now Playing: " + item.name);
         bot._instance.currentlyPlaying = item.name;
         setGame(bot, item.name);
 

@@ -29,5 +29,5 @@ module.exports = function (bot, msg, args, options) {
     embed.setColor([0,125,255]);
     embed.setTitle("Ping: "+ Math.ceil(bot.ping));
     embed.setDescription("Uptime: "+uptime()+" | "+lastReady());
-    msg.channel.sendEmbed(embed);
+    msg.channel.send("",{embed:embed});
 };

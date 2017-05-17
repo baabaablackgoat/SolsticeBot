@@ -1,3 +1,3 @@
 module.exports = function(bot,msg,args,options) {
-    msg.channel.sendMessage(":chicken:");
+    msg.channel.send(":chicken:");
 };

@@ -1,19 +1,19 @@
 const getMembersfromMention = require("./../methods/getMemberfromMention");
 module.exports = function(bot,msg,args,options) {
     if (!msg.member.hasPermission("BAN_MEMBERS")) {
-        msg.channel.sendMessage("You don't have the Ban Members permission.");
+        msg.channel.send("You don't have the Ban Members permission.");
         return;
     }
     let members = getMembersfromMention(msg);
     for (let i = 0; i < members.id_list.length; i++) {
         if (members.values[members.id_list[i]].highestRole.position >= msg.member.highestRole.position){
-            msg.channel.sendMessage("You cannot ban this user! He is on the same or a higher role!");
+            msg.channel.send("You cannot ban this user! He is on the same or a higher role!");
             return;
         }
         members.values[members.id_list[i]].ban()
-            .then(() => {msg.channel.sendMessage("**"+members.values[members.id_list[i]].user.username+"**, ID "+members.values[members.id_list[i]].id+", has been banned. Goodbye forever. <https://www.youtube.com/watch?v=FXPKJUE86d0>");})
+            .then(() => {msg.channel.send("**"+members.values[members.id_list[i]].user.username+"**, ID "+members.values[members.id_list[i]].id+", has been banned. Goodbye forever. <https://www.youtube.com/watch?v=FXPKJUE86d0>");})
             .catch(err => {
-                msg.channel.sendMessage("Something went wrong... Maybe I do not have the permissions to ban this user.");
+                msg.channel.send("Something went wrong... Maybe I do not have the permissions to ban this user.");
                 console.log(err);
             });
     }
@@ -28,20 +28,20 @@ module.exports = function(bot,msg,args,options) {
             }
         }
         if (banned_ids.length < 1) {
-            msg.channel.sendMessage("You didn't provide a valid mention or ID.");
+            msg.channel.send("You didn't provide a valid mention or ID.");
             return;
         } else {
             for (let j=0; j<banned_ids.length; j++) {
                 if (msg.guild.members[banned_ids[j]]) { //Check if the user is present on the server before doing anything.
                     if (msg.guild.members[banned_ids[j]].highestRole.position >= msg.member.highestRole.position){ //If the member is present, compare the roles.
-                        msg.channel.sendMessage("You cannot ban this user! He is on the same or a higher role!");
+                        msg.channel.send("You cannot ban this user! He is on the same or a higher role!");
                         return;
                     }
                 }
                 msg.guild.ban(banned_ids[j])
-                    .then(()=>{msg.channel.sendMessage("The user with the ID "+banned_ids[j]+" was banned. Goodbye forever. <https://www.youtube.com/watch?v=FXPKJUE86d0>")})
+                    .then(()=>{msg.channel.send("The user with the ID "+banned_ids[j]+" was banned. Goodbye forever. <https://www.youtube.com/watch?v=FXPKJUE86d0>")})
                     .catch(err=>{
-                        msg.channel.sendMessage("Something went wrong... Maybe I don't have the permission to ban this user.\n ```\n"+err+"```");
+                        msg.channel.send("Something went wrong... Maybe I don't have the permission to ban this user.\n ```\n"+err+"```");
                         console.log(err);
                     });
             }

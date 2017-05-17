@@ -11,7 +11,7 @@ module.exports = function (bot, msg, args, options) {
     let purgeAmount;
 
     if (!args.length) { //check if any arguments were provided
-        msg.channel.sendMessage("You asked me to purge messages, but you provided no arguments.");
+        msg.channel.send("You asked me to purge messages, but you provided no arguments.");
         return;
     }
 
@@ -44,7 +44,7 @@ module.exports = function (bot, msg, args, options) {
     };
     const runPurge = function(bot,msg,args,keywords,mentions,purge_settings){
         if (keywords.length === 0 && mentions.length === 0 && !purge_settings.bots && !purge_settings.embeds && !purge_settings.system) { //No keywords, no mentions, no specified purge types? Time for annihilation!
-            if (purge_settings.amount < 1) {msg.channel.sendMessage("There was an attempt https://media.giphy.com/media/7rj2ZgttvgomY/giphy.gif"); return;} //unless someone's trolling and requests to delete 0 messages.
+            if (purge_settings.amount < 1) {msg.channel.send("There was an attempt https://media.giphy.com/media/7rj2ZgttvgomY/giphy.gif"); return;} //unless someone's trolling and requests to delete 0 messages.
             console.log("Deleting the last "+purge_settings.amount+" messages in "+msg.channel.name);
             if (purge_settings.amount === 1) { //This check is only here because bulk delete only supports 2 - 100 messages at once.
                 msg.delete()
