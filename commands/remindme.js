@@ -1,6 +1,6 @@
-const parseDuration = require("../modules/parseduration.js");
+const parseDuration = require("./../methods/parseduration");
 module.exports = function(bot,msg,args,options) {
-    if (args[0] === null) {
+    if (!args[0]) {
         if (msg.author.id in bot.globalVars.remindMe) {
             let data = bot.globalVars.remindMe[msg.author.id];
             msg.channel.sendMessage("Your current reminder:\n"+new Date(data.target)+" for "+data.text);
@@ -8,24 +8,25 @@ module.exports = function(bot,msg,args,options) {
             msg.channel.sendMessage("You didn't ask me to remind you of something yet. `"+options.settings.prefix+" help remindme`");
         }
     } else if (args[1]) {
-        /*
-        Possibly put this snippet into parseduration aswell
-         */
-        let target = new Date(args[1]);
-        if (!isNaN(target)){ //Is the entered date valid?
-            if (target < new Date()){ //Is the parseable date in the future?
-                msg.channel.sendMessage("I detected a parseable date, but it is in the past!");
-                return;
-            }
-        } else { 
-        /* current parseduration functionality, please add */
-        }
-        if (msg.author.id in bot.globalVars.remindMe) {
-            let data = bot.globalVars.remindMe[msg.author.id];
-            msg.channel.sendMessage("You already have a running reminder: \n"+new Date(data.target)+" for "+data.text);
-            //add a listener for ten seconds that only listens to the message author to confirm overwrite
+        let target = parseDuration(args[1],"hms");
+        if (!target){
+            msg.channel.sendMessage("The target you entered is invalid. Please use a JS-parseable date or hh[h:mm:ss].");
         } else {
-            
+            if (msg.author.id in bot.globalVars.remindMe) {
+                let data = bot.globalVars.remindMe[msg.author.id];
+                msg.channel.sendMessage("You already have a running reminder: \n`"+new Date(data.target)+"` for `"+data.text+"`");
+                //Add a listener to overwrite?
+            } else {
+                bot.globalVars.remindMe[msg.author.id] = {
+                    target: target.target,
+                    text: args[0],
+                    channel: String(msg.channel.id), //#spam
+                };
+                msg.channel.sendMessage("I will remind you of `"+args[0]+"` at `"+target.target+"`.");
+            }
         }
+    } else {
+        msg.channel.sendMessage("You asked me to remind you of "+args[0]+", but you didn't tell me when.");
+        //Make a listener?
     }
 };
