@@ -1,4 +1,5 @@
-const getRoleID = require("./../methods/getRoleID");
+const hasRole = require("./../methods/hasRole");
 module.exports = function (bot, msg, args, options) {
-    msg.channel.send("Out of order.");
+    msg.channel.send(":ok_hand:");
+    console.log(hasRole(msg.member));
 };

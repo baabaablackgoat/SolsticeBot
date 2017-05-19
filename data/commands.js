@@ -31,6 +31,8 @@ const solstice = require("./../commands/solstice.js");
 const remindme = require("./../commands/remindme.js");
 const now = require("./../commands/now.js");
 const hentai = require("./../commands/hentie.js");
+const giveme = require("./../commands/giveme.js");
+
 
 module.exports = {
     help: {
@@ -305,6 +307,18 @@ module.exports = {
             args: false,
         },
         aliases: ["hentai","hentie"]
+    },
+    giveme: {
+        function: giveme,
+        access: 0,
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            text: "Allow toggling certain roles on yourself.",
+            indepth: "Running this command will, given you fulfill the requirements, give or revoke a certain role from you.",
+            args: "[role]",
+        }
     },
     accessRefresh: {
         function: accessRefresh,
