@@ -318,7 +318,8 @@ module.exports = {
             text: "Allow toggling certain roles on yourself.",
             indepth: "Running this command will, given you fulfill the requirements, give or revoke a certain role from you.",
             args: "[role]",
-        }
+        },
+        aliases: ["giveme"]
     },
     accessRefresh: {
         function: accessRefresh,
