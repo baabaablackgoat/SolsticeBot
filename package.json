@@ -1,0 +1,33 @@
+{
+  "name": "solsticebot",
+  "version": "2.0.0",
+  "description": "A Discord.js based server-managing and shitposting bot for Discord.",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^11.1.0",
+    "gm": "^1.23.0",
+    "levenshtein-string-distance": "^1.6.3",
+    "opusscript": "0.0.1",
+    "youtube-search": "^1.0.9",
+    "ytdl-core": "^0.14.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MGF1998/SolsticeBot.git"
+  },
+  "keywords": [
+    "discord.js",
+    "discord",
+    "node.js"
+  ],
+  "author": "TrueMGF",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MGF1998/SolsticeBot/issues"
+  },
+  "homepage": "https://github.com/MGF1998/SolsticeBot#readme"
+}
