@@ -9,16 +9,16 @@ const bot = new discord.Client();
 
 //################## Functions ###################
 
-const prefixCheck = function(msg){
+const prefixCheck = function(msg){ //Function returns the used prefix. If no prefix was found, returns false.
     for (let i=0;i<settings.prefixes.length;i++) {
         if (msg.content.startsWith(settings.prefixes[i])) {
-            return true;
+            return settings.prefixes[i];
         }
     }
     return false;
 };
 
-const commandCheck = function(msg){
+const commandCheck = function(call){
     for (let i=0; i<commandKeys.length; i++) {
         if (commands[commandKeys[i]].aliases.indexOf(call.name.toLowerCase()) > -1) {
             return commands[commandKeys[i]];
@@ -36,8 +36,9 @@ bot.on("message", (msg)=>{
     if (msg.author.bot) { //Bot messages are ignored.
         return;
     }
-    if (prefixCheck(msg)){ //Did the message start with one of the defined prefixes?
-        let raw = msg.content.substring(settings.prefix.length);
+    let usedPrefix = prefixCheck(msg); 
+    if (usedPrefix){ //Did the message start with one of the defined prefixes?
+        let raw = msg.content.substring(usedPrefix.length);
         let call = parseCommands(raw);
         let calledCommand = commandCheck(call);
         if (calledCommand) {
@@ -53,6 +54,7 @@ bot.on("message", (msg)=>{
                 };
                 fn(bot, msg, args, options);
             } else {
+                //Not entirely sure if this works, hee hee
                 throw new Error("Fatal | Command was detected, but there is no associated function in commands.js.");
             }
         }

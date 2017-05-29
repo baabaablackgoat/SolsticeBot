@@ -1,4 +1,4 @@
-const debug = require("commands/debug.js");
+const debug = require("./cmds/debug.js");
 module.exports = {
     debug: {
         function: debug,
