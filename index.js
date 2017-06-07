@@ -6,6 +6,16 @@ const commands = require("./commands");
 const commandKeys = Object.keys(commands);
 const parseCommands = require("./modules/parseCommands");
 const bot = new discord.Client();
+let player = {
+    dispatcher: null,
+    queue: [],
+    channel: null,
+    nowPlaying: {
+        title: "",
+        duration: 0,
+        
+    }
+};
 
 //################## Functions ###################
 
@@ -26,6 +36,23 @@ const commandCheck = function(call){
     }
     return false;
 };
+
+//############## Audioplayer Events ##############
+
+player.dispatcher.on("start",()=>{
+
+});
+
+player.dispatcher.on("end",(reason)=>{ //Current stream has terminated - either the file or the stream is over, or something else went wrong.
+    //Play next song from queue.
+    //If not applicable, and enabled, _play next song from autoplaylist_.
+    //If autoplaylist is disabled, disconnect from the channel.
+});
+
+player.dispatcher.on("error",(err)=>{
+    console.log(`Audio dispatcher has encountered an error: ${err}`);
+});
+
 
 //################## Bot Events ##################
 
