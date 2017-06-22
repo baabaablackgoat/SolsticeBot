@@ -48,7 +48,7 @@ module.exports = function(bot,msg,args,options) {
                     else {console.log(`Encountered an error while grabbing the metadata: ${err}`);}
                     metaStream.close();
                         bot._player.queue.push({
-                        title: musictitle, //Use npm module musicmetadata?
+                        title: musictitle,
                         src: files[validfiles.indexOf(args)],
                         local: true,
                         issuedchannel: {
@@ -60,9 +60,9 @@ module.exports = function(bot,msg,args,options) {
                     console.log(bot._player.queue);
                     msg.channel.send(`**${musictitle}** has been queued. Now, would you kindly tell me how the hell I join a voicechannel?`);
                 });
-
             } else {
                 msg.channel.send("Sorry, I couldn't find that file, and a certain goat didn't implement YTDL yet.");
+                return;
             }
         } else {
             msg.channel.send("Whoops! Encountered an error: ```"+err+"```");

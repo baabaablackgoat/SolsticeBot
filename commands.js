@@ -1,5 +1,6 @@
 const play = require("./cmds/play.js");
 const debug = require("./cmds/debug.js");
+const hugs = require("./cmds/hugs.js");
 module.exports = {
     play: {
         function: play,
@@ -32,6 +33,23 @@ module.exports = {
         help: {
             short: "Debug command",
             long: "Used to debug solstice. No fixed usage.",
+            args: false,
+        }
+    },
+    hugs: {
+        function: hugs,
+        aliases: ["hug","huggu","hugs"],
+        access: {
+            level: 0,
+            permission: false,
+            role: false,
+        },
+        punishment: false,
+        hidden: true,
+        log: false,
+        help: {
+            short: "*huggu*",
+            long: "Do you need a hug? <w<",
             args: false,
         }
     }

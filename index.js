@@ -7,9 +7,8 @@ const commandKeys = Object.keys(commands);
 const parseCommands = require("./modules/parseCommands");
 const bot = new discord.Client();
 let player = {
-    dispatcher: null,
+    connection: null,
     queue: [],
-    channel: null,
     nowPlaying: {
         src: "",
         title: "",
@@ -57,11 +56,11 @@ const commandCheck = function(call){
 //These events have to be moved to the place where the dispatcher is created, else the bot crashes on start.
 
 /*
-player.dispatcher.on("start",()=>{
+player.connection.dispatcher.on("start",()=>{
     bot.user.setGame(player.nowPlaying.title);
 });
 
-player.dispatcher.on("end",(reason)=>{ //Current stream has terminated - either the file or the stream is over, or something else went wrong.
+player.connection.dispatcher.on("end",(reason)=>{ //Current stream has terminated - either the file or the stream is over, or something else went wrong.
     console.log(`Audio dispatcher has ended: ${reason}`);
     player.nowPlaying.title = "";
     player.nowPlaying.src = "";
@@ -76,7 +75,7 @@ player.dispatcher.on("end",(reason)=>{ //Current stream has terminated - either 
     }
 });
 
-player.dispatcher.on("error",(err)=>{
+player.connection.dispatcher.on("error",(err)=>{
     console.log(`Audio dispatcher has encountered an error: ${err}`);
     bot.user.setGame(settings.defaultGame);
 });
