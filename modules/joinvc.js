@@ -7,7 +7,7 @@ module.exports = function (bot, targetChannel) {
                 .then((connection) => {
                     bot._player.connection = connection;
                     console.log(bot._player.connection.dispatcher);
-                    resolve(`connected to ${connection.channel.name}`);
+                    resolve(`:ok_hand:`);
                 })
                 .catch(err => reject(console.log(err)));
         } else {
