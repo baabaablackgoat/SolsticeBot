@@ -1,5 +1,7 @@
+const nextInQueue = require("./../modules/nextinqueue");
 const fs = require("fs");
 const musicmd = require("musicmetadata");
+const ytdl = require("ytdl-core");
 module.exports = function(bot,msg,args,options) {
     args = args.join(" ");
     if (!options.settings.player.defaultChannel && !bot._player.channel && !msg.member.voiceChannelID) { //prevent missing args
@@ -36,7 +38,6 @@ module.exports = function(bot,msg,args,options) {
                 let metaStream = fs.createReadStream("./data/music/"+files[validfiles.indexOf(args)]);
                 let soMeta = musicmd(metaStream,(err,metadata)=>{
                     if (!err) {
-                        console.log(metadata);
                         if (metadata.title) {
                             musictitle = metadata.title;
                             if (metadata.artist.length>0) {
@@ -47,7 +48,7 @@ module.exports = function(bot,msg,args,options) {
                     }
                     else {console.log(`Encountered an error while grabbing the metadata: ${err}`);}
                     metaStream.close();
-                        bot._player.queue.push({
+                    bot._player.queue.push({
                         title: musictitle,
                         src: files[validfiles.indexOf(args)],
                         local: true,
@@ -57,12 +58,40 @@ module.exports = function(bot,msg,args,options) {
                         },
                         author: msg.author.id,
                     });
-                    console.log(bot._player.queue);
-                    msg.channel.send(`**${musictitle}** has been queued. Now, would you kindly tell me how the hell I join a voicechannel?`);
+                    msg.channel.send(`**${musictitle}** has been queued.`);
+                    if (bot._player.connection) {
+                        if (!bot._player.connection.dispatcher){
+                            nextInQueue(bot);
+                        }
+                    } else {
+                        nextInQueue(bot);
+                    }
                 });
             } else {
-                msg.channel.send("Sorry, I couldn't find that file, and a certain goat didn't implement YTDL yet.");
-                return;
+                ytdl.getInfo(args,{filter: "audioonly"},(err,info)=>{
+                    if (!err) {
+                        bot._player.queue.push({
+                            title: info.title,
+                            src: args,
+                            local: false,
+                            issuedchannel: {
+                                text: msg.channel.id,
+                                voice: issuedVC,
+                            },
+                            author: msg.author.id,
+                        });
+                        msg.channel.send(`**${info.title}** has been queued.`);
+                        if (bot._player.connection) {
+                            if (!bot._player.connection.dispatcher){
+                                nextInQueue(bot);
+                            }
+                        } else {
+                            nextInQueue(bot);
+                        }
+                    } else {
+                        msg.channel.send(`Whoops! This file doesn't exist, nor could I parse the argument from YouTube. \`${err}\``);
+                    }
+                });
             }
         } else {
             msg.channel.send("Whoops! Encountered an error: ```"+err+"```");

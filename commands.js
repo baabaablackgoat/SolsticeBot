@@ -1,4 +1,5 @@
 const play = require("./cmds/play.js");
+const skip = require("./cmds/skip.js");
 const debug = require("./cmds/debug.js");
 const hugs = require("./cmds/hugs.js");
 module.exports = {
@@ -17,6 +18,23 @@ module.exports = {
             short: "Make me play something in VC.",
             long: "This command will add music or sounds to the current queue.",
             args: "(link || filename)",
+        }
+    },
+    skip: {
+        function: skip,
+        aliases: ["skip","next"],
+        access: {
+            level: 0,
+            permission: false,
+            role: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "(Vote)skips the current song.",
+            long: "This command will, depending on your access rights and/or global settings, either vote to skip or skip the current song instantly.",
+            args: false,
         }
     },
     debug: {
