@@ -9,9 +9,9 @@ module.exports= {
     default_game: "WE'RE DOING IT LIVE!",
     //Player settings.
     player: {
-        lockedChannel: false,
-        autoplaylist: true,
-        defaultChannel: false, //Only use default channel when you wish to not use lockedChannel. Else there might be untested problems.
+        defaultChannel: false, //Channel ID - if none, set to false
+        lockedChannel: false, //Boolean: Is the bot locked to this channel id?
+        autoplaylist: true, 
     }
 
 

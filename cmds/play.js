@@ -1,16 +1,19 @@
 const fs = require("fs");
 module.exports = function(bot,msg,args,options) {
     console.log(msg.author.voiceChannelID);
-    if (!options.settings.player.defaultChannel && !bot._player.channel && !msg.author.voiceChannelID) { //prevent missing args
+    if (!options.settings.player.defaultChannel && !bot._player.channel && !msg.member.voiceChannelID) { //prevent missing args
         msg.channel.send("Neither of us are in a voice channel, and I don't have a default one set. Please join a VC to use this command.");
         return;
     }
 
     let issuedVC; //determine which vc this song will be played in
-    if (options.settings.player.lockedChannel) {issuedVC = options.settings.player.defaultChannel;}
-    else if (msg.author.voiceChannelID) {issuedVC = msg.author.voiceChannelID;}
-    else if (bot._player.channel) {issuedVC = bot._player.channel;}
-    else {issuedVC = options.settings.player.defaultChannel;}
+    if (options.settings.player.lockedChannel) {issuedVC = options.settings.player.defaultChannel; console.log("locked channel");}
+    else if (msg.author.voiceChannelID) {issuedVC = msg.author.voiceChannelID; console.log("author channel");}
+    else if (bot._player.channel) {issuedVC = bot._player.channel; console.log("bot channel");}
+    else if (options.settings.player.defaultChannel) {issuedVC = options.settings.player.defaultChannel; console.log("default channel");}
+    else {msg.channel.send("Whoops, something went wrong. I couldn't determine which channel this should be played in.");
+        return;
+    }
 
     if (args[0].startsWith("<") && args[0].endsWith(">")) { //remove escape characters for embed urls
         args[0] = args[0].substr(1,args[0].length-2);
