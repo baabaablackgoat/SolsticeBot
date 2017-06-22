@@ -11,12 +11,27 @@ let player = {
     queue: [],
     channel: null,
     nowPlaying: {
-        title: "",
         src: "",
-        issuedChannel: "",
+        title: "",
+        local: false,
+        issuedChannel: {
+            text: "",
+            voice: "",
+        },
+        author: "",
     },
-    autoplaylist: require("./data/autoplaylist"),
 };
+
+bot._player = player;
+
+if (settings.player.autoplaylist) {
+    try { 
+       player.autoplaylist = require("./data/autoplaylist");
+    } catch (err) {
+        console.log(`Failed to load autoplaylist: ${err}`);
+        player.autoplaylist = false;
+    }
+}
 
 //################## Functions ###################
 
@@ -39,9 +54,11 @@ const commandCheck = function(call){
 };
 
 //############## Audioplayer Events ##############
+//These events have to be moved to the place where the dispatcher is created, else the bot crashes on start.
 
+/*
 player.dispatcher.on("start",()=>{
-
+    bot.user.setGame(player.nowPlaying.title);
 });
 
 player.dispatcher.on("end",(reason)=>{ //Current stream has terminated - either the file or the stream is over, or something else went wrong.
@@ -55,18 +72,24 @@ player.dispatcher.on("end",(reason)=>{ //Current stream has terminated - either 
         //If enabled and valid playlist is available, play a random song from the autoplaylist
     } else {
         //Disconnect from the voice channel.
+        bot.user.setGame(settings.defaultGame);
     }
 });
 
 player.dispatcher.on("error",(err)=>{
     console.log(`Audio dispatcher has encountered an error: ${err}`);
+    bot.user.setGame(settings.defaultGame);
 });
+*/
 
 
 //################## Bot Events ##################
 
 bot.on("ready",()=>{
     console.log("Solstice is ready. Logged in as "+bot.user.username);
+    if (settings.player.lockedChannel) { //If the bot is locked to one channel...
+        //connect to the settings.defaultChannel. Never disconnect until you crash.
+    }
 });
 bot.on("message", (msg)=>{
     if (msg.author.bot) { //Bot messages are ignored.
