@@ -4,3 +4,6 @@ npm-debug.*
 sounds/
 data/userlist.json
 outputs/
+data/music
+!data/music/cena.mp3
+!data/music/fussspurn.mp3
