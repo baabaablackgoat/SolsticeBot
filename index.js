@@ -37,7 +37,6 @@ if (settings.player.autoplaylist) {
     });  
 }
 
-
 //################## Functions ###################
 
 const prefixCheck = function(msg){ //Function returns the used prefix. If no prefix was found, returns false.

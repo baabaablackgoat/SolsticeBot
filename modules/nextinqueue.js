@@ -1,12 +1,11 @@
-const ytdl = require("ytdl-core");
-const joinVC = require("./joinvc");
-const setGame = require("./setgame");
-const randomInt = require("./randomInt");
-let settings = require("./../settings");
-const addToQueue = require("./addtoqueue");
-console.log(addToQueue);
-
 module.exports = function nextInQueue(bot){
+    const ytdl = require("ytdl-core");
+    const joinVC = require("./joinvc");
+    const setGame = require("./setgame");
+    const randomInt = require("./randomInt");
+    let settings = require("./../settings");
+    const addToQueue = require("./addtoqueue");
+    
     if (bot._player.queue.length > 0) {
         bot._player.nowPlaying = bot._player.queue.shift();
         let joinPromise = joinVC(bot,bot._player.nowPlaying.issuedchannel.voice);

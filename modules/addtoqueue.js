@@ -1,12 +1,16 @@
-const fs = require("fs");
-const ytdl = require("ytdl-core");
-const musicmd = require("musicmetadata");
-const nextInQueue = require("./nextinqueue.js");
+module.exports = function(bot,msg,args,issuedVC) {
+    const fs = require("fs");
+    const ytdl = require("ytdl-core");
+    const musicmd = require("musicmetadata");
+    const nextInQueue = require("./nextinqueue.js");
 
-module.exports = function (bot,msg,args,issuedVC) {
-    if (!msg) {
-        msg.channel.id = false;
-        msg.author.id = bot.user.id;
+    let messageInfo = {
+        textChannel : false,
+        author : bot.user.id,
+    };
+    if (msg) {
+        messageInfo.textChannel = msg.channel.id;
+        messageInfo.author = msg.author.id;
     }
     fs.readdir("./data/music",(err,files)=>{ //Get all local files and check if the passed arg is in there
         if (!err) {
@@ -41,10 +45,10 @@ module.exports = function (bot,msg,args,issuedVC) {
                         src: files[validfiles.indexOf(args)],
                         local: true,
                         issuedchannel: {
-                            text: msg.channel.id,
+                            text: messageInfo.textChannel,
                             voice: issuedVC,
                         },
-                        author: msg.author.id,
+                        author: messageInfo.author,
                     });
                     msg.channel.send(`**${musictitle}** has been queued.`);
                     if (bot._player.connection) {
@@ -63,10 +67,10 @@ module.exports = function (bot,msg,args,issuedVC) {
                             src: args,
                             local: false,
                             issuedchannel: {
-                                text: msg.channel.id,
+                                text: messageInfo.textChannel,
                                 voice: issuedVC,
                             },
-                            author: msg.author.id,
+                            author: messageInfo.author,
                         });
                         if (msg) {
                             msg.channel.send(`**${info.title}** has been queued.`);
