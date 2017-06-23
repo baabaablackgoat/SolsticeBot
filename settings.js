@@ -1,6 +1,6 @@
 module.exports = {
     //Set the prefixes/invokers the bot listens to.
-    prefixes: ["beta ", "<!@267407565384581121>","<@267407565384581121>"],
+    prefixes: ["beta ", "<@!267407565384581121>","<@267407565384581121>"],
     //Set the "game" the bot is playing by default.
     default_game: "WE'RE DOING IT LIVE!",
     //Player settings.

@@ -4,5 +4,5 @@ module.exports = function (bot,input) {
         bot.user.setGame(settings.default_game);
     } else {
         bot.user.setGame(input);
-    }
+    } 
 }
