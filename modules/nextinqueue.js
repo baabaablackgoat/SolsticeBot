@@ -3,20 +3,8 @@ const joinVC = require("./joinvc");
 const setGame = require("./setgame");
 const randomInt = require("./randomInt");
 let settings = require("./../settings");
-
-const ap_loader = function (bot,vc_id){
-    let ap_data = bot._player.autoplaylist[randomInt(0,bot._player.autoplaylist.length-1)];
-    bot._player.queue.push({
-        src: ap_data.src,
-        title: ap_data.title,
-        local: ap_data.local,
-        issuedchannel: {
-            text: false,
-            voice: vc_id,
-        },
-        author: bot.user.id,
-    }); 
-};
+const addToQueue = require("./addtoqueue");
+console.log(addToQueue);
 
 module.exports = function nextInQueue(bot){
     if (bot._player.queue.length > 0) {
@@ -49,11 +37,9 @@ module.exports = function nextInQueue(bot){
     } else {
         if (bot._player.autoplaylist) {
             if (bot._player.connection) {
-                ap_loader(bot,bot._player.connection.channel.id);
-                nextInQueue(bot);
+                addToQueue(bot,false,bot._player.autoplaylist[randomInt(0,bot._player.autoplaylist.length-1)],bot._player.connection.channel.id);
             } else if (settings.player.defaultChannel){
-                ap_loader(bot,settings.player.defaultChannel);
-                nextInQueue(bot);
+                addToQueue(bot,false,bot._player.autoplaylist[randomInt(0,bot._player.autoplaylist.length-1)],settings.player.defaultChannel);
             } else {
                 console.log(`Autoplaylist detected, but no default channel defined nor already present in a channel. Disconnecting.`);
             }

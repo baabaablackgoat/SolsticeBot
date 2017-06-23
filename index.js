@@ -1,6 +1,7 @@
 //################### Vars #######################
 
 const discord = require("discord.js");
+const fs = require("fs");
 let settings = require("./settings");
 const commands = require("./commands");
 const commandKeys = Object.keys(commands);
@@ -25,12 +26,15 @@ let player = {
 bot._player = player;
 
 if (settings.player.autoplaylist) {
-    try { 
-       player.autoplaylist = require("./data/autoplaylist");
-    } catch (err) {
-        console.log(`Failed to load autoplaylist: ${err}`);
-        player.autoplaylist = false;
-    }   
+    fs.readFile("./data/autoplaylist.txt",'utf8',(err,data)=>{
+        if (!err) {
+            const result = data.includes("\r\n") ? data.split("\r\n") : data.split("\n");
+            player.autoplaylist = result;
+        } else {
+            console.log(`Failed to load autoplaylist: ${err}`);
+            player.autoplaylist = false;
+        }
+    });  
 }
 
 

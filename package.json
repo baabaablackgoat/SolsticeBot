@@ -9,7 +9,7 @@
     "levenshtein-string-distance": "^1.6.3",
     "musicmetadata": "^2.0.5",
     "opusscript": "0.0.1",
-    "youtube-search": "^1.0.9",
+    "youtube-search": "^1.0.10",
     "ytdl-core": "^0.14.1"
   },
   "devDependencies": {},
