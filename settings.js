@@ -10,8 +10,8 @@ module.exports = {
         autoplaylist: true,
         defaultvolume: 0.5 
     },
-    //Get your User ID (Hint: Discord Developer Mode) and put it here.
-    owner_id: "178470784984023040",
+    //Grants access to dangerous commands. Enter the ID of the users you are sure of they won't troll around.
+    bot_admins: ["178470784984023040","128985967875850240"],
     //After you created a bot user, enter your secret token here. You can either provide the string directly, or you create an environment variable like I did.
     //(Thanks for the idea, Felix!)
     token: process.env.BotToken_Solstice_Beta,

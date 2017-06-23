@@ -7,20 +7,12 @@ const commands = require("./commands");
 const commandKeys = Object.keys(commands);
 const parseCommands = require("./modules/parseCommands");
 const nextInQueue = require("./modules/nextinqueue");
+const joinVC = require("./modules/joinVC");
 const bot = new discord.Client();
 let player = {
     connection: null,
     queue: [],
-    nowPlaying: {
-        src: "",
-        title: "",
-        local: false,
-        issuedChannel: {
-            text: "",
-            voice: "",
-        },
-        author: "",
-    },
+    nowPlaying: false,
 };
 
 bot._player = player;
@@ -62,7 +54,11 @@ const commandCheck = function(call){
 bot.on("ready",()=>{
     console.log("Solstice is ready. Logged in as "+bot.user.username);
     if (settings.player.defaultChannel) {
-        nextInQueue(bot);
+        if (settings.player.autoplaylist) {
+            nextInQueue(bot);
+        } else {
+            joinVC(settings.player.defaultChannel);
+        }
     }
 });
 bot.on("message", (msg)=>{

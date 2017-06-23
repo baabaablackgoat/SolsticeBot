@@ -24,11 +24,13 @@ module.exports = function nextInQueue(bot){
             });
             bot._player.connection.dispatcher.on("error",(err)=>{
                 console.log(`Audio dispatcher has encountered an error: ${err}`);
+                bot._player.nowPlaying = false;
                 setGame(bot,false);
                 nextInQueue(bot);
             });
             bot._player.connection.dispatcher.on("end",(reason)=>{
                 console.log(`Audio dispatcher has ended: ${reason}`);
+                bot._player.nowPlaying = false;
                 setGame(bot,false);
                 nextInQueue(bot);
             });

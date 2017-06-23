@@ -3,6 +3,7 @@ const skip = require("./cmds/skip.js");
 const debug = require("./cmds/debug.js");
 const hugs = require("./cmds/hugs.js");
 const giveme = require("./cmds/giveme.js");
+const nowplaying = require("./cmds/nowplaying.js");
 module.exports = {
     play: {
         function: play,
@@ -19,6 +20,23 @@ module.exports = {
             short: "Make me play something in VC.",
             long: "This command will add music or sounds to the current queue.",
             args: "(link || filename)",
+        }
+    },
+    nowplaying: {
+        function: nowplaying,
+        aliases: ["playing","np","nowplaying","currentsong","thefuckihear"],
+        access: {
+            level: 0,
+            permission: false,
+            role: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "Okay Google, what am I listening to?",
+            long: "Tells you the song the bot is currently playing.",
+            args: false,
         }
     },
     skip: {
