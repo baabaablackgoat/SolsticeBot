@@ -3,7 +3,7 @@ const timeparse = require("./../modules/timeparse");
 const giveme_keys = Object.keys(giveme_list);
 const giveme_check = function(input) {
     for (let i=0; i<giveme_keys.length; i++){
-        if (giveme_list[giveme_keys[i]].aliases.indexOf(input)>1){
+        if (giveme_list[giveme_keys[i]].aliases.indexOf(input)>-1){
             return giveme_list[giveme_keys[i]];
         }
     }
@@ -70,7 +70,8 @@ module.exports = function(bot,msg,args,options){
         //Does the role require to be member for a certain time? (requires: time)
         if (data.requires.time){
             let time = timeparse(data.requires.time);
-            if (time && time>new Date().getTime()-msg.member.joinedTimestamp) {
+            let usertime = new Date().getTime()-msg.member.joinedTimestamp;
+            if (time > usertime) {
                 msg.channel.send(`You cannot use this giveme yet. You have to be a member of this server for ${data.requires.time}.`);
                 return;
             }

@@ -1,12 +1,12 @@
 module.exports = function (timestring) {
     //converts the entered timestring into ms
     let multiplier = 0;
-    let amt = Number(timestring.substr(0,timestring.length-2));
+    let amt = Number(timestring.substr(0,timestring.length-1));
     if (isNaN(amt)){
         console.log(`timeparse encountered an error: amount does not resolve to a number`);
         return false;
     }
-    switch (timestring.toLowerCase().substr(timestring.length-2,timestring.length-1)) {
+    switch (timestring.toLowerCase().substr(timestring.length-1,timestring.length-1)) {
         case "d":
             multiplier = 86400000;
             break;
@@ -20,7 +20,7 @@ module.exports = function (timestring) {
             multiplier = 1000;
             break;
         default:
-            console.log(`timeparse encountered an error: Invalid parameter ${timestring.toLowerCase().substr(timestring.length-2,timestring.length-1)}`);
+            console.log(`timeparse encountered an error: Invalid parameter ${timestring.toLowerCase().substr(timestring.length-1,timestring.length-1)}`);
             break;
     }
     return amt*multiplier;
