@@ -2,7 +2,7 @@ const play = require("./cmds/play.js");
 const skip = require("./cmds/skip.js");
 const debug = require("./cmds/debug.js");
 const hugs = require("./cmds/hugs.js");
-const giveme = require("./cmd/giveme.js");
+const giveme = require("./cmds/giveme.js");
 module.exports = {
     play: {
         function: play,

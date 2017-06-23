@@ -1,5 +1,5 @@
 const giveme_list = require("./../data/giveme");
-const timeparse = require("./../methods/timeparse");
+const timeparse = require("./../modules/timeparse");
 const giveme_keys = Object.keys(giveme_list);
 const giveme_check = function(input) {
     for (let i=0; i<giveme_keys.length; i++){
