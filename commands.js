@@ -4,6 +4,7 @@ const debug = require("./cmds/debug.js");
 const hugs = require("./cmds/hugs.js");
 const giveme = require("./cmds/giveme.js");
 const nowplaying = require("./cmds/nowplaying.js");
+const endprocess = require("./cmds/endprocess.js");
 module.exports = {
     play: {
         function: play,
@@ -106,5 +107,22 @@ module.exports = {
             long: "Do you need a hug? <w<",
             args: false,
         }
-    }
+    },
+    endprocess: {
+        function: endprocess,
+        aliases: ["endprocess","end","die","lightsout","lightsoff","restart","reboot","reset"],
+        access: {
+            level: 99,
+            permission: false,
+            role: false,
+        },
+        punishment: false,
+        hidden: true,
+        log: true,
+        help: {
+            short: "Terminates the bot process.",
+            long: "Terminates the bot process. Only available to the bot owner.",
+            args: false,
+        }
+    },
 };
