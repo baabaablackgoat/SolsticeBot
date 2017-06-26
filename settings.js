@@ -1,6 +1,6 @@
 module.exports = {
     //Set the prefixes/invokers the bot listens to.
-    prefixes: ["beta ", "<@!267407565384581121>","<@267407565384581121>"],
+    prefixes: ["alpha "],
     //Set the "game" the bot is playing by default.
     default_game: "WE'RE DOING IT LIVE!",
     //Player settings.
@@ -14,5 +14,5 @@ module.exports = {
     bot_admins: ["178470784984023040","128985967875850240"],
     //After you created a bot user, enter your secret token here. You can either provide the string directly, or you create an environment variable like I did.
     //(Thanks for the idea, Felix!)
-    token: process.env.BotToken_Solstice_Beta,
+    token: process.env.BotToken_Solstice_Canary,
 };
