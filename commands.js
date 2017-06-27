@@ -1,4 +1,5 @@
 const play = require("./cmds/play.js");
+const search = require("./cmds/search.js");
 const skip = require("./cmds/skip.js");
 const debug = require("./cmds/debug.js");
 const hugs = require("./cmds/hugs.js");
@@ -21,6 +22,23 @@ module.exports = {
             short: "Make me play something in VC.",
             long: "This command will add music or sounds to the current queue.",
             args: "(link || filename)",
+        },
+    },
+    search: {
+        function: search,
+        aliases: ["search", "yt"],
+        access: {
+            level: 0,
+            permission: false,
+            role: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "Look up and automatically queue a song from YouTube.",
+            long: "This command will look up the top three results of the query you enter, and ask you for confirmation. Upon confirmation, the video is added to the current music queue.",
+            args: "query",
         }
     },
     nowplaying: {
