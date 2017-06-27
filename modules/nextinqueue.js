@@ -49,9 +49,11 @@ module.exports = function nextInQueue(bot){
         } else {
             try {
                 bot._player.connection.channel.leave();
-            } catch (e) {
                 
+            } catch (e) {
+                console.log(e);
             }
+            bot._player.connection = null;
         }
     }
 };
