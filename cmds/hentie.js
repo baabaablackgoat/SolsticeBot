@@ -1,4 +1,4 @@
-const randomInt = require("./../methods/randomInt");
+const randomInt = require("./../modules/randomInt");
 module.exports = function(bot,msg,args,options) {
     let rand = randomInt(1,2);
     switch (rand) {
