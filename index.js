@@ -56,7 +56,9 @@ bot.on("ready",()=>{
         if (settings.player.autoplaylist) {
             nextInQueue(bot);
         } else {
-            joinVC(settings.player.defaultChannel);
+            joinVC(settings.player.defaultChannel)
+                .then(()=>{console.log("connected");})
+                .catch((err)=>{console.log(`Couldn't connect to default VC: ${err}`);});
         }
     }
 });
@@ -64,19 +66,6 @@ bot.on("message", (msg)=>{
     if (msg.author.bot) { //Bot messages are ignored.
         return;
     }
-
-    /*for (let i=0;i<listeners.length;i++){ //Check the currently existing event listeners
-        console.log(listeners[i].promise);
-        if (!listeners[i].user || listeners[i].user === msg.author.id){
-            if (!listeners[i].channel || listeners[i].channel === msg.channel.id) {
-                if (!listeners[i].validcontent || listeners[i].validcontent.includes(msg.content)){
-                    console.log("attempting to resolve");
-                    Promise.resolve(listeners[i].promise);
-                }
-            }
-        }
-    }*/
-
     let usedPrefix = prefixCheck(msg); 
     if (usedPrefix){ //Did the message start with one of the defined prefixes?
         let raw = msg.content.substring(usedPrefix.length);
