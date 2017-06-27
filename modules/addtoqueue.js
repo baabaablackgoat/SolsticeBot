@@ -1,8 +1,18 @@
-module.exports = function(bot,msg,args,issuedVC) {
+module.exports = function(bot,msg,args) {
     const fs = require("fs");
     const ytdl = require("ytdl-core");
     const musicmd = require("musicmetadata");
     const nextInQueue = require("./nextinqueue.js");
+    const settings = require("./../settings.js");
+
+    let issuedVC; //determine which vc this song will be played in
+        if (settings.player.lockedChannel) {issuedVC = settings.player.defaultChannel;}
+        else if (msg.member.voiceChannelID) {issuedVC = msg.member.voiceChannelID;}
+        else if (bot._player.channel) {issuedVC = bot._player.channel;}
+        else if (settings.player.defaultChannel) {issuedVC = settings.player.defaultChannel;}
+        else {msg.channel.send("Whoops, something went wrong. I couldn't determine which channel this should be played in.");
+            return;
+        }
 
     let messageInfo = {
         textChannel : false,
