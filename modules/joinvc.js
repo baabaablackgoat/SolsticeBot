@@ -1,6 +1,10 @@
 module.exports = function (bot, targetChannel) {
     return new Promise((resolve, reject) => {
         if (!bot._player.connection || bot._player.connection.channel.id !== targetChannel) {
+            if (bot._player.connection) {
+                bot._player.connection.channel.leave();
+                bot._player.connection = null;
+            }
             console.log(`attempting to connect`);
             return bot.channels
                 .get(targetChannel)

@@ -47,12 +47,7 @@ module.exports = function nextInQueue(bot){
         } else if (settings.player.lockedChannel && bot._player.connection.channel.id !== settings.player.defaultChannel) {
             joinVC(settings.player.defaultChannel);
         } else {
-            try {
-                bot._player.connection.channel.leave();
-                
-            } catch (e) {
-                console.log(e);
-            }
+            bot._player.connection.channel.leave();
             bot._player.connection = null;
         }
     }
