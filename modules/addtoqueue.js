@@ -7,7 +7,7 @@ module.exports = function(bot,msg,args) {
 
     let issuedVC; //determine which vc this song will be played in
         if (settings.player.lockedChannel) {issuedVC = settings.player.defaultChannel;}
-        else if (msg.member.voiceChannelID) {issuedVC = msg.member.voiceChannelID;}
+        else if (msg && msg.member.voiceChannelID) {issuedVC = msg.member.voiceChannelID;}
         else if (bot._player.channel) {issuedVC = bot._player.channel;}
         else if (settings.player.defaultChannel) {issuedVC = settings.player.defaultChannel;}
         else {msg.channel.send("Whoops, something went wrong. I couldn't determine which channel this should be played in.");

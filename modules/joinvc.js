@@ -5,18 +5,18 @@ module.exports = function (bot, targetChannel) {
                 bot._player.connection.channel.leave();
                 bot._player.connection = null;
             }
-            console.log(`attempting to connect`);
+            //console.log(`attempting to connect`);
             return bot.channels
                 .get(targetChannel)
                 .join()
                 .then((connection) => {
                     bot._player.connection = connection;
-                    console.log(`connected`);
+                    //console.log(`connected`);
                     resolve(`:ok_hand:`);
                 })
                 .catch(err => reject(console.log(err)));
         } else {
-            console.log(`still connected to correct channel`);
+            //console.log(`still connected to correct channel`);
             return resolve(`Connection to ${bot._player.connection.channel.name} still valid`);
         }
     });
