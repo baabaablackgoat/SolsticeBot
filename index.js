@@ -7,6 +7,7 @@ const commands = require("./commands");
 const commandKeys = Object.keys(commands);
 const parseCommands = require("./modules/parseCommands");
 const nextInQueue = require("./modules/nextinqueue");
+const checkAccess = require("./modules/checkAccess");
 const joinVC = require("./modules/joinVC");
 const bot = new discord.Client();
 let player = {
@@ -66,7 +67,7 @@ const getUserLists = function(){
             throw `Failed to load Userlists: ${err}`; 
         }
     });
-}
+};
 
 //################## Bot Events ##################
 
@@ -93,40 +94,20 @@ bot.on("message", (msg)=>{
         let call = parseCommands(raw);
         let calledCommand = commandCheck(call);
         if (calledCommand) {
-            if (calledCommand.access.permissions) {
-                console.log("needs permissions");
-                if (!msg.member.hasPermission(calledCommand.access.permissions,false,false)) {
-                    console.log("doesn't have perms");
-                    msg.channel.send(`You don't have the required permissions in this guild to run this command. You need to have \`${calledCommand.access.permissions.join(", ")}\`.`);
-                    return;
-                }
-            }
-            if (calledCommand.access.roles) { //Maybe put this into an external module at some point - this is also used in giveme!
-                let user_role_amt = 0;
-                for (let i=0;i<calledCommand.access.roles.ids.length;i++){
-                    if (msg.member.roles.has(calledCommand.access.roles.ids[i])){
-                        user_role_amt++;
-                    }
-                }
-                if(calledCommand.access.roles.require_all && user_role_amt < calledCommand.access.roles.ids.length){
+            let access = checkAccess(bot,msg,calledCommand);
+            if (access) {
+                if (access.reason === "userlist") {
+                    msg.channel.send(`Only ${access.specific} can use this command.`);  
+                } else if (access.reason === "role_all") {
                     msg.channel.send(`You are missing one of the multiple necessary roles to use this command.`);
-                    return;
-                } else if (user_role_amt < 1){
+                } else if (access.reason === "role_one") {
                     msg.channel.send(`You have none of the neccessary roles to use this command.`);
-                    return;
+                } else if (access.reason === "permission") {
+                    msg.channel.send(`You don't have the required permissions in this guild to run this command. You need to have \`${access.specific.join(", ")}\`.`);
+                } else {
+                    console.log(`Something went wrong while checking access for ${msg.author.name} using ${calledCommand} - checkAccess returned invalid values ${access}`);
                 }
-            }
-            if (calledCommand.access.user_lists) {
-                let test_against = [];
-                (typeof calledCommand.access.user_lists === "string") ? test_against.push(calledCommand.access.user_lists) : test_against = calledCommand.access.user_lists;
-                console.log(test_against);
-                for (let i=0;i<test_against.length;i++){
-                    userlists.hasOwnProperty(test_against[i])
-                    if (userlists.hasOwnProperty(test_against[i]) && !userlists[test_against[i]].includes(msg.author.id)) {
-                        msg.channel.send(`Only ${test_against[i]} can use this command.`);
-                        return;
-                    }
-                }
+                return;
             }
             let fn = calledCommand.function;
             if (typeof fn === 'function') {
