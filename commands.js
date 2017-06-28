@@ -3,6 +3,7 @@ const nowplaying = require("./cmds/nowplaying.js");
 const search = require("./cmds/search.js");
 const skip = require("./cmds/skip.js");
 
+const help = require("./cmds/help.js");
 const giveme = require("./cmds/giveme.js");
 const hugs = require("./cmds/hugs.js");
 
@@ -15,14 +16,31 @@ const hentie = require("./cmds/hentie.js");
 const debug = require("./cmds/debug.js");
 const endprocess = require("./cmds/endprocess.js");
 
+/* A note on Access settings
+    If a command access check should be bypassed, use false. Don't just leave an empty string, object or array, it could screw things up.
+
+    Access permission settings can either be a string - or if you need multiple permissions _at the same time_, use an array.
+    access.permissions should be a PermissionResolvable, preferably the string. More information here: https://discord.js.org/#/docs/main/stable/class/Permissions?scrollTo=s-FLAGS
+
+    Role permissions are defined within an object like this: {
+        ids: [""] //Array with all required role ids
+        require_all: (boolean), //If true, the user needs every single specified role. If false, one role out of the list suffices.
+    }
+    For the love of god, don't just specify ids as a string. You can and will fuck up if you do that.
+
+    user_lists are predetermined constants that are stored in the data folder. Currently, they cannot be tinkered with from within the bot.
+*/
+
+
+
 module.exports = {
     play: {
         function: play,
         aliases: ["play","addtoqueue"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: false,
@@ -37,9 +55,9 @@ module.exports = {
         function: search,
         aliases: ["search", "yt"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: false,
@@ -54,9 +72,9 @@ module.exports = {
         function: nowplaying,
         aliases: ["playing","np","nowplaying","currentsong","thefuckihear"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: false,
@@ -71,9 +89,9 @@ module.exports = {
         function: skip,
         aliases: ["skip","next"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: false,
@@ -85,13 +103,31 @@ module.exports = {
         }
     },
     
+    help: {
+        function: help,
+        aliases: ["help","whatis","whatintarnationis"],
+        access: {
+            permissions: false,
+            roles: false,
+            user_lists: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "Get help on my commands.",
+            long: "Either lists all commands, if given no arguments - or instead shows information about the passed command.",
+            args: "[commandname]",
+        }
+    },
+
     giveme: {
         function: giveme,
         aliases: ["giveme","giverole"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: false,
@@ -106,9 +142,9 @@ module.exports = {
         function: hugs,
         aliases: ["hug","huggu","hugs"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: true,
@@ -125,9 +161,9 @@ module.exports = {
         function: bang,
         aliases: ["bang"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: true,
@@ -142,9 +178,9 @@ module.exports = {
         function: cock,
         aliases: ["cock","upcock"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: true,
@@ -159,9 +195,9 @@ module.exports = {
         function: fix,
         aliases: ["fix"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: true,
@@ -176,9 +212,9 @@ module.exports = {
         function: fuck,
         aliases: ["fuck","intercourse"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: true,
@@ -194,9 +230,9 @@ module.exports = {
         function: hentie,
         aliases: ["hentie","hentai"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: false,
         },
         punishment: false,
         hidden: true,
@@ -210,13 +246,14 @@ module.exports = {
     },
 
     //### Bot Admin Commands ### 
+    //### All commands below this line need to be called by users that have been manually entered by ID! (access.user_list = owner)
     debug: {
         function: debug,
-        aliases: ["test","debug"],
+        aliases: ["debug","test"],
         access: {
-            level: 0,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: "owner",
         },
         punishment: false,
         hidden: false,
@@ -231,16 +268,16 @@ module.exports = {
         function: endprocess,
         aliases: ["endprocess","end","die","lightsout","lightsoff","restart","reboot","reset"],
         access: {
-            level: 99,
-            permission: false,
-            role: false,
+            permissions: false,
+            roles: false,
+            user_lists: "owner",
         },
         punishment: false,
         hidden: true,
         log: true,
         help: {
             short: "Terminates the bot process.",
-            long: "Terminates the bot process. Only available to the bot owner.",
+            long: "Terminates the bot process. Only available to the bot owner. If the bot was started with `node run_respawn`, the bot will restart - if possible.",
             args: false,
         }
     },
