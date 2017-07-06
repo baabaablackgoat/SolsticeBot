@@ -2,6 +2,8 @@ const play = require("./cmds/play.js");
 const nowplaying = require("./cmds/nowplaying.js");
 const search = require("./cmds/search.js");
 const skip = require("./cmds/skip.js");
+const queue = require("./cmds/queue.js");
+const clearqueue = require("./cmds/clearqueue.js");
 
 const help = require("./cmds/help.js");
 const giveme = require("./cmds/giveme.js");
@@ -100,6 +102,40 @@ module.exports = {
             short: "(Vote)skips the current song.",
             long: "This command will, depending on your access rights and/or global settings, either vote to skip or skip the current song instantly.",
             args: false,
+        }
+    },
+    queue: {
+        function: queue,
+        aliases: ["queue","listqueue","showqueue"],
+        access: {
+            permissions: false,
+            roles: false,
+            user_lists: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "Lists the currently queued songs/files.",
+            long: "Lists Song/Filename, issued Voice Channel, and Issuing User of all the songs currently in the player queue. If given an arg, only shows the songs queued by the given user.",
+            args: "[user]",
+        }
+    },
+    clearqueue: {
+        function: clearqueue,
+        aliases: ["clearqueue","clear"],
+        access: {
+            permissions: "MANAGE_CHANNELS",
+            roles: false,
+            user_lists: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "Clears the player queue.",
+            long: "Clears the player queue. If given an argument that resolves to a user, only clears songs queued by this user.",
+            args: "[user]",
         }
     },
     
