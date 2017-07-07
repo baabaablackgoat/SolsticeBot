@@ -16,16 +16,3 @@ module.exports = function(bot,msg,args,options){
     }
     if (response.length === 0) { msg.channel.send("I couldn't find any songs queued by this user."); } else { msg.channel.send(response); }
 };
-
-/*
-{
-    title: info.title,
-    src: args,
-    local: false,
-    issuedchannel: {
-        text: messageInfo.textChannel,
-        voice: issuedVC,
-    },
-    author: messageInfo.author,
-}
-*/
