@@ -10,14 +10,18 @@ const nextInQueue = require("./modules/nextinqueue");
 const checkAccess = require("./modules/checkAccess");
 const joinVC = require("./modules/joinVC");
 const bot = new discord.Client();
+//I should really fix the next part
 let player = {
     connection: null,
     queue: [],
     nowPlaying: false,
 };
 let userlists = {};
-bot._userlists = userlists;
+let votes = {};
 bot._player = player;
+bot._userlists = userlists;
+bot._votes = votes;
+//...yep
 
 if (settings.player.autoplaylist) {
     fs.readFile("./data/autoplaylist.txt",'utf8',(err,data)=>{
@@ -86,6 +90,9 @@ bot.on("ready",()=>{
 });
 bot.on("message", (msg)=>{
     if (msg.author.bot) { //Bot messages are ignored.
+        return;
+    }
+    if (msg.channel.type === "dm") { //DM Messages are (temporairly) ignored for safety reasons because it *could* crash the bot.
         return;
     }
     let usedPrefix = prefixCheck(msg); 

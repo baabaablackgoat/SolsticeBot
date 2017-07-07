@@ -2,6 +2,7 @@ const play = require("./cmds/play.js");
 const nowplaying = require("./cmds/nowplaying.js");
 const search = require("./cmds/search.js");
 const skip = require("./cmds/skip.js");
+const forceskip = require("./cmds/forceskip.js");
 const queue = require("./cmds/queue.js");
 const clearqueue = require("./cmds/clearqueue.js");
 
@@ -99,8 +100,25 @@ module.exports = {
         hidden: false,
         log: true,
         help: {
-            short: "(Vote)skips the current song.",
-            long: "This command will, depending on your access rights and/or global settings, either vote to skip or skip the current song instantly.",
+            short: "Voteskips the current song.",
+            long: "Using this command will cast your vote to skip the currently running song.",
+            args: false,
+        }
+    },
+    forceskip: {
+        function: forceskip,
+        aliases: ["forceskip","forcenext"],
+        access: {
+            permissions: false,
+            roles: false,
+            user_lists: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "Forcefully skips the current song.",
+            long: "Automatically skips the currently running song.",
             args: false,
         }
     },
