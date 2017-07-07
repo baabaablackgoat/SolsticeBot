@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MGF1998/SolsticeBot.git"
+    "url": "git+https://github.com/TrueMGF/SolsticeBot.git"
   },
   "keywords": [
     "discord.js",
@@ -31,7 +31,7 @@
   "author": "TrueMGF",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MGF1998/SolsticeBot/issues"
+    "url": "https://github.com/TrueMGF/SolsticeBot/issues"
   },
-  "homepage": "https://github.com/MGF1998/SolsticeBot#readme"
+  "homepage": "https://github.com/TrueMGF/SolsticeBot#readme"
 }
