@@ -6,6 +6,8 @@ const forceskip = require("./cmds/forceskip.js");
 const queue = require("./cmds/queue.js");
 const clearqueue = require("./cmds/clearqueue.js");
 
+const ban = require("./cmds/ban.js");
+
 const help = require("./cmds/help.js");
 const giveme = require("./cmds/giveme.js");
 const hugs = require("./cmds/hugs.js");
@@ -158,6 +160,24 @@ module.exports = {
         }
     },
     
+    ban: {
+        function: ban,
+        aliases: ["ban","banuser"],
+        access: {
+            permissions: "BAN_MEMBERS",
+            roles: false,
+            user_lists: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "Bans the specified user.",
+            long: "Bans the specified user from the guild the command was issued in. If given a second arg, it will be the reason in the audit logs.",
+            args: "(user)[reason]",
+        }
+    },
+
     help: {
         function: help,
         aliases: ["help","whatis","whatintarnationis"],
