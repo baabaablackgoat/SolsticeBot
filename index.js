@@ -35,12 +35,17 @@ if (settings.player.autoplaylist) {
     });  
 }
 
-/*
-
-    Check if reminders.js(on) exists
-    If yes, load it into bot._reminders
-
-*/
+fs.readFile("./data/reminders.json","utf8",(err,data)=>{
+    if (!err) {
+        try {
+            bot._reminders = JSON.parse(data);
+        } catch (err) {
+            console.log(`Failed to parse JSON: ${err}`);
+        }
+    } else {
+        console.log(`Reminders couldn't be restored: ${err}`);
+    }
+});
 
 
 //################## Functions ###################

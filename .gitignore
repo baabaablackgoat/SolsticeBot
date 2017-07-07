@@ -3,6 +3,7 @@ node_modules/
 npm-debug.*
 sounds/
 data/userlist.json
+data/reminders.json
 outputs/
 data/music
 !data/music/cena.mp3
