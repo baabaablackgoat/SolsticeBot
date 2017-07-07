@@ -9,6 +9,7 @@ const clearqueue = require("./cmds/clearqueue.js");
 const help = require("./cmds/help.js");
 const giveme = require("./cmds/giveme.js");
 const hugs = require("./cmds/hugs.js");
+const remindme = require("./cmds/remindme.js");
 
 const bang = require("./cmds/bang.js");
 const cock = require("./cmds/cock.js");
@@ -109,7 +110,7 @@ module.exports = {
         function: forceskip,
         aliases: ["forceskip","forcenext"],
         access: {
-            permissions: false,
+            permissions: "MANAGE_CHANNELS",
             roles: false,
             user_lists: false,
         },
@@ -207,6 +208,23 @@ module.exports = {
             short: "*huggu*",
             long: "Do you need a hug? <w<",
             args: false,
+        }
+    },
+    remindme: {
+        function: remindme,
+        aliases: ["remindme","reminder"],
+        access: {
+            permissions: false,
+            roles: false,
+            user_lists: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "Reminds the caller of something.",
+            long: "Pings the user after the specified time in the channel this command was issued in with a message of their choice.",
+            args: "(time-amount),[text]",
         }
     },
 

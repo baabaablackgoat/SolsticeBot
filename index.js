@@ -9,31 +9,39 @@ const parseCommands = require("./modules/parseCommands");
 const nextInQueue = require("./modules/nextinqueue");
 const checkAccess = require("./modules/checkAccess");
 const joinVC = require("./modules/joinVC");
+const checkReminders = require("./modules/checkreminders");
 const bot = new discord.Client();
-//I should really fix the next part
-let player = {
+bot._player = {
     connection: null,
     queue: [],
     nowPlaying: false,
 };
-let userlists = {};
-let votes = {};
-bot._player = player;
-bot._userlists = userlists;
-bot._votes = votes;
-//...yep
+bot._userlists = {};
+bot._votes = {};
+bot._reminders = {};
+bot._interval = {reminders: setInterval(function(){checkReminders(bot);},1000)};
+
+//############### Loading files ##################
 
 if (settings.player.autoplaylist) {
     fs.readFile("./data/autoplaylist.txt",'utf8',(err,data)=>{
         if (!err) {
             const result = data.includes("\r\n") ? data.split("\r\n") : data.split("\n");
-            player.autoplaylist = result;
+            bot._player.autoplaylist = result;
         } else {
             console.log(`Failed to load autoplaylist: ${err}`);
-            player.autoplaylist = false;
+            bot._player.autoplaylist = false;
         }
     });  
 }
+
+/*
+
+    Check if reminders.js(on) exists
+    If yes, load it into bot._reminders
+
+*/
+
 
 //################## Functions ###################
 
@@ -61,7 +69,7 @@ const getUserLists = function(){
             for (let i=0;i<filenames.length;i++){
                 fs.readFile(`./data/userlists/${filenames[i]}`,"utf8",(err,data)=>{
                     if (!err) {
-                        userlists[filenames[i].substr(0,filenames[i].length-4)] = data.includes("\r\n") ? data.split("\r\n") : data.split("\n");
+                        bot._userlists[filenames[i].substr(0,filenames[i].length-4)] = data.includes("\r\n") ? data.split("\r\n") : data.split("\n");
                     } else {
                         throw `Failed to read userlist ./data/userlists/${filenames[i]}: ${err}`;
                     }

@@ -11,6 +11,7 @@
     "node-gyp": "^3.6.2",
     "node-opus": "^0.2.6",
     "respawn": "^2.5.0",
+    "worldtime": "^0.1.7",
     "youtube-search": "^1.0.10",
     "ytdl-core": "^0.14.1"
   },
