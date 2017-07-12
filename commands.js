@@ -6,6 +6,7 @@ const forceskip = require("./cmds/forceskip.js");
 const queue = require("./cmds/queue.js");
 const clearqueue = require("./cmds/clearqueue.js");
 
+const kick = require("./cmds/kick.js");
 const ban = require("./cmds/ban.js");
 
 const help = require("./cmds/help.js");
@@ -18,6 +19,7 @@ const cock = require("./cmds/cock.js");
 const fix = require("./cmds/fix.js");
 const fuck = require("./cmds/fuck.js");
 const hentie = require("./cmds/hentie.js");
+const fantastico = require("./cmds/fantastico.js");
 
 const debug = require("./cmds/debug.js");
 const endprocess = require("./cmds/endprocess.js");
@@ -159,7 +161,25 @@ module.exports = {
             args: "[user]",
         }
     },
-    
+
+
+    kick: {
+        function: kick,
+        aliases: ["kick","kickuser"],
+        access: {
+            permissions: "KICK_MEMBERS",
+            roles: false,
+            user_lists: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "Kicks the specified user.",
+            long: "Kicks the specified user from the guild the command was issued in. If given a second arg, it will be the reason in the audit logs.",
+            args: "(user)[reason]",
+        }
+    },
     ban: {
         function: ban,
         aliases: ["ban","banuser"],
@@ -332,6 +352,24 @@ module.exports = {
         help: {
             short: "nsfw",
             long: "actually, nsfl",
+            args: false,
+        }
+
+    },
+    fantastico: {
+        function: fantastico,
+        aliases: ["fantastico"],
+        access: {
+            permissions: false,
+            roles: false,
+            user_lists: false,
+        },
+        punishment: false,
+        hidden: true,
+        log: true,
+        help: {
+            short: "FANTASTICO",
+            long: "FANTASTICO",
             args: false,
         }
 

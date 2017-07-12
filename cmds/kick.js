@@ -2,23 +2,24 @@ const getUserID = require("./../modules/getuserid");
 const IDtoUser = require("./../modules/idtouser");
 const discord = require("discord.js");
 
-const attemptBan = function(bot,msg,target,reason){
+const attemptkick = function(bot,msg,target,reason){
     if (!bot.guilds.get(msg.guild.id).members.has(target)) {
-        msg.channel.send(`I identified the user, but they're not in the guild. Attempting to ban nontheless...`); 
+        msg.channel.send(`I identified the user, but they're not in the guild.`); 
+        return;
     } else if (bot.guilds.get(msg.guild.id).members.get(target).highestRole.calculatedPosition >= msg.member.highestRole.calculatedPosition) {
          msg.channel.send(`The user you're targeting has an equal or higher role than you!`);
          return;
     }
-    msg.guild.ban(target,reason).then(user=>msg.channel.send(`${user.username} was banned from the server.`)).catch(err=>`Something went wrong... I couldn't ban this user.\n\`\`\`${err}\`\`\``);
+    bot.guilds.get(msg.guild.id).members.get(target).kick(reason).then((kicked)=>{msg.channel.send(`${kicked.displayName} was kicked from the server.`);}).catch(err=>`Something went wrong... I couldn't kick this user.\n\`\`\`${err}\`\`\``);
 };
 
 module.exports = function(bot,msg,args,options){
     if (!args[0]){
-        msg.channel.send(`You didn't tell me who you'd like to ban!`);
+        msg.channel.send(`You didn't tell me who you'd like to kick!`);
         return;
     } 
     let selected_users = getUserID(bot,args[0],msg.guild.id);
-    let ban_reason = args[1] ? args[1] : "No reason given.";
+    let kick_reason = args[1] ? args[1] : "No reason given.";
     let target;
     if (!selected_users) {
         msg.channel.send(`I couldn't find this user...`);
@@ -38,10 +39,11 @@ module.exports = function(bot,msg,args,options){
             }
             let keys = Array.from(collection.keys());
             target = selected_users[collection.get(keys[0]).content];
-            attemptBan(bot,msg,target,ban_reason);
+            
+            attemptkick(bot,msg,target,kick_reason);
         });
     } else {
         target = selected_users[0];
-        attemptBan(bot,msg,target,ban_reason);
+        attemptkick(bot,msg,target,kick_reason);
     }
 };
