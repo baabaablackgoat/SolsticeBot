@@ -11,6 +11,25 @@ module.exports = {
         defaultvolume: 0.5,
         skip_rate: 0.5,
     },
+    roleban: {
+        enabled: false,
+        role: "",
+    },
+    modlog: {
+        enabled: {
+            member_join: {},
+            member_leave: {
+                kicks_only: false,
+            }, 
+            member_ban: {},
+            member_unban: {},
+            guild_channelCreate: {},
+            guild_channelRemove: {},
+            guild_channelUpdate: {},
+        }, 
+        channel: "", //enter the channel id the bot is supposed to send all events to
+        admin_channel: "" //enter the channel id that specified events are supposed to be relayed to. set to false if not needed.
+    },
     //After you created a bot user, enter your secret token here. You can either provide the string directly, or you create an environment variable like I did.
     //(Thanks for the idea, Felix!)
     token: process.env.BotToken_Solstice_Canary,
