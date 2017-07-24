@@ -6,13 +6,15 @@ module.exports = function(bot,msg,args,options){
     else {
         msg.channel.send(`Initiating Spyfall game...`).then(spy_msg=>{
             spy_msg.edit(`**Spyfall (by Aleksandr Ushan)**\nGame ID: ${spy_msg.id}\nClick on the reaction to join the game. Game will start with 8 players or in 60 seconds.`);
-            spy_msg.react("spy");
-            let collector = new Discord.ReactionCollector(spy_msg, (reaction)=>{},{time:60000});
+            spy_msg.react("🕵");
+            let collector = new Discord.ReactionCollector(spy_msg, (inp)=>{return true;},{time:60000});
             collector.on("collect",(el,col)=>{
-                console.log(el);
+                if (el._emoji.name !== "🕵"){
+                    el.remove()
+                }
             });
             collector.on("end",(el,col)=>{
-                msg.channel.send("Collector timed out");
+                //
             });
         });
     }
