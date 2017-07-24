@@ -20,6 +20,7 @@ bot._userlists = {};
 bot._votes = {};
 bot._reminders = {};
 bot._interval = {reminders: setInterval(function(){checkReminders(bot);},1000)};
+bot._spyfall = {};
 
 //############### Loading files ##################
 
