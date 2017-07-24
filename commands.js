@@ -374,6 +374,24 @@ module.exports = {
         }
 
     },
+    octagon: {
+        function: octagon,
+        aliases: ["octagon"],
+        access: {
+            permissions: false,
+            roles: false,
+            user_lists: false,
+        },
+        punishment: false,
+        hidden: true,
+        log: true,
+        help: {
+            short: "Cre8ive exercises",
+            long: "filthy memes",
+            args: false,
+        }
+
+    },
 
     //### Bot Admin Commands ### 
     //### All commands below this line need to be called by users that have been manually entered by ID! (access.user_list = owner)
