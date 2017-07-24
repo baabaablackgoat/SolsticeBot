@@ -13,6 +13,7 @@ const help = require("./cmds/help.js");
 const giveme = require("./cmds/giveme.js");
 const hugs = require("./cmds/hugs.js");
 const remindme = require("./cmds/remindme.js");
+const spyfall = require("./cmds/spyfall.js");
 
 const bang = require("./cmds/bang.js");
 const cock = require("./cmds/cock.js");
@@ -265,6 +266,23 @@ module.exports = {
             short: "Reminds the caller of something.",
             long: "Pings the user after the specified time in the channel this command was issued in with a message of their choice.",
             args: "(time-amount),[text]",
+        }
+    },
+    spyfall: {
+        function: spyfall,
+        aliases: ["spyfall"],
+        access: {
+            permissions: false,
+            roles: false,
+            user_lists: false,
+        },
+        punishment: false,
+        hidden: false,
+        log: true,
+        help: {
+            short: "Start a game of Spyfall.",
+            long: "Start a new game of Spyfall in the issued channel.",
+            args: false,
         }
     },
 
