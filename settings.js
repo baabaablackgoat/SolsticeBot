@@ -15,6 +15,10 @@ module.exports = {
         enabled: false,
         role: "",
     },
+    purge: {
+        defaultamt: 100,
+        msglimit: 300,
+    },
     modlog: {
         enabled: {
             member_join: {},
