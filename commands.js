@@ -21,6 +21,7 @@ const fix = require("./cmds/fix.js");
 const fuck = require("./cmds/fuck.js");
 const hentie = require("./cmds/hentie.js");
 const fantastico = require("./cmds/fantastico.js");
+const octagon = require("./cmds/octagon.js");
 
 const debug = require("./cmds/debug.js");
 const endprocess = require("./cmds/endprocess.js");
