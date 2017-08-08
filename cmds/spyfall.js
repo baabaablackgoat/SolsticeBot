@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const idToUser = require("./../modules/idtouser");
 const randInt = require("./../modules/randomInt");
 const fs = require("fs");
+const display_emoji = ["🐐","🐶","🐱","🐭","🐹","🐰","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐸","🐙","🐵","🐔","🐧","🐦","🐺"];
 module.exports = function(bot,msg,args,options){
     if (bot._spyfall.hasOwnProperty(msg.channel.id)){
         msg.channel.send(`There already is a game running in this channel! Please wait until it has finished.`);return;
@@ -17,7 +18,7 @@ module.exports = function(bot,msg,args,options){
             let msgstart = `**Spyfall** (by Aleksandr Ushan)\nGame ID: \`${spy_msg.id}\`\n\n`;
             spy_msg.edit(`${msgstart}Click on the reaction to join the game. Game will start in 60 seconds.`);
             spy_msg.react("🕵");
-            let collector = new Discord.ReactionCollector(spy_msg, (inp)=>{return true;},{time:10000});
+            let collector = new Discord.ReactionCollector(spy_msg, (inp)=>{return true;},{time:10000,maxUsers:20});
             collector.on("collect",(el,col)=>{
                 if (el._emoji.name !== "🕵"){
                     el.remove(Array.from(el.users.keys())[0]).catch(err=>console.log(err));
@@ -89,11 +90,21 @@ module.exports = function(bot,msg,args,options){
                 for (let i=0;i<Object.keys(gamedata.erroredplayers);i++){
                     failedtags.push(players.get(Object.keys(gamedata.erroredplayers)[i]).tag);
                 }
-                if (Object.keys(gamedata.players).length < 3){
+                /*if (Object.keys(gamedata.players).length < 3){
                     spy_msg.edit(`${msgstart}Whoops! I couldn't DM enough players for the game to start...\nPlease check if you have DMs from server members disabled. (Server Privacy settings)\n\nThese players did not recieve a DM:\n${failedtags.join(", ")}`);
                     return;
+                }*/
+
+                //Clear for launch. Display the timer, remove all spy reactions.
+                //Add number reactions for the players to vote on. Remove non-player votes. If everyone but the targeted player reacted on the corresp. number, stop the game.
+                //Add a stop sign reaction for the spy to react on once he wishes to solve the location. Stop the timer, add a check and x reaction.
+                let playerdisplay = "";
+                for (let i=0;i<playerids.length;i++){
+                    if (gamedata.erroredplayers.hasOwnProperty(playerids[i])){continue;}//skip errored players
+                    playerdisplay += `${display_emoji[i]} ${players.get(playerids[i]).tag}\n`;
                 }
-                spy_msg.edit(`${msgstart}Game has started.`);
+                spy_msg.edit(`${msgstart}Game in progress.\n\n**Players:**\n${playerdisplay}`);
+
             });
         });
     }
