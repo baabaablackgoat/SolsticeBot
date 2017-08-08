@@ -14,7 +14,8 @@ module.exports = function(bot,msg,args,options){
             }
         });
         msg.channel.send(`Initiating Spyfall game...`).then(spy_msg=>{
-            spy_msg.edit(`**Spyfall (by Aleksandr Ushan)**\nGame ID: ${spy_msg.id}\nClick on the reaction to join the game. Game will start in 60 seconds.`);
+            let msgstart = `**Spyfall** (by Aleksandr Ushan)\nGame ID: \`${spy_msg.id}\`\n\n`;
+            spy_msg.edit(`${msgstart}Click on the reaction to join the game. Game will start in 60 seconds.`);
             spy_msg.react("🕵");
             let collector = new Discord.ReactionCollector(spy_msg, (inp)=>{return true;},{time:3000});
             collector.on("collect",(el,col)=>{
@@ -45,7 +46,7 @@ module.exports = function(bot,msg,args,options){
                 for (let i=0;i<playerids.length;i++){
                     //Check if error code 50007 occurs. If it happens, their DMs are disabled.
                     if (playerids[i] === gamedata.spy){ //Current player is the spy!
-                        players.get(playerids[i]).createDM().then(dmchannel=>dmchannel.send(`**Spyfall**\nGame ID: \`${spy_msg.id}\`\n\n**You are the spy!**\nYour mission: Find out which location your "friends" are currently at. Do not let them find out that you're the Spy.\n\n**Location list:**\n${Object.keys(locations).join("\n")}`))
+                        players.get(playerids[i]).createDM().then(dmchannel=>dmchannel.send(`${msgstart}**You are the spy!**\nYour mission: Find out which location your "friends" are currently at. Do not let them find out that you're the Spy.\n\n**Location list:**\n${Object.keys(locations).join("\n")}`))
                             .catch(err=>{
                                 if (err.hasOwnProperty("code")){
                                     gamedata.erroredplayers[players.get(playerids[i]).id] = err.code;
@@ -60,7 +61,7 @@ module.exports = function(bot,msg,args,options){
                         let role = gamedata.location[randInt(0,gamedata.location.length-2)];
                         if (Object.values(gamedata.players).includes(role)){role = gamedata.location[gamedata.location.length-1];} //If the role was already distributed to someone else, give them the default (last) role.
                         gamedata.players[playerids[i]] = role;
-                        players.get(playerids[i]).createDM().then(dmchannel=>dmchannel.send(`**Spyfall**\nGame ID: \`${spy_msg.id}\`\n\n**You are NOT the spy.**\nYour role: ${role}\nYour mission: One of your fellow friends is a spy. Luckily, they have no idea where they're at. Figure out who the spy is before he knows where you're at, and get all your teammates to vote them out as a spy.\n\n**Location list:**\n${Object.keys(locations).join("\n")}`))
+                        players.get(playerids[i]).createDM().then(dmchannel=>dmchannel.send(`${msgstart}**You are NOT the spy.**\nYour role: ${role}\nYour mission: One of your fellow friends is a spy. Luckily, they have no idea where they're at. Figure out who the spy is before he knows where you're at, and get all your teammates to vote them out as a spy.\n\n**Location list:**\n${Object.keys(locations).join("\n")}`))
                             .catch(err=>{
                                 if (err.hasOwnProperty("code")){
                                     gamedata.erroredplayers[players.get(playerids[i]).id] = err.code;
@@ -74,8 +75,22 @@ module.exports = function(bot,msg,args,options){
                     }
                 }
                 //Did the spy not recieve a DM? Are not enough players (3) left to start? If either is true, abort the game.
-
-                spy_msg.edit(`**Spyfall (by Aleksandr Ushan)**\nGame ID: ${spy_msg.id}\nGame has started...?`);
+                if (Object.keys(gamedata.erroredplayers).includes(gamedata.spy)){
+                    if (gamedata.erroredplayers[gamedata.spy]===50007){
+                        spy_msg.edit(`${msgstart}Whoops! ${players.get(gamedata.spy)} was selected as the spy, but their DMs are disabled! SHAME! :bell: :bell: Game aborted.`);
+                    } else {
+                        spy_msg.edit(`${msgstart}Whoops! ${players.get(gamedata.spy)} was selected as the spy, but something went wrong... Sorry. Game aborted.`);
+                    }
+                    return;
+                }
+                let failedtags = [];
+                for (let i=0;i<Object.keys(gamedata.erroredplayers);i++){
+                    failedtags.push(players.get(Object.keys(gamedata.erroredplayers)[i]).tag);
+                }
+                if (Object.keys(gamedata.players).length < 3){
+                    spy_msg.edit(`${msgstart}Whoops! I couldn't DM enough players for the game to start...\nPlease check if you have DMs from server members disabled. (Server Privacy settings)\n\nThese players did not recieve a DM:\n${failedtags.join(", ")}`);
+                }
+                spy_msg.edit(`${msgstart}Game has started.`);
             });
         });
     }
